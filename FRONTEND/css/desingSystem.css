@@ -1,0 +1,580 @@
+/*
+ * Tours Out Here — Frontend design system
+ * Canonical token stylesheet: FRONTEND/css/desingSystem.css
+ *
+ * The tokens in this file follow the front-end SDD:
+ * - Midnight & Gold palette
+ * - Local variable fonts
+ * - Fluid typography and layout
+ * - rem-based spacing and sizing
+ * - Reduced-motion and visible-focus support
+ *
+ * PX conversion reference:
+ * - The standard browser root size is 16px (`html { font-size: 100%; }`),
+ *   so 1rem = 16px and every rem value can be multiplied by 16 for reference.
+ * - Example scale: 0.25rem = 4px; 0.5rem = 8px; 0.75rem = 12px; 1rem = 16px.
+ * - Pixel comments are documentation only. The rem values remain responsive
+ *   to the user's browser font-size preference.
+ * - Fluid `vw`/`vh` values have no single pixel conversion; comments show
+ *   their fixed minimum and maximum in pixels.
+ *
+ * This file provides the shared foundation. Page-specific components can
+ * consume these variables without hard-coding colors, sizes, or spacing.
+ */
+
+/* --------------------------------------------------------------------------
+   Local variable fonts
+   -------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: "Playfair Display";
+  src: url("../fonts/playfair-var.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Playfair Display";
+  src: url("../fonts/playfair-italic-var.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 400 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "EB Garamond";
+  src: url("../fonts/ebgaramond-var.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "EB Garamond";
+  src: url("../fonts/ebgaramond-italic-var.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+/* --------------------------------------------------------------------------
+   Design tokens
+   -------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: light;
+
+  /* Brand palette — SDD §5.2 */
+  --primario: #2000B8;
+  --dorado: #B8A200;
+  --primario-oscuro: #312378;
+  --oliva: #635A00;
+  --medianoche: #000338;
+  --ambar: #F4A020;
+
+  /* Surfaces and text */
+  --superficie: #FDF6E4;
+  --superficie-alta: #FFFDF7;
+  --superficie-tenue: #F5EEDB;
+  --blanco: #FFFFFF;
+  --negro: #000000;
+  --texto: var(--medianoche);
+  --texto-muted: rgba(0, 3, 56, 0.72);
+  --texto-inverse: #FFFDF7;
+  --texto-inverse-muted: rgba(255, 253, 247, 0.78);
+
+  /* Borders and overlays */
+  --borde: rgba(0, 3, 56, 0.16);
+  --borde-fuerte: rgba(0, 3, 56, 0.32);
+  --borde-inverse: rgba(255, 253, 247, 0.24);
+  --overlay: rgba(0, 3, 56, 0.72);
+  --overlay-fuerte: rgba(0, 3, 56, 0.88);
+  --overlay-suave: rgba(0, 3, 56, 0.42);
+
+  /* Semantic color aliases */
+  --color-primary: var(--primario);
+  --color-primary-hover: var(--primario-oscuro);
+  --color-primary-active: var(--medianoche);
+  --color-accent: var(--dorado);
+  --color-accent-hover: var(--ambar);
+  --color-positive: var(--dorado);
+  --color-warning: var(--ambar);
+  --color-info: var(--primario);
+  --color-focus: var(--ambar);
+  --color-on-primary: var(--texto-inverse);
+  --color-on-dark: var(--texto-inverse);
+  --color-surface: var(--superficie);
+  --color-surface-raised: var(--superficie-alta);
+  --color-border: var(--borde);
+
+  /* Gradients */
+  --gradiente-primario: linear-gradient(135deg, var(--primario), var(--primario-oscuro));
+  --gradiente-dorado: linear-gradient(135deg, var(--dorado), var(--ambar));
+  --gradiente-hero: linear-gradient(90deg, var(--overlay-fuerte) 0%, var(--overlay) 48%, transparent 100%);
+  --gradiente-card: linear-gradient(180deg, transparent 45%, var(--overlay) 100%);
+
+  /* Typography — pixel references assume a 16px root font size */
+  --ff-titulo: "Playfair Display", Georgia, serif;
+  --ff-cuerpo: "EB Garamond", Georgia, serif;
+  --ff-ui: var(--ff-cuerpo);
+
+  --font-size-body: clamp(1rem, 0.95rem + 0.25vw, 1.125rem); /* 16px–18px; preferred: 15.2px + 0.25vw */
+  --font-size-body-sm: 0.875rem; /* 14px */
+  --font-size-body-xs: 0.75rem; /* 12px */
+  --font-size-caption: 0.8125rem; /* 13px */
+  --font-size-label: 0.875rem; /* 14px */
+  --font-size-lead: clamp(1.125rem, 1.4vw, 1.5rem); /* 18px–24px fluid */
+  --font-size-hero: clamp(3rem, 10vw, 6rem); /* 48px–96px fluid */
+  --font-size-h1: clamp(2.5rem, 5vw, 4.5rem); /* 40px–72px fluid */
+  --font-size-h2: clamp(1.8rem, 4vw, 2.9rem); /* 28.8px–46.4px fluid */
+  --font-size-h3: clamp(1.35rem, 2.5vw, 1.75rem); /* 21.6px–28px fluid */
+  --font-size-h4: clamp(1.2rem, 2vw, 1.45rem); /* 19.2px–23.2px fluid */
+  --font-size-h5: 1.125rem; /* 18px */
+  --font-size-h6: 1rem; /* 16px */
+  --font-size-kicker: clamp(0.75rem, 0.9vw, 0.85rem); /* 12px–13.6px fluid */
+  --font-size-button: 1rem; /* 16px */
+  --font-size-badge: 0.75rem; /* 12px */
+  --font-size-price: clamp(1.5rem, 3vw, 2.25rem); /* 24px–36px fluid */
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+
+  --line-height-none: 1;
+  --line-height-tight: 1.15;
+  --line-height-heading: 1.2;
+  --line-height-body: 1.6;
+  --line-height-relaxed: 1.75;
+
+  --letter-spacing-tight: -0.02em; /* ~-0.32px at a 16px font size */
+  --letter-spacing-normal: 0; /* 0px at any font size */
+  --letter-spacing-wide: 0.04em; /* ~0.64px at a 16px font size */
+  --letter-spacing-kicker: 0.08em; /* ~1.28px at a 16px font size */
+
+  /* Spacing scale — SDD §7.1 (1rem = 16px reference) */
+  --space-0: 0;         /* 0px */
+  --space-025: 0.25rem; /* 4px */
+  --space-05: 0.5rem;   /* 8px */
+  --space-075: 0.75rem; /* 12px */
+  --space-1: 1rem;      /* 16px */
+  --space-15: 1.5rem;   /* 24px */
+  --space-2: 2rem;      /* 32px */
+  --space-25: 2.5rem;   /* 40px */
+  --space-3: 3rem;      /* 48px */
+  --space-4: 4rem;      /* 64px */
+  --space-5: 5rem;      /* 80px */
+  --space-6: 6rem;      /* 96px */
+  --space-8: 8rem;      /* 128px */
+  --space-10: 10rem;    /* 160px */
+
+  /* Semantic spacing aliases */
+  --space-xs: var(--space-05); /* 8px */
+  --space-sm: var(--space-1); /* 16px */
+  --space-md: var(--space-15); /* 24px */
+  --space-lg: var(--space-2); /* 32px */
+  --space-xl: var(--space-3); /* 48px */
+  --space-inline: var(--space-1); /* 16px */
+  --space-block: var(--space-2); /* 32px */
+  --space-section-sm: var(--space-6); /* 96px */
+  --space-section: clamp(3rem, 8vw, 7rem); /* 48px–112px fluid */
+  --space-section-lg: clamp(4rem, 10vw, 9rem); /* 64px–144px fluid */
+
+  /* Layout and sizing */
+  --content-max: 72rem; /* 1152px */
+  --content-wide: 90rem; /* 1440px */
+  --reading-max: 44rem; /* 704px */
+  --content-gutter: clamp(1rem, 3vw, 2rem); /* 16px–32px fluid */
+  --container-width: min(calc(100% - 2rem), var(--content-max)); /* viewport width - 32px; max 1152px */
+  --grid-min: 18rem; /* 288px */
+  --grid-gap: var(--space-15); /* 24px */
+  --grid-auto: repeat(auto-fit, minmax(min(100%, var(--grid-min)), 1fr));
+  --sidebar-width: 16rem; /* 256px */
+  --topbar-height: 4.5rem; /* 72px */
+  --touch-target: 2.75rem; /* 44px */
+  --hero-min-height: clamp(22rem, 68vh, 42rem); /* 352px–672px fluid; 68vh preferred */
+  --hero-media-height: clamp(18rem, 55vh, 38rem); /* 288px–608px fluid; 55vh preferred */
+  --dashboard-sidebar-width: 16rem; /* 256px */
+  --dashboard-topbar-height: 4.5rem; /* 72px */
+  --table-min-width: 48rem; /* 768px */
+
+  /* Box dimensions */
+  --box-width-logo: 1.5rem; /* 24px */
+  --box-width-xs: 6rem;  /* 96px */
+  --box-width-sm: 12rem; /* 192px */
+  --box-width-md: 24rem; /* 384px */
+  --box-width-lg: 36rem; /* 576px */
+  --box-width-xl: 48rem; /* 768px */
+
+  --box-height-logo: 1.5rem; /* 24px */
+  --box-height-xs: 3rem;    /* 48px */
+  --box-height-sm: 9rem;    /* 144px */
+  --box-height-md: 18rem;   /* 288px */
+  --box-height-lg: 27rem;   /* 432px */
+  --box-height-xl: 36rem;   /* 576px */
+
+  /* Media ratios — rendered pixel size depends on container width */
+  --aspect-square: 1 / 1;
+  --aspect-card: 4 / 3;
+  --aspect-wide: 16 / 9;
+  --aspect-portrait: 3 / 4;
+
+  /* Shape */
+  --radius-xs: 0.25rem; /* 4px */
+  --radius-sm: 0.5rem; /* 8px */
+  --radius: 1rem; /* 16px */
+  --radius-lg: 1.5rem; /* 24px */
+  --radius-xl: 2rem; /* 32px */
+  --radius-pill: 999rem; /* 15,984px */
+  
+  --border-width: 0.0625rem; /* 1px */
+  --border-width-strong: 0.125rem; /* 2px */
+
+  /* Shadows and focus */
+  --shadow-sm: 0 0.125rem 0.5rem rgba(0, 3, 56, 0.08); /* 0 2px 8px rgba(0, 3, 56, 0.08) */
+  --shadow-md: 0 0.5rem 1.5rem rgba(0, 3, 56, 0.12); /* 0 8px 24px rgba(0, 3, 56, 0.12) */
+  --shadow-lg: 0 1rem 3rem rgba(0, 3, 56, 0.18); /* 0 16px 48px rgba(0, 3, 56, 0.18) */
+  --focus-ring-width: 0.1875rem; /* 3px */
+  --focus-ring-offset: 0.125rem; /* 2px */
+  --focus-ring-color: var(--color-focus);
+  --focus-ring: 0 0 0 var(--focus-ring-width) var(--focus-ring-color); /* 0 0 0 3px var(--color-focus) */
+
+  /* Motion */
+  --duration-instant: 0ms;
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 450ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --transition-control: color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+  --transition-transform: transform var(--duration-base) var(--ease-emphasized);
+  --transition-shadow: box-shadow var(--duration-base) var(--ease-standard);
+
+  /* Component defaults */
+  --control-height: var(--touch-target); /* 44px */
+  --control-height-sm: 2.25rem; /* 36px */
+  --control-padding-inline: var(--space-1); /* 16px */
+  --control-border-color: var(--borde-fuerte);
+  --control-background: var(--superficie-alta);
+  --button-padding-inline: var(--space-15); /* 24px */
+  --button-padding-block: var(--space-075); /* 12px */
+  --button-gap: var(--space-05); /* 8px */
+  --card-padding: var(--space-15); /* 24px */
+  --card-gap: var(--space-1); /* 16px */
+  --card-media-ratio: var(--aspect-card);
+  --badge-padding-inline: var(--space-05); /* 8px */
+  --badge-padding-block: var(--space-025); /* 4px */
+  --badge-radius: var(--radius-pill);
+  --footer-padding-block: var(--space-2); /* 32px */
+  --nav-padding-block: var(--space-075); /* 12px */
+  --avatar-size: 2.5rem; /* 40px */
+
+  /* Stacking */
+  --z-base: 0;
+  --z-raised: 1;
+  --z-sticky: 10;
+  --z-overlay: 20;
+  --z-modal: 30;
+  --z-toast: 40;
+}
+
+/* --------------------------------------------------------------------------
+   Base foundation
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 100%; /* preserves the browser/user default; normally 16px */
+  scroll-behavior: smooth;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-width: 0;
+  margin: 0;
+  background: var(--color-surface);
+  color: var(--texto);
+  font-family: var(--ff-cuerpo);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  color: var(--texto);
+  font-family: var(--ff-titulo);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-heading);
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+}
+
+h3 {
+  font-size: var(--font-size-h3);
+}
+
+h4 {
+  font-size: var(--font-size-h4);
+}
+
+h5 {
+  font-size: var(--font-size-h5);
+}
+
+h6 {
+  font-size: var(--font-size-h6);
+}
+
+p {
+  margin-block: 0 var(--space-1);
+}
+
+small {
+  font-size: var(--font-size-body-sm);
+}
+
+strong,
+b {
+  font-weight: var(--font-weight-bold);
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration-thickness: 0.08em; /* ~1.28px at a 16px font size */
+  text-underline-offset: 0.2em; /* ~3.2px at a 16px font size */
+  transition: var(--transition-control);
+}
+
+a:hover {
+  color: var(--color-accent-hover);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  min-block-size: var(--touch-target);
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+img,
+video {
+  height: auto;
+}
+
+form,
+fieldset {
+  margin: 0;
+}
+
+fieldset {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+}
+
+hr {
+  height: var(--border-width);
+  margin-block: var(--space-2);
+  border: 0;
+  background: var(--borde);
+}
+
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+::placeholder {
+  color: var(--texto-muted);
+  opacity: 1;
+}
+
+::selection {
+  background: var(--ambar);
+  color: var(--medianoche);
+}
+
+details > summary {
+  cursor: pointer;
+}
+
+/* --------------------------------------------------------------------------
+   Small token-driven primitives
+   -------------------------------------------------------------------------- */
+
+.container {
+  width: var(--container-width);
+  margin-inline: auto;
+}
+
+.section-site {
+  padding-block: var(--space-section);
+}
+
+.section-site--superficie,
+.section-site--papel {
+  background-color: var(--superficie);
+}
+
+.section-heading {
+  max-inline-size: var(--reading-max);
+}
+
+.section-heading h2 {
+  font-size: var(--font-size-h2);
+}
+
+.kicker {
+  color: var(--color-accent);
+  font-family: var(--ff-titulo);
+  font-size: var(--font-size-kicker);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-kicker);
+  line-height: var(--line-height-none);
+  text-transform: uppercase;
+}
+
+.text-underline {
+  width: 3.5rem; /* 56px */
+  height: var(--space-05); /* 8px */
+  margin-block: var(--space-1); /* 16px */
+  background: var(--color-accent);
+}
+
+.texto-muted {
+  color: var(--texto-muted);
+}
+
+.d-none {
+  display: none !important;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.d-grid {
+  display: grid;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.align-items-start {
+  align-items: flex-start;
+}
+
+.align-items-end {
+  align-items: flex-end;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.justify-content-end {
+  justify-content: flex-end;
+}
+
+.gap-05 {
+  gap: var(--space-05);
+}
+
+.gap-1 {
+  gap: var(--space-1);
+}
+
+.gap-15 {
+  gap: var(--space-15);
+}
+
+.gap-2 {
+  gap: var(--space-2);
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.h-100 {
+  height: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-end {
+  text-align: end;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: var(--duration-instant) !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: var(--duration-instant) !important;
+  }
+}
