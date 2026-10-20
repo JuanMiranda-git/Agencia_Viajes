@@ -10,12 +10,11 @@ const ErrorApi = require('../utils/ErrorApi');
 const { firmarToken } = require('../utils/jwt');
 const { hashearClave, compararClave } = require('../utils/claves');
 const Usuario = require('../models/Usuario');
-const usuariosRepositorio = require('../repositories/usuariosRepositorio');
-const clientesRepositorio = require('../repositories/clientesRepositorio');
-const rolesRepositorio = require('../repositories/rolesRepositorio');
-const tokensRepositorio = require('../repositories/tokensRepositorio');
-const bitacoraRepositorio = require('../repositories/bitacoraRepositorio');
-const { ejecutarTransaccion } = require('../config/baseDatos');
+const usuariosServicio = require('./usuariosServicio');
+const clientesServicio = require('./clientesServicio');
+const rolesServicio = require('./rolesServicio');
+const bitacoraServicio = require('./bitacoraServicio');
+const { pool, ejecutarTransaccion } = require('../config/baseDatos');
 
 const VIGENCIA_TOKEN_HORAS = 1;
 
@@ -23,7 +22,7 @@ const VIGENCIA_TOKEN_HORAS = 1;
  * Valida credenciales y emite un token JWT.
  */
 async function iniciarSesion({ email, contrasena }) {
-  const fila = await usuariosRepositorio.obtenerPorEmail(email);
+  const fila = await usuariosServicio.datos.obtenerPorEmail(email);
   if (!fila) {
     throw ErrorApi.noAutenticado('Credenciales invalidas');
   }
@@ -39,7 +38,7 @@ async function iniciarSesion({ email, contrasena }) {
   }
 
   const token = firmarToken(usuario);
-  await bitacoraRepositorio.registrar({
+  await bitacoraServicio.datos.registrar({
     idUsuario: usuario.idUsuario,
     tablaAfectada: 'usuarios',
     idRegistro: usuario.idUsuario,
@@ -55,7 +54,7 @@ async function iniciarSesion({ email, contrasena }) {
  * Se registra en bitacora para auditoria.
  */
 async function cerrarSesion(idUsuario) {
-  await bitacoraRepositorio.registrar({
+  await bitacoraServicio.datos.registrar({
     idUsuario,
     tablaAfectada: 'usuarios',
     idRegistro: idUsuario,
@@ -71,7 +70,7 @@ async function cerrarSesion(idUsuario) {
  * retorna en la respuesta para permitir el flujo completo (documentado en README).
  */
 async function solicitarRecuperacion({ email, baseUrlComprobante = null }) {
-  const fila = await usuariosRepositorio.obtenerPorEmail(email);
+  const fila = await usuariosServicio.datos.obtenerPorEmail(email);
 
   // Respuesta generica para no revelar si el correo existe.
   if (!fila) {
@@ -83,9 +82,9 @@ async function solicitarRecuperacion({ email, baseUrlComprobante = null }) {
   const fechaExpiracion = new Date(Date.now() + VIGENCIA_TOKEN_HORAS * 60 * 60 * 1000);
 
   await ejecutarTransaccion(async (conexion) => {
-    await tokensRepositorio.invalidarPendientes(usuario.idUsuario, conexion);
-    await tokensRepositorio.crear({ idUsuario: usuario.idUsuario, token, fechaExpiracion }, conexion);
-    await bitacoraRepositorio.registrar(
+    await invalidarPendientes(usuario.idUsuario, conexion);
+    await crear({ idUsuario: usuario.idUsuario, token, fechaExpiracion }, conexion);
+    await bitacoraServicio.datos.registrar(
       {
         idUsuario: usuario.idUsuario,
         tablaAfectada: 'tokens_recuperacion_clave',
@@ -110,7 +109,7 @@ async function solicitarRecuperacion({ email, baseUrlComprobante = null }) {
  * RF-ACC-05: restablece la contrasena con un token vigente.
  */
 async function restablecerClave({ token, nuevaContrasena }) {
-  const registro = await tokensRepositorio.obtenerValidoPorToken(token);
+  const registro = await obtenerValidoPorToken(token);
   if (!registro) {
     throw ErrorApi.solicitudInvalida('El token de recuperacion no es valido o ya expiro');
   }
@@ -118,9 +117,9 @@ async function restablecerClave({ token, nuevaContrasena }) {
   const nuevaHash = await hashearClave(nuevaContrasena);
 
   await ejecutarTransaccion(async (conexion) => {
-    await usuariosRepositorio.actualizarContrasena(registro.id_usuario, nuevaHash);
-    await tokensRepositorio.marcarUsado(registro.id_token, conexion);
-    await bitacoraRepositorio.registrar(
+    await usuariosServicio.datos.actualizarContrasena(registro.id_usuario, nuevaHash);
+    await marcarUsado(registro.id_token, conexion);
+    await bitacoraServicio.datos.registrar(
       {
         idUsuario: registro.id_usuario,
         tablaAfectada: 'usuarios',
@@ -140,17 +139,17 @@ async function restablecerClave({ token, nuevaContrasena }) {
  * crea el cliente y su usuario con rol Cliente en una sola transaccion.
  */
 async function registrarCliente({ nombre, apellido, email, telefono, direccion, contrasena }) {
-  const rolCliente = await rolesRepositorio.obtenerPorNombre('Cliente');
+  const rolCliente = await rolesServicio.datos.obtenerPorNombre('Cliente');
   if (!rolCliente || rolCliente.estado_rol !== 'Activo') {
     throw ErrorApi.reglaNegocio('El registro de clientes no esta habilitado en este momento');
   }
 
-  const emailUsuario = await usuariosRepositorio.existeEmail(email);
+  const emailUsuario = await usuariosServicio.datos.existeEmail(email);
   if (emailUsuario) {
     throw ErrorApi.conflicto('Ya existe un usuario registrado con ese correo electronico');
   }
 
-  const emailCliente = await clientesRepositorio.existeEmail(email);
+  const emailCliente = await clientesServicio.datos.existeEmail(email);
   if (emailCliente) {
     throw ErrorApi.conflicto('Ya existe un cliente registrado con ese correo electronico');
   }
@@ -158,12 +157,12 @@ async function registrarCliente({ nombre, apellido, email, telefono, direccion, 
   const hash = await hashearClave(contrasena);
 
   return ejecutarTransaccion(async (conexion) => {
-    const idCliente = await clientesRepositorio.crear(
+    const idCliente = await clientesServicio.datos.crear(
       { nombre, apellido, email, telefono, direccion, categoriaCliente: 'Nuevo', consentimientoDatos: true },
       conexion
     );
 
-    const idUsuario = await usuariosRepositorio.crear(
+    const idUsuario = await usuariosServicio.datos.crear(
       {
         nombreUsuario: `${nombre} ${apellido}`.trim(),
         email,
@@ -175,7 +174,7 @@ async function registrarCliente({ nombre, apellido, email, telefono, direccion, 
       conexion
     );
 
-    await bitacoraRepositorio.registrar(
+    await bitacoraServicio.datos.registrar(
       {
         idUsuario,
         tablaAfectada: 'usuarios',
@@ -188,6 +187,39 @@ async function registrarCliente({ nombre, apellido, email, telefono, direccion, 
 
     return { idCliente, idUsuario };
   });
+}
+
+async function invalidarPendientes(idUsuario, conexion = null) {
+  const ejecutor = conexion || pool;
+  await ejecutor.query('UPDATE tokens_recuperacion_clave SET usado = 1 WHERE id_usuario = ? AND usado = 0', [idUsuario]);
+}
+
+async function crear({ idUsuario, token, fechaExpiracion }, conexion = null) {
+  const ejecutor = conexion || pool;
+  const [resultado] = await ejecutor.query(
+    'INSERT INTO tokens_recuperacion_clave (id_usuario, token, fecha_expiracion) VALUES (?, ?, ?)',
+    [idUsuario, token, fechaExpiracion]
+  );
+  return resultado.insertId;
+}
+
+async function obtenerValidoPorToken(token) {
+  const [filas] = await pool.query(
+    `SELECT t.id_token, t.id_usuario, t.token, t.fecha_expiracion, t.usado, t.fecha_creacion,
+            u.email AS usuario_email, u.estado_usuario
+       FROM tokens_recuperacion_clave t
+       INNER JOIN usuarios u ON u.id_usuario = t.id_usuario
+      WHERE t.token = ?
+        AND t.usado = 0
+        AND t.fecha_expiracion > NOW()`,
+    [token]
+  );
+  return filas[0] || null;
+}
+
+async function marcarUsado(idToken, conexion = null) {
+  const ejecutor = conexion || pool;
+  await ejecutor.query('UPDATE tokens_recuperacion_clave SET usado = 1 WHERE id_token = ?', [idToken]);
 }
 
 module.exports = { iniciarSesion, cerrarSesion, solicitarRecuperacion, restablecerClave, registrarCliente };

@@ -8,14 +8,13 @@ const ErrorApi = require('../utils/ErrorApi');
 const { hashearClave } = require('../utils/claves');
 const { normalizarPaginacion, metadatosPaginacion } = require('../utils/paginacion');
 const Usuario = require('../models/Usuario');
-const usuariosRepositorio = require('../repositories/usuariosRepositorio');
-const rolesRepositorio = require('../repositories/rolesRepositorio');
-const bitacoraRepositorio = require('../repositories/bitacoraRepositorio');
-const { ejecutarTransaccion } = require('../config/baseDatos');
+const rolesServicio = require('./rolesServicio');
+const bitacoraServicio = require('./bitacoraServicio');
+const { pool, ejecutarTransaccion } = require('../config/baseDatos');
 
 async function listarUsuarios(consulta) {
   const { pagina, limite, desplazamiento } = normalizarPaginacion(consulta);
-  const { filas, total } = await usuariosRepositorio.listar({
+  const { filas, total } = await listar({
     nombre: consulta.nombre,
     correo: consulta.correo,
     estado: consulta.estado,
@@ -33,7 +32,7 @@ async function listarUsuarios(consulta) {
 }
 
 async function obtenerUsuario(idUsuario) {
-  const fila = await usuariosRepositorio.obtenerPorId(idUsuario);
+  const fila = await obtenerPorId(idUsuario);
   if (!fila) {
     throw ErrorApi.noEncontrado('El usuario solicitado no existe');
   }
@@ -41,7 +40,7 @@ async function obtenerUsuario(idUsuario) {
 }
 
 async function crearUsuario(datos, contexto) {
-  const rol = await rolesRepositorio.obtenerPorId(datos.idRol);
+  const rol = await rolesServicio.datos.obtenerPorId(datos.idRol);
   if (!rol) {
     throw ErrorApi.solicitudInvalida('El rol indicado no existe', [{ campo: 'idRol', mensaje: 'Rol inexistente' }]);
   }
@@ -49,17 +48,17 @@ async function crearUsuario(datos, contexto) {
     throw ErrorApi.reglaNegocio('No se puede asignar un rol inactivo');
   }
 
-  if (await usuariosRepositorio.existeEmail(datos.email)) {
+  if (await existeEmail(datos.email)) {
     throw ErrorApi.conflicto('Ya existe un usuario con ese correo electronico');
   }
-  if (await usuariosRepositorio.existeDocumento(datos.documento)) {
+  if (await existeDocumento(datos.documento)) {
     throw ErrorApi.conflicto('Ya existe un usuario con ese documento');
   }
 
   const hash = await hashearClave(datos.contrasena);
 
   return ejecutarTransaccion(async (conexion) => {
-    const idUsuario = await usuariosRepositorio.crear(
+    const idUsuario = await crear(
       {
         nombreUsuario: datos.nombreUsuario,
         email: datos.email,
@@ -72,7 +71,7 @@ async function crearUsuario(datos, contexto) {
       conexion
     );
 
-    await bitacoraRepositorio.registrar(
+    await bitacoraServicio.datos.registrar(
       {
         idUsuario: contexto.idUsuario,
         tablaAfectada: 'usuarios',
@@ -88,13 +87,13 @@ async function crearUsuario(datos, contexto) {
 }
 
 async function actualizarUsuario(idUsuario, datos, contexto) {
-  const fila = await usuariosRepositorio.obtenerPorId(idUsuario);
+  const fila = await obtenerPorId(idUsuario);
   if (!fila) {
     throw ErrorApi.noEncontrado('El usuario solicitado no existe');
   }
 
   if (datos.idRol !== fila.id_rol) {
-    const rol = await rolesRepositorio.obtenerPorId(datos.idRol);
+    const rol = await rolesServicio.datos.obtenerPorId(datos.idRol);
     if (!rol) {
       throw ErrorApi.solicitudInvalida('El rol indicado no existe', [{ campo: 'idRol', mensaje: 'Rol inexistente' }]);
     }
@@ -103,13 +102,13 @@ async function actualizarUsuario(idUsuario, datos, contexto) {
     }
   }
 
-  await usuariosRepositorio.actualizar(idUsuario, {
+  await actualizar(idUsuario, {
     nombreUsuario: datos.nombreUsuario,
     telefono: datos.telefono,
     idRol: datos.idRol
   });
 
-  await bitacoraRepositorio.registrar({
+  await bitacoraServicio.datos.registrar({
     idUsuario: contexto.idUsuario,
     tablaAfectada: 'usuarios',
     idRegistro: idUsuario,
@@ -121,7 +120,7 @@ async function actualizarUsuario(idUsuario, datos, contexto) {
 }
 
 async function cambiarEstadoUsuario(idUsuario, estadoUsuario, contexto) {
-  const fila = await usuariosRepositorio.obtenerPorId(idUsuario);
+  const fila = await obtenerPorId(idUsuario);
   if (!fila) {
     throw ErrorApi.noEncontrado('El usuario solicitado no existe');
   }
@@ -131,15 +130,15 @@ async function cambiarEstadoUsuario(idUsuario, estadoUsuario, contexto) {
   }
 
   if (estadoUsuario === 'Inactivo' && fila.nombre_rol === 'Administrador') {
-    const administradoresActivos = await rolesRepositorio.contarUsuariosActivos(fila.id_rol);
+    const administradoresActivos = await rolesServicio.datos.contarUsuariosActivos(fila.id_rol);
     if (administradoresActivos <= 1) {
       throw ErrorApi.reglaNegocio('No se puede inactivar al ultimo administrador activo del sistema');
     }
   }
 
-  await usuariosRepositorio.cambiarEstado(idUsuario, estadoUsuario);
+  await cambiarEstado(idUsuario, estadoUsuario);
 
-  await bitacoraRepositorio.registrar({
+  await bitacoraServicio.datos.registrar({
     idUsuario: contexto.idUsuario,
     tablaAfectada: 'usuarios',
     idRegistro: idUsuario,
@@ -150,4 +149,131 @@ async function cambiarEstadoUsuario(idUsuario, estadoUsuario, contexto) {
   return { mensaje: `Usuario marcado como ${estadoUsuario}` };
 }
 
-module.exports = { listarUsuarios, obtenerUsuario, crearUsuario, actualizarUsuario, cambiarEstadoUsuario };
+const CAMPOS_SELECT = `u.id_usuario, u.nombre_usuario, u.email, u.documento, u.telefono,
+                       u.id_rol, r.nombre_rol, u.estado_usuario, u.proveedores_id_proveedor,
+                       u.fecha_registro, u.fecha_modificacion`;
+
+async function listar({ nombre, correo, estado, documento, idRol, pagina, limite, desplazamiento }) {
+  const condiciones = [];
+  const parametros = [];
+
+  if (nombre) {
+    condiciones.push('u.nombre_usuario LIKE ?');
+    parametros.push(`%${nombre}%`);
+  }
+  if (correo) {
+    condiciones.push('u.email LIKE ?');
+    parametros.push(`%${correo}%`);
+  }
+  if (estado) {
+    condiciones.push('u.estado_usuario = ?');
+    parametros.push(estado);
+  }
+  if (documento) {
+    condiciones.push('u.documento LIKE ?');
+    parametros.push(`%${documento}%`);
+  }
+  if (idRol) {
+    condiciones.push('u.id_rol = ?');
+    parametros.push(idRol);
+  }
+
+  const donde = condiciones.length > 0 ? `WHERE ${condiciones.join(' AND ')}` : '';
+
+  const [filas] = await pool.query(
+    `SELECT ${CAMPOS_SELECT}
+       FROM usuarios u
+       INNER JOIN roles r ON r.id_rol = u.id_rol
+       ${donde}
+       ORDER BY u.id_usuario ASC
+       LIMIT ? OFFSET ?`,
+    [...parametros, limite, desplazamiento]
+  );
+
+  const [conteo] = await pool.query(
+    `SELECT COUNT(*) AS total FROM usuarios u INNER JOIN roles r ON r.id_rol = u.id_rol ${donde}`,
+    parametros
+  );
+
+  return { filas, total: conteo[0].total };
+}
+
+async function obtenerPorId(idUsuario) {
+  const [filas] = await pool.query(
+    `SELECT ${CAMPOS_SELECT}
+       FROM usuarios u
+       INNER JOIN roles r ON r.id_rol = u.id_rol
+      WHERE u.id_usuario = ?`,
+    [idUsuario]
+  );
+  return filas[0] || null;
+}
+
+async function obtenerPorEmail(email) {
+  const [filas] = await pool.query(
+    `SELECT ${CAMPOS_SELECT}, u.contrasena
+       FROM usuarios u
+       INNER JOIN roles r ON r.id_rol = u.id_rol
+      WHERE u.email = ?`,
+    [email]
+  );
+  return filas[0] || null;
+}
+
+async function existeEmail(email, exceptoId = null) {
+  const parametros = [email];
+  let condicionExtra = '';
+  if (exceptoId) {
+    condicionExtra = 'AND id_usuario <> ?';
+    parametros.push(exceptoId);
+  }
+  const [filas] = await pool.query(`SELECT 1 AS existe FROM usuarios WHERE email = ? ${condicionExtra}`, parametros);
+  return filas.length > 0;
+}
+
+async function existeDocumento(documento, exceptoId = null) {
+  const parametros = [documento];
+  let condicionExtra = '';
+  if (exceptoId) {
+    condicionExtra = 'AND id_usuario <> ?';
+    parametros.push(exceptoId);
+  }
+  const [filas] = await pool.query(`SELECT 1 AS existe FROM usuarios WHERE documento = ? ${condicionExtra}`, parametros);
+  return filas.length > 0;
+}
+
+async function crear({ nombreUsuario, email, contrasena, documento, telefono, idRol, proveedoresIdProveedor = null }, conexion = null) {
+  const ejecutor = conexion || pool;
+  const [resultado] = await ejecutor.query(
+    `INSERT INTO usuarios (nombre_usuario, email, contrasena, documento, telefono, id_rol, proveedores_id_proveedor)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [nombreUsuario, email, contrasena, documento, telefono, idRol, proveedoresIdProveedor]
+  );
+  return resultado.insertId;
+}
+
+async function actualizar(idUsuario, { nombreUsuario, telefono, idRol }) {
+  await pool.query('UPDATE usuarios SET nombre_usuario = ?, telefono = ?, id_rol = ? WHERE id_usuario = ?', [
+    nombreUsuario,
+    telefono,
+    idRol,
+    idUsuario
+  ]);
+}
+
+async function cambiarEstado(idUsuario, estadoUsuario) {
+  await pool.query('UPDATE usuarios SET estado_usuario = ? WHERE id_usuario = ?', [estadoUsuario, idUsuario]);
+}
+
+async function actualizarContrasena(idUsuario, contrasenaHash) {
+  await pool.query('UPDATE usuarios SET contrasena = ? WHERE id_usuario = ?', [contrasenaHash, idUsuario]);
+}
+
+module.exports = {
+  listarUsuarios,
+  obtenerUsuario,
+  crearUsuario,
+  actualizarUsuario,
+  cambiarEstadoUsuario,
+  datos: { obtenerPorId, obtenerPorEmail, existeEmail, crear, actualizarContrasena }
+};

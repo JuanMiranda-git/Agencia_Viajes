@@ -4,10 +4,10 @@
  * Servicio de configuraciones del sistema (RNF-REN-01).
  */
 
-const configuracionesRepositorio = require('../repositories/configuracionesRepositorio');
+const { pool } = require('../config/baseDatos');
 
 async function listarConfiguraciones() {
-  const filas = await configuracionesRepositorio.listar();
+  const filas = await listar();
   return filas.map((fila) => ({
     idConfiguracion: fila.id_configuracion,
     parametro: fila.parametro,
@@ -16,4 +16,19 @@ async function listarConfiguraciones() {
   }));
 }
 
-module.exports = { listarConfiguraciones };
+async function listar() {
+  const [filas] = await pool.query(
+    'SELECT id_configuracion, parametro, valor, descripcion FROM configuraciones ORDER BY id_configuracion ASC'
+  );
+  return filas;
+}
+
+async function obtenerPorParametro(parametro) {
+  const [filas] = await pool.query(
+    'SELECT id_configuracion, parametro, valor, descripcion FROM configuraciones WHERE parametro = ?',
+    [parametro]
+  );
+  return filas[0] || null;
+}
+
+module.exports = { listarConfiguraciones, datos: { obtenerPorParametro } };

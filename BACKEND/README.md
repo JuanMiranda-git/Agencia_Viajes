@@ -2,7 +2,7 @@
 
 API REST del Sistema de Gestión de Operaciones Turísticas (TourManager) para la
 agencia de viajes. Node.js + Express 5 con arquitectura en capas
-`rutas → controladores → servicios → repositorios` sobre MySQL (mysql2/promise).
+`rutas → controladores → servicios (reglas de negocio + SQL)` sobre MySQL (mysql2/promise).
 
 ## Requisitos
 
@@ -51,8 +51,7 @@ BACKEND/
 ├── app.js               # Aplicación Express + apagado controlado
 ├── config/              # entorno, pool MySQL, logger Winston
 ├── controllers/         # Traducción HTTP ↔ servicio (16 módulos)
-├── services/            # Reglas de negocio y transacciones
-├── repositories/        # SQL parametrizado (sin reglas de negocio)
+├── services/            # Reglas de negocio, transacciones y SQL parametrizado
 ├── routes/              # Enrutadores /api/v1 (+ validación Joi)
 ├── validators/          # Esquemas Joi por módulo
 ├── models/              # Entidades de dominio ES6 (18 clases + comun.js)

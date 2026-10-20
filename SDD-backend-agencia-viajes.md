@@ -197,17 +197,19 @@ only **add** relations, never remove these.
 ```
 Request → HTTP layer (REST JSON / server-rendered pages)
         → Auth middleware (session cookie; role/permission check vs Roles_Modulos)
-        → Module service (business rules: RN-*, totals, availability, RN-02)
-        → Repository (SQL; parameterized only)
+        → Module service (business rules: RN-*, totals, availability, RN-02;
+          parameterized SQL for its own domain)
         → MySQL (utf8mb4)
 Side effects: Email queue (≤60 s), Bitácora writer, PDF generator
 ```
 
-- **Placement:** all backend code under `BACKEND/` (repo folder exists,
-  currently empty except an empty `css/`). Frontend stays in `FRONTEND/`.
+- **Placement:** all backend code under `BACKEND/`. Frontend stays in `FRONTEND/`.
 - **Config via environment variables** (Appendix A). No secrets in git — the
   repo has **no `.gitignore` yet; create one before the first `.env`**.
 - Layering must keep rules (Section 9) out of controllers so they are unit-testable.
+- SQL lives in the service that owns the domain. Cross-domain SQL helpers are
+  exposed as `datos` from that service (for example `bitacoraServicio.datos`),
+  so there is no separate repository layer.
 
 ---
 

@@ -8,11 +8,11 @@
 const ErrorApi = require('../utils/ErrorApi');
 const { normalizarPaginacion, metadatosPaginacion } = require('../utils/paginacion');
 const Transporte = require('../models/Transporte');
-const transporteRepositorio = require('../repositories/transporteRepositorio');
-const proveedoresRepositorio = require('../repositories/proveedoresRepositorio');
-const paquetesRepositorio = require('../repositories/paquetesRepositorio');
+const proveedoresServicio = require('./proveedoresServicio');
+const paquetesServicio = require('./paquetesServicio');
 const contratosServicio = require('./contratosServicio');
-const bitacoraRepositorio = require('../repositories/bitacoraRepositorio');
+const bitacoraServicio = require('./bitacoraServicio');
+const { pool } = require('../config/baseDatos');
 
 function mapearTransporte(fila) {
   return new Transporte({
@@ -32,7 +32,7 @@ function mapearTransporte(fila) {
 
 async function listarTransportes(consulta) {
   const { pagina, limite, desplazamiento } = normalizarPaginacion(consulta);
-  const { filas, total } = await transporteRepositorio.listar({
+  const { filas, total } = await listar({
     tipoTransporte: consulta.tipoTransporte,
     estado: consulta.estado,
     idPaquete: consulta.idPaquete,
@@ -52,7 +52,7 @@ async function listarTransportes(consulta) {
 }
 
 async function obtenerTransporte(idTransporte) {
-  const fila = await transporteRepositorio.obtenerPorId(idTransporte);
+  const fila = await obtenerPorId(idTransporte);
   if (!fila) {
     throw ErrorApi.noEncontrado('El transporte solicitado no existe');
   }
@@ -64,7 +64,7 @@ async function obtenerTransporte(idTransporte) {
 }
 
 async function crearTransporte(datos, contexto) {
-  const proveedor = await proveedoresRepositorio.obtenerPorId(datos.idProveedor);
+  const proveedor = await proveedoresServicio.datos.obtenerPorId(datos.idProveedor);
   if (!proveedor) {
     throw ErrorApi.solicitudInvalida('El proveedor indicado no existe', [
       { campo: 'idProveedor', mensaje: 'Proveedor inexistente' }
@@ -75,7 +75,7 @@ async function crearTransporte(datos, contexto) {
   await contratosServicio.obtenerContratoVigente(datos.idProveedor, proveedor.nombre_empresa);
 
   if (datos.idPaquete) {
-    const paquete = await paquetesRepositorio.obtenerPorId(datos.idPaquete);
+    const paquete = await paquetesServicio.datos.obtenerPorId(datos.idPaquete);
     if (!paquete) {
       throw ErrorApi.solicitudInvalida('El paquete indicado no existe', [
         { campo: 'idPaquete', mensaje: 'Paquete inexistente' }
@@ -95,9 +95,9 @@ async function crearTransporte(datos, contexto) {
     estadoTransporte: datos.estadoTransporte
   });
 
-  const idTransporte = await transporteRepositorio.crear(transporte.aJSON());
+  const idTransporte = await crear(transporte.aJSON());
 
-  await bitacoraRepositorio.registrar({
+  await bitacoraServicio.datos.registrar({
     idUsuario: contexto.idUsuario,
     tablaAfectada: 'transporte',
     idRegistro: idTransporte,
@@ -109,7 +109,7 @@ async function crearTransporte(datos, contexto) {
 }
 
 async function actualizarTransporte(idTransporte, datos, contexto) {
-  const fila = await transporteRepositorio.obtenerPorId(idTransporte);
+  const fila = await obtenerPorId(idTransporte);
   if (!fila) {
     throw ErrorApi.noEncontrado('El transporte solicitado no existe');
   }
@@ -130,9 +130,9 @@ async function actualizarTransporte(idTransporte, datos, contexto) {
   const { idTransporte: id, ...campos } = transporte.aJSON();
   void id;
 
-  await transporteRepositorio.actualizar(idTransporte, campos);
+  await actualizar(idTransporte, campos);
 
-  await bitacoraRepositorio.registrar({
+  await bitacoraServicio.datos.registrar({
     idUsuario: contexto.idUsuario,
     tablaAfectada: 'transporte',
     idRegistro: idTransporte,
@@ -144,14 +144,14 @@ async function actualizarTransporte(idTransporte, datos, contexto) {
 }
 
 async function cambiarEstadoTransporte(idTransporte, estadoTransporte, contexto) {
-  const fila = await transporteRepositorio.obtenerPorId(idTransporte);
+  const fila = await obtenerPorId(idTransporte);
   if (!fila) {
     throw ErrorApi.noEncontrado('El transporte solicitado no existe');
   }
 
-  await transporteRepositorio.cambiarEstado(idTransporte, estadoTransporte);
+  await cambiarEstado(idTransporte, estadoTransporte);
 
-  await bitacoraRepositorio.registrar({
+  await bitacoraServicio.datos.registrar({
     idUsuario: contexto.idUsuario,
     tablaAfectada: 'transporte',
     idRegistro: idTransporte,
@@ -160,6 +160,87 @@ async function cambiarEstadoTransporte(idTransporte, estadoTransporte, contexto)
   });
 
   return { mensaje: `Transporte marcado como ${estadoTransporte}` };
+}
+
+const CAMPOS_SELECT = `t.id_transporte, t.tipo_transporte, t.id_proveedor, pr.nombre_empresa, t.id_paquete,
+                       p.nombre_paquete, t.descripcion, t.capacidad, t.precio, t.fecha_salida, t.fecha_llegada,
+                       t.estado_transporte, t.fecha_creacion`;
+
+async function listar({ tipoTransporte, estado, idPaquete, pagina, limite, desplazamiento }) {
+  const condiciones = [];
+  const parametros = [];
+
+  if (tipoTransporte) {
+    condiciones.push('t.tipo_transporte = ?');
+    parametros.push(tipoTransporte);
+  }
+  if (estado) {
+    condiciones.push('t.estado_transporte = ?');
+    parametros.push(estado);
+  }
+  if (idPaquete) {
+    condiciones.push('t.id_paquete = ?');
+    parametros.push(idPaquete);
+  }
+
+  const donde = condiciones.length > 0 ? `WHERE ${condiciones.join(' AND ')}` : '';
+
+  const [filas] = await pool.query(
+    `SELECT ${CAMPOS_SELECT}
+       FROM transporte t
+       INNER JOIN proveedores pr ON pr.id_proveedor = t.id_proveedor
+       LEFT JOIN paquetes_turisticos p ON p.id_paquete = t.id_paquete
+       ${donde}
+       ORDER BY t.id_transporte ASC
+       LIMIT ? OFFSET ?`,
+    [...parametros, limite, desplazamiento]
+  );
+
+  const [conteo] = await pool.query(
+    `SELECT COUNT(*) AS total
+       FROM transporte t
+       INNER JOIN proveedores pr ON pr.id_proveedor = t.id_proveedor
+       LEFT JOIN paquetes_turisticos p ON p.id_paquete = t.id_paquete
+       ${donde}`,
+    parametros
+  );
+
+  return { filas, total: conteo[0].total };
+}
+
+async function obtenerPorId(idTransporte) {
+  const [filas] = await pool.query(
+    `SELECT ${CAMPOS_SELECT}
+       FROM transporte t
+       INNER JOIN proveedores pr ON pr.id_proveedor = t.id_proveedor
+       LEFT JOIN paquetes_turisticos p ON p.id_paquete = t.id_paquete
+      WHERE t.id_transporte = ?`,
+    [idTransporte]
+  );
+  return filas[0] || null;
+}
+
+async function crear({ tipoTransporte, idProveedor, idPaquete, descripcion, capacidad, precio, fechaSalida, fechaLlegada, estadoTransporte }) {
+  const [resultado] = await pool.query(
+    `INSERT INTO transporte (tipo_transporte, id_proveedor, id_paquete, descripcion, capacidad, precio, fecha_salida, fecha_llegada, estado_transporte)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [tipoTransporte, idProveedor, idPaquete, descripcion, capacidad, precio, fechaSalida, fechaLlegada, estadoTransporte]
+  );
+  return resultado.insertId;
+}
+
+async function actualizar(idTransporte, { tipoTransporte, idProveedor, idPaquete, descripcion, capacidad, precio, fechaSalida, fechaLlegada, estadoTransporte }) {
+  await pool.query(
+    `UPDATE transporte
+        SET tipo_transporte = ?, id_proveedor = ?, id_paquete = ?, descripcion = ?, capacidad = ?, precio = ?,
+            fecha_salida = ?, fecha_llegada = ?, estado_transporte = ?
+      WHERE id_transporte = ?`,
+    [tipoTransporte, idProveedor, idPaquete, descripcion, capacidad, precio, fechaSalida, fechaLlegada, estadoTransporte, idTransporte]
+  );
+}
+
+async function cambiarEstado(idTransporte, estadoTransporte) {
+  await pool.query('UPDATE transporte SET estado_transporte = ? WHERE id_transporte = ?', [estadoTransporte, idTransporte]);
 }
 
 module.exports = {

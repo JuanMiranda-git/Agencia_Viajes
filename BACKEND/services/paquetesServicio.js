@@ -8,9 +8,8 @@ const ErrorApi = require('../utils/ErrorApi');
 const { normalizarPaginacion, metadatosPaginacion } = require('../utils/paginacion');
 const PaqueteTuristico = require('../models/PaqueteTuristico');
 const ServicioPaquete = require('../models/ServicioPaquete');
-const paquetesRepositorio = require('../repositories/paquetesRepositorio');
-const bitacoraRepositorio = require('../repositories/bitacoraRepositorio');
-const { ejecutarTransaccion } = require('../config/baseDatos');
+const bitacoraServicio = require('./bitacoraServicio');
+const { pool, ejecutarTransaccion } = require('../config/baseDatos');
 
 function mapearPaquete(fila) {
   return new PaqueteTuristico({
@@ -39,7 +38,7 @@ async function listarPaquetes(consulta, opciones = {}) {
   const { pagina, limite, desplazamiento } = normalizarPaginacion(consulta);
   const estado = opciones.soloActivos ? 'Activo' : consulta.estado;
 
-  const { filas, total } = await paquetesRepositorio.listar({
+  const { filas, total } = await listar({
     nombre: consulta.nombre,
     estado,
     precioMinimo: consulta.precioMinimo,
@@ -56,12 +55,12 @@ async function listarPaquetes(consulta, opciones = {}) {
 }
 
 async function obtenerPaquete(idPaquete) {
-  const fila = await paquetesRepositorio.obtenerPorId(idPaquete);
+  const fila = await obtenerPorId(idPaquete);
   if (!fila) {
     throw ErrorApi.noEncontrado('El paquete solicitado no existe');
   }
   const paquete = mapearPaquete(fila);
-  const servicios = await paquetesRepositorio.listarServicios(idPaquete);
+  const servicios = await listarServicios(idPaquete);
   return { ...paquete, servicios: servicios.map(mapearServicioPaquete) };
 }
 
@@ -75,9 +74,9 @@ async function crearPaquete(datos, contexto) {
     estadoPaquete: datos.estadoPaquete
   });
 
-  const idPaquete = await paquetesRepositorio.crear(paquete.aJSON());
+  const idPaquete = await crear(paquete.aJSON());
 
-  await bitacoraRepositorio.registrar({
+  await bitacoraServicio.datos.registrar({
     idUsuario: contexto.idUsuario,
     tablaAfectada: 'paquetes_turisticos',
     idRegistro: idPaquete,
@@ -89,7 +88,7 @@ async function crearPaquete(datos, contexto) {
 }
 
 async function actualizarPaquete(idPaquete, datos, contexto) {
-  const fila = await paquetesRepositorio.obtenerPorId(idPaquete);
+  const fila = await obtenerPorId(idPaquete);
   if (!fila) {
     throw ErrorApi.noEncontrado('El paquete solicitado no existe');
   }
@@ -107,9 +106,9 @@ async function actualizarPaquete(idPaquete, datos, contexto) {
   const { idPaquete: id, ...campos } = paquete.aJSON();
   void id;
 
-  await paquetesRepositorio.actualizar(idPaquete, campos);
+  await actualizar(idPaquete, campos);
 
-  await bitacoraRepositorio.registrar({
+  await bitacoraServicio.datos.registrar({
     idUsuario: contexto.idUsuario,
     tablaAfectada: 'paquetes_turisticos',
     idRegistro: idPaquete,
@@ -121,14 +120,14 @@ async function actualizarPaquete(idPaquete, datos, contexto) {
 }
 
 async function cambiarEstadoPaquete(idPaquete, estadoPaquete, contexto) {
-  const fila = await paquetesRepositorio.obtenerPorId(idPaquete);
+  const fila = await obtenerPorId(idPaquete);
   if (!fila) {
     throw ErrorApi.noEncontrado('El paquete solicitado no existe');
   }
 
-  await paquetesRepositorio.cambiarEstado(idPaquete, estadoPaquete);
+  await cambiarEstado(idPaquete, estadoPaquete);
 
-  await bitacoraRepositorio.registrar({
+  await bitacoraServicio.datos.registrar({
     idUsuario: contexto.idUsuario,
     tablaAfectada: 'paquetes_turisticos',
     idRegistro: idPaquete,
@@ -140,11 +139,11 @@ async function cambiarEstadoPaquete(idPaquete, estadoPaquete, contexto) {
 }
 
 async function listarServiciosDePaquete(idPaquete) {
-  const fila = await paquetesRepositorio.obtenerPorId(idPaquete);
+  const fila = await obtenerPorId(idPaquete);
   if (!fila) {
     throw ErrorApi.noEncontrado('El paquete solicitado no existe');
   }
-  const servicios = await paquetesRepositorio.listarServicios(idPaquete);
+  const servicios = await listarServicios(idPaquete);
   return servicios.map(mapearServicioPaquete);
 }
 
@@ -153,7 +152,7 @@ async function listarServiciosDePaquete(idPaquete) {
  * dentro de una transaccion.
  */
 async function agregarServicioAPaquete(idPaquete, datos, contexto) {
-  const fila = await paquetesRepositorio.obtenerPorId(idPaquete);
+  const fila = await obtenerPorId(idPaquete);
   if (!fila) {
     throw ErrorApi.noEncontrado('El paquete solicitado no existe');
   }
@@ -165,9 +164,9 @@ async function agregarServicioAPaquete(idPaquete, datos, contexto) {
   });
 
   const idServicio = await ejecutarTransaccion(async (conexion) => {
-    const id = await paquetesRepositorio.crearServicio(servicio.aJSON(), conexion);
-    await paquetesRepositorio.asociarServicio(idPaquete, id, conexion);
-    await bitacoraRepositorio.registrar(
+    const id = await crearServicio(servicio.aJSON(), conexion);
+    await asociarServicio(idPaquete, id, conexion);
+    await bitacoraServicio.datos.registrar(
       {
         idUsuario: contexto.idUsuario,
         tablaAfectada: 'servicios_paquete',
@@ -184,17 +183,17 @@ async function agregarServicioAPaquete(idPaquete, datos, contexto) {
 }
 
 async function quitarServicioDePaquete(idPaquete, idServicio, contexto) {
-  const fila = await paquetesRepositorio.obtenerPorId(idPaquete);
+  const fila = await obtenerPorId(idPaquete);
   if (!fila) {
     throw ErrorApi.noEncontrado('El paquete solicitado no existe');
   }
 
-  const filasAfectadas = await paquetesRepositorio.quitarServicio(idPaquete, idServicio);
+  const filasAfectadas = await quitarServicio(idPaquete, idServicio);
   if (filasAfectadas === 0) {
     throw ErrorApi.noEncontrado('El paquete no tiene asociado ese servicio');
   }
 
-  await bitacoraRepositorio.registrar({
+  await bitacoraServicio.datos.registrar({
     idUsuario: contexto.idUsuario,
     tablaAfectada: 'PAQUETE_SERVICIO',
     idRegistro: idPaquete,
@@ -205,6 +204,114 @@ async function quitarServicioDePaquete(idPaquete, idServicio, contexto) {
   return { mensaje: 'Servicio retirado del paquete correctamente' };
 }
 
+async function listar({ nombre, estado, precioMinimo, precioMaximo, pagina, limite, desplazamiento }) {
+  const condiciones = [];
+  const parametros = [];
+
+  if (nombre) {
+    condiciones.push('p.nombre_paquete LIKE ?');
+    parametros.push(`%${nombre}%`);
+  }
+  if (estado) {
+    condiciones.push('p.estado_paquete = ?');
+    parametros.push(estado);
+  }
+  if (precioMinimo !== undefined && precioMinimo !== null) {
+    condiciones.push('p.precio >= ?');
+    parametros.push(precioMinimo);
+  }
+  if (precioMaximo !== undefined && precioMaximo !== null) {
+    condiciones.push('p.precio <= ?');
+    parametros.push(precioMaximo);
+  }
+
+  const donde = condiciones.length > 0 ? `WHERE ${condiciones.join(' AND ')}` : '';
+
+  const [filas] = await pool.query(
+    `SELECT p.id_paquete, p.nombre_paquete, p.descripcion, p.precio, p.fecha_inicio, p.fecha_fin,
+            p.estado_paquete, p.fecha_creacion, p.fecha_modificacion
+       FROM paquetes_turisticos p
+       ${donde}
+       ORDER BY p.id_paquete ASC
+       LIMIT ? OFFSET ?`,
+    [...parametros, limite, desplazamiento]
+  );
+
+  const [conteo] = await pool.query(`SELECT COUNT(*) AS total FROM paquetes_turisticos p ${donde}`, parametros);
+
+  return { filas, total: conteo[0].total };
+}
+
+async function obtenerPorId(idPaquete) {
+  const [filas] = await pool.query(
+    `SELECT id_paquete, nombre_paquete, descripcion, precio, fecha_inicio, fecha_fin, estado_paquete,
+            fecha_creacion, fecha_modificacion
+       FROM paquetes_turisticos WHERE id_paquete = ?`,
+    [idPaquete]
+  );
+  return filas[0] || null;
+}
+
+async function crear({ nombrePaquete, descripcion, precio, fechaInicio, fechaFin, estadoPaquete }, conexion = null) {
+  const ejecutor = conexion || pool;
+  const [resultado] = await ejecutor.query(
+    `INSERT INTO paquetes_turisticos (nombre_paquete, descripcion, precio, fecha_inicio, fecha_fin, estado_paquete)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [nombrePaquete, descripcion, precio, fechaInicio, fechaFin, estadoPaquete]
+  );
+  return resultado.insertId;
+}
+
+async function actualizar(idPaquete, { nombrePaquete, descripcion, precio, fechaInicio, fechaFin, estadoPaquete }) {
+  await pool.query(
+    `UPDATE paquetes_turisticos
+        SET nombre_paquete = ?, descripcion = ?, precio = ?, fecha_inicio = ?, fecha_fin = ?, estado_paquete = ?
+      WHERE id_paquete = ?`,
+    [nombrePaquete, descripcion, precio, fechaInicio, fechaFin, estadoPaquete, idPaquete]
+  );
+}
+
+async function cambiarEstado(idPaquete, estadoPaquete) {
+  await pool.query('UPDATE paquetes_turisticos SET estado_paquete = ? WHERE id_paquete = ?', [estadoPaquete, idPaquete]);
+}
+
+async function listarServicios(idPaquete) {
+  const [filas] = await pool.query(
+    `SELECT s.id_servicio, s.tipo_servicio, s.descripcion, s.precio
+       FROM PAQUETE_SERVICIO ps
+       INNER JOIN servicios_paquete s ON s.id_servicio = ps.servicios_paquete_id_servicio
+      WHERE ps.paquetes_turisticos_id_paquete = ?
+      ORDER BY s.id_servicio ASC`,
+    [idPaquete]
+  );
+  return filas;
+}
+
+async function crearServicio({ tipoServicio, descripcion, precio }, conexion = null) {
+  const ejecutor = conexion || pool;
+  const [resultado] = await ejecutor.query(
+    'INSERT INTO servicios_paquete (tipo_servicio, descripcion, precio) VALUES (?, ?, ?)',
+    [tipoServicio, descripcion, precio]
+  );
+  return resultado.insertId;
+}
+
+async function asociarServicio(idPaquete, idServicio, conexion = null) {
+  const ejecutor = conexion || pool;
+  await ejecutor.query('INSERT INTO PAQUETE_SERVICIO (paquetes_turisticos_id_paquete, servicios_paquete_id_servicio) VALUES (?, ?)', [
+    idPaquete,
+    idServicio
+  ]);
+}
+
+async function quitarServicio(idPaquete, idServicio) {
+  const [resultado] = await pool.query(
+    'DELETE FROM PAQUETE_SERVICIO WHERE paquetes_turisticos_id_paquete = ? AND servicios_paquete_id_servicio = ?',
+    [idPaquete, idServicio]
+  );
+  return resultado.affectedRows;
+}
+
 module.exports = {
   listarPaquetes,
   obtenerPaquete,
@@ -213,5 +320,6 @@ module.exports = {
   cambiarEstadoPaquete,
   listarServiciosDePaquete,
   agregarServicioAPaquete,
-  quitarServicioDePaquete
+  quitarServicioDePaquete,
+  datos: { obtenerPorId }
 };

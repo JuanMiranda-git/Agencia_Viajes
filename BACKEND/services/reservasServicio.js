@@ -14,14 +14,11 @@ const { normalizarPaginacion, metadatosPaginacion } = require('../utils/paginaci
 const { generarNumeroReserva } = require('../utils/numeroReserva');
 const Reserva = require('../models/Reserva');
 const PaqueteTuristico = require('../models/PaqueteTuristico');
-const reservasRepositorio = require('../repositories/reservasRepositorio');
-const paquetesRepositorio = require('../repositories/paquetesRepositorio');
-const clientesRepositorio = require('../repositories/clientesRepositorio');
 const clientesServicio = require('./clientesServicio');
-const ventasRepositorio = require('../repositories/ventasRepositorio');
-const configuracionesRepositorio = require('../repositories/configuracionesRepositorio');
-const bitacoraRepositorio = require('../repositories/bitacoraRepositorio');
-const { ejecutarTransaccion } = require('../config/baseDatos');
+const paquetesServicio = require('./paquetesServicio');
+const configuracionesServicio = require('./configuracionesServicio');
+const bitacoraServicio = require('./bitacoraServicio');
+const { pool, ejecutarTransaccion } = require('../config/baseDatos');
 
 const CUPO_POR_DEFECTO = 30;
 
@@ -52,7 +49,7 @@ async function resolverIdCliente(datos, usuario, contexto) {
     ]);
   }
 
-  const cliente = await clientesRepositorio.obtenerPorId(datos.idCliente);
+  const cliente = await clientesServicio.datos.obtenerPorId(datos.idCliente);
   if (!cliente) {
     throw ErrorApi.solicitudInvalida('El cliente indicado no existe', [
       { campo: 'idCliente', mensaje: 'Cliente inexistente' }
@@ -62,7 +59,7 @@ async function resolverIdCliente(datos, usuario, contexto) {
 }
 
 async function obtenerCupoConfigurado() {
-  const parametro = await configuracionesRepositorio.obtenerPorParametro('cupo_maximo_viaje');
+  const parametro = await configuracionesServicio.datos.obtenerPorParametro('cupo_maximo_viaje');
   const cupo = parametro ? Number.parseInt(parametro.valor, 10) : CUPO_POR_DEFECTO;
   return Number.isInteger(cupo) && cupo > 0 ? cupo : CUPO_POR_DEFECTO;
 }
@@ -73,12 +70,12 @@ async function listarReservas(consulta, usuario) {
   let idCliente = consulta.idCliente;
 
   if (usuario.rol === 'Cliente') {
-    const cliente = await clientesRepositorio.obtenerPorEmail(usuario.correo);
+    const cliente = await clientesServicio.datos.obtenerPorEmail(usuario.correo);
     // Un cliente sin perfil simplemente no tiene reservas.
     idCliente = cliente ? cliente.id_cliente : -1;
   }
 
-  const { filas, total } = await reservasRepositorio.listar({
+  const { filas, total } = await listar({
     estado: consulta.estado,
     idCliente,
     fechaDesde: consulta.fechaDesde,
@@ -99,13 +96,13 @@ async function listarReservas(consulta, usuario) {
 }
 
 async function obtenerReserva(idReserva, usuario) {
-  const fila = await reservasRepositorio.obtenerPorId(idReserva);
+  const fila = await obtenerPorId(idReserva);
   if (!fila) {
     throw ErrorApi.noEncontrado('La reserva solicitada no existe');
   }
 
   if (usuario.rol === 'Cliente') {
-    const cliente = await clientesRepositorio.obtenerPorEmail(usuario.correo);
+    const cliente = await clientesServicio.datos.obtenerPorEmail(usuario.correo);
     if (!cliente || Number(cliente.id_cliente) !== Number(fila.id_cliente)) {
       throw ErrorApi.prohibido('Solo puede consultar sus propias reservas');
     }
@@ -120,7 +117,7 @@ async function obtenerReserva(idReserva, usuario) {
 }
 
 async function crearReserva(datos, usuario, contexto) {
-  const filaPaquete = await paquetesRepositorio.obtenerPorId(datos.idPaquete);
+  const filaPaquete = await paquetesServicio.datos.obtenerPorId(datos.idPaquete);
   if (!filaPaquete) {
     throw ErrorApi.solicitudInvalida('El paquete indicado no existe', [
       { campo: 'idPaquete', mensaje: 'Paquete inexistente' }
@@ -146,7 +143,7 @@ async function crearReserva(datos, usuario, contexto) {
   const idCliente = await resolverIdCliente(datos, usuario, contexto);
 
   const cupoMaximo = await obtenerCupoConfigurado();
-  const pasajerosReservados = await reservasRepositorio.sumarPasajerosReservados(datos.idPaquete, datos.fechaViaje);
+  const pasajerosReservados = await sumarPasajerosReservados(datos.idPaquete, datos.fechaViaje);
 
   if (Number(pasajerosReservados) + Number(datos.numPasajeros) > cupoMaximo) {
     throw ErrorApi.reglaNegocio(`No hay cupo suficiente para esa fecha (cupo maximo ${cupoMaximo} pasajeros)`, [
@@ -158,7 +155,7 @@ async function crearReserva(datos, usuario, contexto) {
   const total = Reserva.calcularTotal(paquete.precio, datos.numPasajeros);
 
   const idReserva = await ejecutarTransaccion(async (conexion) => {
-    const id = await reservasRepositorio.crear(
+    const id = await crear(
       {
         idCliente,
         idUsuario: contexto.idUsuario,
@@ -170,7 +167,7 @@ async function crearReserva(datos, usuario, contexto) {
       conexion
     );
 
-    await bitacoraRepositorio.registrar(
+    await bitacoraServicio.datos.registrar(
       {
         idUsuario: contexto.idUsuario,
         tablaAfectada: 'reservas',
@@ -188,7 +185,7 @@ async function crearReserva(datos, usuario, contexto) {
 }
 
 async function confirmarReserva(idReserva, contexto) {
-  const fila = await reservasRepositorio.obtenerPorId(idReserva);
+  const fila = await obtenerPorId(idReserva);
   if (!fila) {
     throw ErrorApi.noEncontrado('La reserva solicitada no existe');
   }
@@ -209,7 +206,7 @@ async function confirmarReserva(idReserva, contexto) {
   let numeroReserva = null;
   for (let intento = 0; intento < 5 && !numeroReserva; intento += 1) {
     const candidato = generarNumeroReserva('AV');
-    const repetido = await reservasRepositorio.existeNumero(candidato);
+    const repetido = await existeNumero(candidato);
     if (!repetido) numeroReserva = candidato;
   }
   if (!numeroReserva) {
@@ -219,12 +216,12 @@ async function confirmarReserva(idReserva, contexto) {
   const reservaConfirmada = reserva.confirmar(numeroReserva);
 
   await ejecutarTransaccion(async (conexion) => {
-    await reservasRepositorio.cambiarEstado(
+    await cambiarEstado(
       idReserva,
       { estadoReserva: reservaConfirmada.estadoReserva, numeroReserva: reservaConfirmada.numeroReserva },
       conexion
     );
-    await bitacoraRepositorio.registrar(
+    await bitacoraServicio.datos.registrar(
       {
         idUsuario: contexto.idUsuario,
         tablaAfectada: 'reservas',
@@ -236,24 +233,24 @@ async function confirmarReserva(idReserva, contexto) {
     );
   });
 
-  const actualizada = await reservasRepositorio.obtenerPorId(idReserva);
+  const actualizada = await obtenerPorId(idReserva);
   return mapearReserva(actualizada);
 }
 
 async function cancelarReserva(idReserva, usuario, contexto) {
-  const fila = await reservasRepositorio.obtenerPorId(idReserva);
+  const fila = await obtenerPorId(idReserva);
   if (!fila) {
     throw ErrorApi.noEncontrado('La reserva solicitada no existe');
   }
 
   if (usuario.rol === 'Cliente') {
-    const cliente = await clientesRepositorio.obtenerPorEmail(usuario.correo);
+    const cliente = await clientesServicio.datos.obtenerPorEmail(usuario.correo);
     if (!cliente || Number(cliente.id_cliente) !== Number(fila.id_cliente)) {
       throw ErrorApi.prohibido('Solo puede cancelar sus propias reservas');
     }
   }
 
-  const venta = await ventasRepositorio.obtenerPorReserva(idReserva);
+  const venta = await require('./ventasServicio').datos.obtenerPorReserva(idReserva);
   if (venta && venta.estado_venta === 'Pagado') {
     throw ErrorApi.reglaNegocio('No se puede cancelar una reserva con una venta pagada; anule primero la venta');
   }
@@ -274,12 +271,12 @@ async function cancelarReserva(idReserva, usuario, contexto) {
   const reservaCancelada = reserva.cancelar();
 
   await ejecutarTransaccion(async (conexion) => {
-    await reservasRepositorio.cambiarEstado(
+    await cambiarEstado(
       idReserva,
       { estadoReserva: reservaCancelada.estadoReserva },
       conexion
     );
-    await bitacoraRepositorio.registrar(
+    await bitacoraServicio.datos.registrar(
       {
         idUsuario: contexto.idUsuario,
         tablaAfectada: 'reservas',
@@ -291,7 +288,7 @@ async function cancelarReserva(idReserva, usuario, contexto) {
     );
   });
 
-  const actualizada = await reservasRepositorio.obtenerPorId(idReserva);
+  const actualizada = await obtenerPorId(idReserva);
   return mapearReserva(actualizada);
 }
 
@@ -312,11 +309,123 @@ async function obtenerDatosComprobante(idReserva, usuario) {
   };
 }
 
+const CAMPOS_SELECT = `r.id_reserva, r.id_cliente, CONCAT(c.nombre, ' ', c.apellido) AS nombre_cliente,
+                       r.id_usuario, r.id_paquete, p.nombre_paquete, p.precio AS precio_paquete,
+                       r.fecha_reserva, r.fecha_viaje, r.num_pasajeros, r.estado_reserva, r.total,
+                       r.numero_reserva, r.fecha_modificacion`;
+
+async function listar({ estado, idCliente, fechaDesde, fechaHasta, pagina, limite, desplazamiento }) {
+  const condiciones = [];
+  const parametros = [];
+
+  if (estado) {
+    condiciones.push('r.estado_reserva = ?');
+    parametros.push(estado);
+  }
+  if (idCliente) {
+    condiciones.push('r.id_cliente = ?');
+    parametros.push(idCliente);
+  }
+  if (fechaDesde) {
+    condiciones.push('r.fecha_viaje >= ?');
+    parametros.push(fechaDesde);
+  }
+  if (fechaHasta) {
+    condiciones.push('r.fecha_viaje <= ?');
+    parametros.push(fechaHasta);
+  }
+
+  const donde = condiciones.length > 0 ? `WHERE ${condiciones.join(' AND ')}` : '';
+
+  const [filas] = await pool.query(
+    `SELECT ${CAMPOS_SELECT}
+       FROM reservas r
+       INNER JOIN clientes c ON c.id_cliente = r.id_cliente
+       INNER JOIN paquetes_turisticos p ON p.id_paquete = r.id_paquete
+       ${donde}
+       ORDER BY r.id_reserva DESC
+       LIMIT ? OFFSET ?`,
+    [...parametros, limite, desplazamiento]
+  );
+
+  const [conteo] = await pool.query(
+    `SELECT COUNT(*) AS total
+       FROM reservas r
+       INNER JOIN clientes c ON c.id_cliente = r.id_cliente
+       INNER JOIN paquetes_turisticos p ON p.id_paquete = r.id_paquete
+       ${donde}`,
+    parametros
+  );
+
+  return { filas, total: conteo[0].total };
+}
+
+async function obtenerPorId(idReserva) {
+  const [filas] = await pool.query(
+    `SELECT ${CAMPOS_SELECT}
+       FROM reservas r
+       INNER JOIN clientes c ON c.id_cliente = r.id_cliente
+       INNER JOIN paquetes_turisticos p ON p.id_paquete = r.id_paquete
+      WHERE r.id_reserva = ?`,
+    [idReserva]
+  );
+  return filas[0] || null;
+}
+
+async function crear({ idCliente, idUsuario, idPaquete, fechaViaje, numPasajeros, total }, conexion = null) {
+  const ejecutor = conexion || pool;
+  const [resultado] = await ejecutor.query(
+    `INSERT INTO reservas (id_cliente, id_usuario, id_paquete, fecha_viaje, num_pasajeros, estado_reserva, total)
+     VALUES (?, ?, ?, ?, ?, 'Pendiente', ?)`,
+    [idCliente, idUsuario, idPaquete, fechaViaje, numPasajeros, total]
+  );
+  return resultado.insertId;
+}
+
+async function cambiarEstado(idReserva, { estadoReserva, numeroReserva = null }, conexion = null) {
+  const ejecutor = conexion || pool;
+  await ejecutor.query('UPDATE reservas SET estado_reserva = ?, numero_reserva = COALESCE(?, numero_reserva) WHERE id_reserva = ?', [
+    estadoReserva,
+    numeroReserva,
+    idReserva
+  ]);
+}
+
+async function obtenerPorNumero(numeroReserva) {
+  const [filas] = await pool.query(
+    `SELECT ${CAMPOS_SELECT}
+       FROM reservas r
+       INNER JOIN clientes c ON c.id_cliente = r.id_cliente
+       INNER JOIN paquetes_turisticos p ON p.id_paquete = r.id_paquete
+      WHERE r.numero_reserva = ?`,
+    [numeroReserva]
+  );
+  return filas[0] || null;
+}
+
+async function sumarPasajerosReservados(idPaquete, fechaViaje) {
+  const [filas] = await pool.query(
+    `SELECT COALESCE(SUM(num_pasajeros), 0) AS pasajeros
+       FROM reservas
+      WHERE id_paquete = ?
+        AND fecha_viaje = ?
+        AND estado_reserva <> 'Cancelada'`,
+    [idPaquete, fechaViaje]
+  );
+  return filas[0].pasajeros;
+}
+
+async function existeNumero(numeroReserva) {
+  const [filas] = await pool.query('SELECT 1 AS existe FROM reservas WHERE numero_reserva = ?', [numeroReserva]);
+  return filas.length > 0;
+}
+
 module.exports = {
   listarReservas,
   obtenerReserva,
   crearReserva,
   confirmarReserva,
   cancelarReserva,
-  obtenerDatosComprobante
+  obtenerDatosComprobante,
+  datos: { obtenerPorId }
 };

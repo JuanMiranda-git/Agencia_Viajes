@@ -2,7 +2,7 @@
 
 /**
  * Aplicacion Express de TourManager (API REST v1).
- * Capas: rutas -> controladores -> servicios -> repositorios -> MySQL.
+ * Capas: rutas -> controladores -> servicios (reglas + SQL) -> MySQL.
  */
 
 const express = require('express');

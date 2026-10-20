@@ -8,12 +8,9 @@
 const ErrorApi = require('../utils/ErrorApi');
 const { normalizarPaginacion, metadatosPaginacion } = require('../utils/paginacion');
 const Cliente = require('../models/Cliente');
-const clientesRepositorio = require('../repositories/clientesRepositorio');
-const usuariosRepositorio = require('../repositories/usuariosRepositorio');
-const crmRepositorio = require('../repositories/crmRepositorio');
-const retroalimentacionRepositorio = require('../repositories/retroalimentacionRepositorio');
-const bitacoraRepositorio = require('../repositories/bitacoraRepositorio');
-const { ejecutarTransaccion } = require('../config/baseDatos');
+const usuariosServicio = require('./usuariosServicio');
+const bitacoraServicio = require('./bitacoraServicio');
+const { pool, ejecutarTransaccion } = require('../config/baseDatos');
 
 function mapearCliente(fila) {
   return new Cliente({
@@ -32,7 +29,7 @@ function mapearCliente(fila) {
 
 async function listarClientes(consulta) {
   const { pagina, limite, desplazamiento } = normalizarPaginacion(consulta);
-  const { filas, total } = await clientesRepositorio.listar({
+  const { filas, total } = await listar({
     nombre: consulta.nombre,
     email: consulta.email,
     categoria: consulta.categoria,
@@ -48,7 +45,7 @@ async function listarClientes(consulta) {
 }
 
 async function obtenerCliente(idCliente) {
-  const fila = await clientesRepositorio.obtenerPorId(idCliente);
+  const fila = await obtenerPorId(idCliente);
   if (!fila) {
     throw ErrorApi.noEncontrado('El cliente solicitado no existe');
   }
@@ -56,7 +53,7 @@ async function obtenerCliente(idCliente) {
 }
 
 async function obtenerClientePorEmail(email) {
-  const fila = await clientesRepositorio.obtenerPorEmail(email);
+  const fila = await obtenerPorEmail(email);
   return fila ? mapearCliente(fila) : null;
 }
 
@@ -66,19 +63,19 @@ async function obtenerClientePorEmail(email) {
  * por lo que el perfil autogenerado se crea con consentimiento otorgado.
  */
 async function asegurarClienteDeUsuario(usuario, contexto) {
-  const existente = await clientesRepositorio.obtenerPorEmail(usuario.correo);
+  const existente = await obtenerPorEmail(usuario.correo);
   if (existente) {
     return existente.id_cliente;
   }
 
-  const usuarioFila = await usuariosRepositorio.obtenerPorId(usuario.idUsuario);
+  const usuarioFila = await usuariosServicio.datos.obtenerPorId(usuario.idUsuario);
   const nombreCompleto = (usuarioFila && usuarioFila.nombre_usuario) || usuario.nombreUsuario || 'Cliente';
   const partes = String(nombreCompleto).trim().split(' ');
   const nombre = partes.shift() || nombreCompleto;
   const apellido = partes.join(' ') || '';
 
   return ejecutarTransaccion(async (conexion) => {
-    const idCliente = await clientesRepositorio.crear(
+    const idCliente = await crear(
       {
         nombre,
         apellido,
@@ -91,7 +88,7 @@ async function asegurarClienteDeUsuario(usuario, contexto) {
       conexion
     );
 
-    await bitacoraRepositorio.registrar(
+    await bitacoraServicio.datos.registrar(
       {
         idUsuario: contexto.idUsuario,
         tablaAfectada: 'clientes',
@@ -110,11 +107,11 @@ async function crearCliente(datos, contexto) {
   if (!datos.consentimientoDatos) {
     throw ErrorApi.reglaNegocio('Debe registrar el consentimiento de tratamiento de datos (Ley 1581 de 2012)');
   }
-  if (await clientesRepositorio.existeEmail(datos.email)) {
+  if (await existeEmail(datos.email)) {
     throw ErrorApi.conflicto('Ya existe un cliente con ese correo electronico');
   }
 
-  const idCliente = await clientesRepositorio.crear({
+  const idCliente = await crear({
     nombre: datos.nombre,
     apellido: datos.apellido,
     email: datos.email,
@@ -124,7 +121,7 @@ async function crearCliente(datos, contexto) {
     consentimientoDatos: true
   });
 
-  await bitacoraRepositorio.registrar({
+  await bitacoraServicio.datos.registrar({
     idUsuario: contexto.idUsuario,
     tablaAfectada: 'clientes',
     idRegistro: idCliente,
@@ -136,12 +133,12 @@ async function crearCliente(datos, contexto) {
 }
 
 async function actualizarCliente(idCliente, datos, contexto) {
-  const fila = await clientesRepositorio.obtenerPorId(idCliente);
+  const fila = await obtenerPorId(idCliente);
   if (!fila) {
     throw ErrorApi.noEncontrado('El cliente solicitado no existe');
   }
 
-  await clientesRepositorio.actualizar(idCliente, {
+  await actualizar(idCliente, {
     nombre: datos.nombre,
     apellido: datos.apellido,
     telefono: datos.telefono,
@@ -149,7 +146,7 @@ async function actualizarCliente(idCliente, datos, contexto) {
     categoriaCliente: datos.categoriaCliente
   });
 
-  await bitacoraRepositorio.registrar({
+  await bitacoraServicio.datos.registrar({
     idUsuario: contexto.idUsuario,
     tablaAfectada: 'clientes',
     idRegistro: idCliente,
@@ -164,7 +161,7 @@ async function actualizarCliente(idCliente, datos, contexto) {
  * Ley 1581 - Derecho de acceso: datos personales almacenados del titular.
  */
 async function obtenerDatosPersonales(idCliente) {
-  const fila = await clientesRepositorio.obtenerPorId(idCliente);
+  const fila = await obtenerPorId(idCliente);
   if (!fila) {
     throw ErrorApi.noEncontrado('El cliente solicitado no existe');
   }
@@ -180,16 +177,16 @@ async function obtenerDatosPersonales(idCliente) {
  * Ley 1581 - Derecho de rectificacion: actualiza los datos del titular.
  */
 async function actualizarDatosPersonales(idCliente, datos, contexto) {
-  const fila = await clientesRepositorio.obtenerPorId(idCliente);
+  const fila = await obtenerPorId(idCliente);
   if (!fila) {
     throw ErrorApi.noEncontrado('El cliente solicitado no existe');
   }
 
-  if (datos.email !== fila.email && (await clientesRepositorio.existeEmail(datos.email, idCliente))) {
+  if (datos.email !== fila.email && (await existeEmail(datos.email, idCliente))) {
     throw ErrorApi.conflicto('Ya existe otro cliente con ese correo electronico');
   }
 
-  await clientesRepositorio.actualizarDatosPersonales(idCliente, {
+  await actualizarDatosPersonalesSql(idCliente, {
     nombre: datos.nombre,
     apellido: datos.apellido,
     email: datos.email,
@@ -198,7 +195,7 @@ async function actualizarDatosPersonales(idCliente, datos, contexto) {
     consentimientoDatos: datos.consentimientoDatos
   });
 
-  await bitacoraRepositorio.registrar({
+  await bitacoraServicio.datos.registrar({
     idUsuario: contexto.idUsuario,
     tablaAfectada: 'clientes',
     idRegistro: idCliente,
@@ -214,17 +211,17 @@ async function actualizarDatosPersonales(idCliente, datos, contexto) {
  * Se conservan las reservas por trazabilidad contable, sin datos del titular.
  */
 async function eliminarDatosPersonales(idCliente, contexto) {
-  const fila = await clientesRepositorio.obtenerPorId(idCliente);
+  const fila = await obtenerPorId(idCliente);
   if (!fila) {
     throw ErrorApi.noEncontrado('El cliente solicitado no existe');
   }
 
-  const filasAfectadas = await clientesRepositorio.anonimizar(idCliente);
+  const filasAfectadas = await anonimizar(idCliente);
   if (filasAfectadas === 0) {
     throw ErrorApi.noEncontrado('El cliente solicitado no existe');
   }
 
-  await bitacoraRepositorio.registrar({
+  await bitacoraServicio.datos.registrar({
     idUsuario: contexto.idUsuario,
     tablaAfectada: 'clientes',
     idRegistro: idCliente,
@@ -239,15 +236,15 @@ async function eliminarDatosPersonales(idCliente, contexto) {
  * RF-CRM-02/RF-CRM-03: historial consolidado del cliente.
  */
 async function obtenerHistorial(idCliente) {
-  const fila = await clientesRepositorio.obtenerPorId(idCliente);
+  const fila = await obtenerPorId(idCliente);
   if (!fila) {
     throw ErrorApi.noEncontrado('El cliente solicitado no existe');
   }
 
   const [reservas, interacciones, retroalimentacion] = await Promise.all([
-    crmRepositorio.reservasDeCliente(idCliente),
-    crmRepositorio.listar({ idCliente, pagina: 1, limite: 100, desplazamiento: 0 }),
-    retroalimentacionRepositorio.listar({ idCliente, pagina: 1, limite: 100, desplazamiento: 0 })
+    require('./crmServicio').datos.reservasDeCliente(idCliente),
+    require('./crmServicio').datos.listar({ idCliente, pagina: 1, limite: 100, desplazamiento: 0 }),
+    require('./retroalimentacionServicio').datos.listar({ idCliente, pagina: 1, limite: 100, desplazamiento: 0 })
   ]);
 
   return {
@@ -256,6 +253,106 @@ async function obtenerHistorial(idCliente) {
     interacciones: interacciones.filas,
     retroalimentacion: retroalimentacion.filas
   };
+}
+
+const CAMPOS_SELECT = `c.id_cliente, c.nombre, c.apellido, c.email, c.telefono, c.direccion,
+                       c.categoria_cliente, c.consentimiento_datos, c.fecha_consentimiento, c.fecha_registro`;
+
+async function listar({ nombre, email, categoria, pagina, limite, desplazamiento }) {
+  const condiciones = [];
+  const parametros = [];
+
+  if (nombre) {
+    condiciones.push('(c.nombre LIKE ? OR c.apellido LIKE ?)');
+    parametros.push(`%${nombre}%`, `%${nombre}%`);
+  }
+  if (email) {
+    condiciones.push('c.email LIKE ?');
+    parametros.push(`%${email}%`);
+  }
+  if (categoria) {
+    condiciones.push('c.categoria_cliente = ?');
+    parametros.push(categoria);
+  }
+
+  const donde = condiciones.length > 0 ? `WHERE ${condiciones.join(' AND ')}` : '';
+
+  const [filas] = await pool.query(
+    `SELECT ${CAMPOS_SELECT} FROM clientes c ${donde} ORDER BY c.id_cliente ASC LIMIT ? OFFSET ?`,
+    [...parametros, limite, desplazamiento]
+  );
+
+  const [conteo] = await pool.query(`SELECT COUNT(*) AS total FROM clientes c ${donde}`, parametros);
+
+  return { filas, total: conteo[0].total };
+}
+
+async function obtenerPorId(idCliente) {
+  const [filas] = await pool.query(`SELECT ${CAMPOS_SELECT} FROM clientes c WHERE c.id_cliente = ?`, [idCliente]);
+  return filas[0] || null;
+}
+
+async function obtenerPorEmail(email) {
+  const [filas] = await pool.query(`SELECT ${CAMPOS_SELECT} FROM clientes c WHERE c.email = ?`, [email]);
+  return filas[0] || null;
+}
+
+async function existeEmail(email, exceptoId = null) {
+  const parametros = [email];
+  let condicionExtra = '';
+  if (exceptoId) {
+    condicionExtra = 'AND id_cliente <> ?';
+    parametros.push(exceptoId);
+  }
+  const [filas] = await pool.query(`SELECT 1 AS existe FROM clientes WHERE email = ? ${condicionExtra}`, parametros);
+  return filas.length > 0;
+}
+
+async function crear({ nombre, apellido, email, telefono, direccion, categoriaCliente, consentimientoDatos }, conexion = null) {
+  const ejecutor = conexion || pool;
+  const [resultado] = await ejecutor.query(
+    `INSERT INTO clientes (nombre, apellido, email, telefono, direccion, categoria_cliente, consentimiento_datos, fecha_consentimiento)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      nombre,
+      apellido,
+      email,
+      telefono,
+      direccion,
+      categoriaCliente,
+      consentimientoDatos ? 1 : 0,
+      consentimientoDatos ? new Date() : null
+    ]
+  );
+  return resultado.insertId;
+}
+
+async function actualizar(idCliente, { nombre, apellido, telefono, direccion, categoriaCliente }) {
+  await pool.query(
+    `UPDATE clientes SET nombre = ?, apellido = ?, telefono = ?, direccion = ?, categoria_cliente = ? WHERE id_cliente = ?`,
+    [nombre, apellido, telefono, direccion, categoriaCliente, idCliente]
+  );
+}
+
+async function actualizarDatosPersonalesSql(idCliente, { nombre, apellido, email, telefono, direccion, consentimientoDatos }) {
+  await pool.query(
+    `UPDATE clientes
+        SET nombre = ?, apellido = ?, email = ?, telefono = ?, direccion = ?,
+            consentimiento_datos = ?, fecha_consentimiento = COALESCE(fecha_consentimiento, ?)
+      WHERE id_cliente = ?`,
+    [nombre, apellido, email, telefono, direccion, consentimientoDatos ? 1 : 0, new Date(), idCliente]
+  );
+}
+
+async function anonimizar(idCliente) {
+  const [resultado] = await pool.query(
+    `UPDATE clientes
+        SET nombre = 'Anonimo', apellido = 'Anonimo', email = CONCAT('anonimo+', id_cliente, '@eliminado.local'),
+            telefono = NULL, direccion = NULL, categoria_cliente = NULL, consentimiento_datos = 0
+      WHERE id_cliente = ?`,
+    [idCliente]
+  );
+  return resultado.affectedRows;
 }
 
 module.exports = {
@@ -268,5 +365,6 @@ module.exports = {
   obtenerDatosPersonales,
   actualizarDatosPersonales,
   eliminarDatosPersonales,
-  obtenerHistorial
+  obtenerHistorial,
+  datos: { obtenerPorId, obtenerPorEmail, existeEmail, crear }
 };

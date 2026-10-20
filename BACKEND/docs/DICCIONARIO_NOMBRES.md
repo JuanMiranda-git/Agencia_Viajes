@@ -7,7 +7,7 @@ Criterio C11: código en español, nombres en `camelCase`, base de datos en
 
 | Elemento | Convención | Ejemplo |
 |----------|------------|---------|
-| Archivos | Español, `camelCase` con sufijo de capa | `reservasControlador.js`, `reservasServicio.js`, `reservasRepositorio.js`, `reservasRutas.js`, `reservasValidador.js` |
+| Archivos | Español, `camelCase` con sufijo de capa | `reservasControlador.js`, `reservasServicio.js`, `reservasRutas.js`, `reservasValidador.js` |
 | Clases de dominio | `PascalCase` | `Reserva`, `PaqueteTuristico` |
 | Variables y funciones | `camelCase` en español | `confirmarReserva`, `numeroReserva` |
 | Tablas y columnas (MySQL) | `snake_case` en español | `paquetes_turisticos`, `num_pasajeros` |
@@ -103,35 +103,39 @@ Criterio C11: código en español, nombres en `camelCase`, base de datos en
 | `registroPeticiones.js` | `registroPeticiones` | `X-Request-Id` + log de acceso |
 | `manejadorErrores.js` | `rutaNoEncontrada`, `manejadorErrores` | 404 y traducción central de errores |
 
-## 7. Capas y módulos (`controllers/`, `services/`, `repositories/`, `routes/`, `validators/`)
+## 7. Capas y módulos (`controllers/`, `services/`, `routes/`, `validators/`)
 
-Cada módulo de negocio tiene cinco archivos homónimos:
+Cada módulo de negocio tiene controlador, servicio, rutas y validador (cuando
+aplica). El SQL parametrizado vive dentro de su servicio, no en una capa aparte.
 
-| Módulo | Controlador | Servicio | Repositorio | Rutas | Validador |
-|--------|-------------|----------|-------------|-------|-----------|
-| Roles | `rolesControlador.js` | `rolesServicio.js` | `rolesRepositorio.js` | `rolesRutas.js` | `rolesValidador.js` |
-| Usuarios | `usuariosControlador.js` | `usuariosServicio.js` | `usuariosRepositorio.js` | `usuariosRutas.js` | `usuariosValidador.js` |
-| Autenticación | `autenticacionControlador.js` | `autenticacionServicio.js` | `usuariosRepositorio.js`, `tokensRepositorio.js` | `autenticacionRutas.js` | `autenticacionValidador.js` |
-| Clientes | `clientesControlador.js` | `clientesServicio.js` | `clientesRepositorio.js` | `clientesRutas.js` | `clientesValidador.js` |
-| Proveedores | `proveedoresControlador.js` | `proveedoresServicio.js` | `proveedoresRepositorio.js` | `proveedoresRutas.js` | `proveedoresValidador.js` |
-| Contratos | `contratosControlador.js` | `contratosServicio.js` | `contratosRepositorio.js` | `contratosRutas.js` | `contratosValidador.js` |
-| Paquetes | `paquetesControlador.js` | `paquetesServicio.js` | `paquetesRepositorio.js` | `paquetesRutas.js` | `paquetesValidador.js` |
-| Itinerarios | `itinerariosControlador.js` | `itinerariosServicio.js` | `itinerariosRepositorio.js` | `itinerariosRutas.js` | `itinerariosValidador.js` |
-| Reservas | `reservasControlador.js` | `reservasServicio.js` | `reservasRepositorio.js` | `reservasRutas.js` | `reservasValidador.js` |
-| Ventas | `ventasControlador.js` | `ventasServicio.js` | `ventasRepositorio.js`, `pagos` (modelo `Pago`) | `ventasRutas.js` | `ventasValidador.js` |
-| Transporte | `transporteControlador.js` | `transporteServicio.js` | `transporteRepositorio.js` | `transporteRutas.js` | `transporteValidador.js` |
-| CRM | `crmControlador.js` | `crmServicio.js` | `crmRepositorio.js` | `crmRutas.js` | `crmValidador.js` |
-| Retroalimentación | `retroalimentacionControlador.js` | `retroalimentacionServicio.js` | `retroalimentacionRepositorio.js` | `retroalimentacionRutas.js` | `retroalimentacionValidador.js` |
-| Informes | `informesControlador.js` | `informesServicio.js` | `informesRepositorio.js` | `informesRutas.js` | - |
-| Bitácora | `bitacoraControlador.js` | `bitacoraServicio.js` | `bitacoraRepositorio.js` | `bitacoraRutas.js` | - |
-| Módulos | `modulosControlador.js` | `modulosServicio.js` | `modulosRepositorio.js` | `modulosRutas.js` | - |
-| Salud | `saludControlador.js` | - | - | `saludRutas.js` | - |
+| Módulo | Controlador | Servicio (incluye SQL) | Rutas | Validador |
+|--------|-------------|------------------------|-------|-----------|
+| Roles | `rolesControlador.js` | `rolesServicio.js` | `rolesRutas.js` | `rolesValidador.js` |
+| Usuarios | `usuariosControlador.js` | `usuariosServicio.js` | `usuariosRutas.js` | `usuariosValidador.js` |
+| Autenticación | `autenticacionControlador.js` | `autenticacionServicio.js` | `autenticacionRutas.js` | `autenticacionValidador.js` |
+| Clientes | `clientesControlador.js` | `clientesServicio.js` | `clientesRutas.js` | `clientesValidador.js` |
+| Proveedores | `proveedoresControlador.js` | `proveedoresServicio.js` | `proveedoresRutas.js` | `proveedoresValidador.js` |
+| Contratos | `contratosControlador.js` | `contratosServicio.js` | `contratosRutas.js` | `contratosValidador.js` |
+| Paquetes | `paquetesControlador.js` | `paquetesServicio.js` | `paquetesRutas.js` | `paquetesValidador.js` |
+| Itinerarios | `itinerariosControlador.js` | `itinerariosServicio.js` | `itinerariosRutas.js` | `itinerariosValidador.js` |
+| Reservas | `reservasControlador.js` | `reservasServicio.js` | `reservasRutas.js` | `reservasValidador.js` |
+| Ventas | `ventasControlador.js` | `ventasServicio.js` | `ventasRutas.js` | `ventasValidador.js` |
+| Transporte | `transporteControlador.js` | `transporteServicio.js` | `transporteRutas.js` | `transporteValidador.js` |
+| CRM | `crmControlador.js` | `crmServicio.js` | `crmRutas.js` | `crmValidador.js` |
+| Retroalimentación | `retroalimentacionControlador.js` | `retroalimentacionServicio.js` | `retroalimentacionRutas.js` | `retroalimentacionValidador.js` |
+| Informes | `informesControlador.js` | `informesServicio.js` | `informesRutas.js` | - |
+| Bitácora | `bitacoraControlador.js` | `bitacoraServicio.js` | `bitacoraRutas.js` | - |
+| Módulos | `modulosControlador.js` | `modulosServicio.js` | `modulosRutas.js` | - |
+| Salud | `saludControlador.js` | - | `saludRutas.js` | - |
 
 Reglas de capas (C3):
 1. Las rutas solo enlazan validación + middleware + controlador.
 2. Los controladores solo traducen HTTP ↔ servicio (sin SQL, sin reglas).
-3. Los servicios contienen las reglas de negocio y transacciones (sin `req`/`res`).
-4. Los repositorios solo ejecutan SQL parametrizado (sin reglas de negocio).
+3. Los servicios contienen las reglas de negocio, las transacciones y el SQL
+   parametrizado de su dominio (sin `req`/`res`).
+4. Cuando un servicio necesita SQL de otro dominio, consume las funciones
+   internas que el servicio dueño expone en `datos` (por ejemplo
+   `bitacoraServicio.datos.registrar`).
 
 ## 8. Variables de entorno (`.env` / `.env.example`)
 

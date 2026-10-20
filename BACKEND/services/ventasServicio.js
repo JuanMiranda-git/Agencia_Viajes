@@ -10,10 +10,9 @@ const ErrorApi = require('../utils/ErrorApi');
 const { normalizarPaginacion, metadatosPaginacion } = require('../utils/paginacion');
 const Venta = require('../models/Venta');
 const Pago = require('../models/Pago');
-const ventasRepositorio = require('../repositories/ventasRepositorio');
-const reservasRepositorio = require('../repositories/reservasRepositorio');
-const bitacoraRepositorio = require('../repositories/bitacoraRepositorio');
-const { ejecutarTransaccion } = require('../config/baseDatos');
+const reservasServicio = require('./reservasServicio');
+const bitacoraServicio = require('./bitacoraServicio');
+const { pool, ejecutarTransaccion } = require('../config/baseDatos');
 
 function mapearVenta(fila) {
   return new Venta({
@@ -30,7 +29,7 @@ function mapearVenta(fila) {
 
 async function listarVentas(consulta) {
   const { pagina, limite, desplazamiento } = normalizarPaginacion(consulta);
-  const { filas, total } = await ventasRepositorio.listar({
+  const { filas, total } = await listar({
     estado: consulta.estado,
     fechaDesde: consulta.fechaDesde,
     fechaHasta: consulta.fechaHasta,
@@ -51,7 +50,7 @@ async function listarVentas(consulta) {
 }
 
 async function obtenerVenta(idVenta) {
-  const fila = await ventasRepositorio.obtenerPorId(idVenta);
+  const fila = await obtenerPorId(idVenta);
   if (!fila) {
     throw ErrorApi.noEncontrado('La venta solicitada no existe');
   }
@@ -67,14 +66,14 @@ async function obtenerVenta(idVenta) {
  * RF-VEN-01: registra la venta de una reserva confirmada.
  */
 async function crearVenta(datos, contexto) {
-  const filaReserva = await reservasRepositorio.obtenerPorId(datos.idReserva);
+  const filaReserva = await reservasServicio.datos.obtenerPorId(datos.idReserva);
   if (!filaReserva) {
     throw ErrorApi.solicitudInvalida('La reserva indicada no existe', [
       { campo: 'idReserva', mensaje: 'Reserva inexistente' }
     ]);
   }
 
-  const ventaExistente = await ventasRepositorio.obtenerPorReserva(datos.idReserva);
+  const ventaExistente = await obtenerPorReserva(datos.idReserva);
   if (ventaExistente) {
     throw ErrorApi.conflicto('Ya existe una venta registrada para esa reserva');
   }
@@ -94,7 +93,7 @@ async function crearVenta(datos, contexto) {
   const estadoVenta = pago.estaPagado() ? 'Pagado' : 'Pendiente';
 
   const idVenta = await ejecutarTransaccion(async (conexion) => {
-    const id = await ventasRepositorio.crear(
+    const id = await crear(
       {
         idReserva: venta.idReserva,
         monto: venta.monto,
@@ -106,14 +105,14 @@ async function crearVenta(datos, contexto) {
     );
 
     if (pago.estaPagado()) {
-      await ventasRepositorio.actualizarEstado(
+      await actualizarEstado(
         id,
         { estadoVenta, comprobanteRuta: `/api/v1/ventas/${id}/comprobante` },
         conexion
       );
     }
 
-    await bitacoraRepositorio.registrar(
+    await bitacoraServicio.datos.registrar(
       {
         idUsuario: contexto.idUsuario,
         tablaAfectada: 'ventas',
@@ -135,7 +134,7 @@ async function crearVenta(datos, contexto) {
  * RF-VEN-02/RF-VEN-04: procesa el pago de una venta pendiente.
  */
 async function registrarPago(idVenta, datos, contexto) {
-  const fila = await ventasRepositorio.obtenerPorId(idVenta);
+  const fila = await obtenerPorId(idVenta);
   if (!fila) {
     throw ErrorApi.noEncontrado('La venta solicitada no existe');
   }
@@ -158,12 +157,12 @@ async function registrarPago(idVenta, datos, contexto) {
   if (pago.estaPagado()) {
     const pagada = venta.marcarPagada();
     await ejecutarTransaccion(async (conexion) => {
-      await ventasRepositorio.actualizarEstado(
+      await actualizarEstado(
         idVenta,
         { estadoVenta: pagada.estadoVenta, comprobanteRuta: `/api/v1/ventas/${idVenta}/comprobante` },
         conexion
       );
-      await bitacoraRepositorio.registrar(
+      await bitacoraServicio.datos.registrar(
         {
           idUsuario: contexto.idUsuario,
           tablaAfectada: 'ventas',
@@ -175,7 +174,7 @@ async function registrarPago(idVenta, datos, contexto) {
       );
     });
   } else {
-    await bitacoraRepositorio.registrar({
+    await bitacoraServicio.datos.registrar({
       idUsuario: contexto.idUsuario,
       tablaAfectada: 'ventas',
       idRegistro: idVenta,
@@ -189,7 +188,7 @@ async function registrarPago(idVenta, datos, contexto) {
 }
 
 async function cancelarVenta(idVenta, contexto) {
-  const fila = await ventasRepositorio.obtenerPorId(idVenta);
+  const fila = await obtenerPorId(idVenta);
   if (!fila) {
     throw ErrorApi.noEncontrado('La venta solicitada no existe');
   }
@@ -205,8 +204,8 @@ async function cancelarVenta(idVenta, contexto) {
   const cancelada = venta.cancelar();
 
   await ejecutarTransaccion(async (conexion) => {
-    await ventasRepositorio.actualizarEstado(idVenta, { estadoVenta: cancelada.estadoVenta }, conexion);
-    await bitacoraRepositorio.registrar(
+    await actualizarEstado(idVenta, { estadoVenta: cancelada.estadoVenta }, conexion);
+    await bitacoraServicio.datos.registrar(
       {
         idUsuario: contexto.idUsuario,
         tablaAfectada: 'ventas',
@@ -240,4 +239,97 @@ async function obtenerDatosComprobante(idVenta) {
   };
 }
 
-module.exports = { listarVentas, obtenerVenta, crearVenta, registrarPago, cancelarVenta, obtenerDatosComprobante };
+const CAMPOS_SELECT = `v.id_venta, v.id_reserva, r.numero_reserva, r.id_cliente,
+                       CONCAT(c.nombre, ' ', c.apellido) AS nombre_cliente, r.id_paquete, p.nombre_paquete,
+                       v.monto, v.fecha_venta, v.metodo_pago, v.estado_venta, v.comprobante_ruta, v.fecha_modificacion`;
+
+async function listar({ estado, fechaDesde, fechaHasta, pagina, limite, desplazamiento }) {
+  const condiciones = [];
+  const parametros = [];
+
+  if (estado) {
+    condiciones.push('v.estado_venta = ?');
+    parametros.push(estado);
+  }
+  if (fechaDesde) {
+    condiciones.push('DATE(v.fecha_venta) >= ?');
+    parametros.push(fechaDesde);
+  }
+  if (fechaHasta) {
+    condiciones.push('DATE(v.fecha_venta) <= ?');
+    parametros.push(fechaHasta);
+  }
+
+  const donde = condiciones.length > 0 ? `WHERE ${condiciones.join(' AND ')}` : '';
+
+  const [filas] = await pool.query(
+    `SELECT ${CAMPOS_SELECT}
+       FROM ventas v
+       INNER JOIN reservas r ON r.id_reserva = v.id_reserva
+       INNER JOIN clientes c ON c.id_cliente = r.id_cliente
+       INNER JOIN paquetes_turisticos p ON p.id_paquete = r.id_paquete
+       ${donde}
+       ORDER BY v.id_venta DESC
+       LIMIT ? OFFSET ?`,
+    [...parametros, limite, desplazamiento]
+  );
+
+  const [conteo] = await pool.query(
+    `SELECT COUNT(*) AS total
+       FROM ventas v
+       INNER JOIN reservas r ON r.id_reserva = v.id_reserva
+       INNER JOIN clientes c ON c.id_cliente = r.id_cliente
+       INNER JOIN paquetes_turisticos p ON p.id_paquete = r.id_paquete
+       ${donde}`,
+    parametros
+  );
+
+  return { filas, total: conteo[0].total };
+}
+
+async function obtenerPorId(idVenta) {
+  const [filas] = await pool.query(
+    `SELECT ${CAMPOS_SELECT}
+       FROM ventas v
+       INNER JOIN reservas r ON r.id_reserva = v.id_reserva
+       INNER JOIN clientes c ON c.id_cliente = r.id_cliente
+       INNER JOIN paquetes_turisticos p ON p.id_paquete = r.id_paquete
+      WHERE v.id_venta = ?`,
+    [idVenta]
+  );
+  return filas[0] || null;
+}
+
+async function obtenerPorReserva(idReserva) {
+  const [filas] = await pool.query('SELECT * FROM ventas WHERE id_reserva = ?', [idReserva]);
+  return filas[0] || null;
+}
+
+async function crear({ idReserva, monto, metodoPago, estadoVenta, comprobanteRuta = null }, conexion = null) {
+  const ejecutor = conexion || pool;
+  const [resultado] = await ejecutor.query(
+    `INSERT INTO ventas (id_reserva, monto, metodo_pago, estado_venta, comprobante_ruta)
+     VALUES (?, ?, ?, ?, ?)`,
+    [idReserva, monto, metodoPago, estadoVenta, comprobanteRuta]
+  );
+  return resultado.insertId;
+}
+
+async function actualizarEstado(idVenta, { estadoVenta, comprobanteRuta = null }, conexion = null) {
+  const ejecutor = conexion || pool;
+  await ejecutor.query('UPDATE ventas SET estado_venta = ?, comprobante_ruta = COALESCE(?, comprobante_ruta) WHERE id_venta = ?', [
+    estadoVenta,
+    comprobanteRuta,
+    idVenta
+  ]);
+}
+
+module.exports = {
+  listarVentas,
+  obtenerVenta,
+  crearVenta,
+  registrarPago,
+  cancelarVenta,
+  obtenerDatosComprobante,
+  datos: { obtenerPorReserva }
+};

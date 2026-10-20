@@ -12,14 +12,13 @@ codigo y verificado en sintaxis. Falta unicamente la prueba E2E contra MySQL rea
 bloqueada porque no tenemos credenciales validas de MySQL.
 
 Backend implementado (Node.js + Express 5, arquitectura en capas):
-  rutas -> controladores -> servicios -> repositorios -> MySQL (mysql2/promise)
+  rutas -> controladores -> servicios (reglas + SQL) -> MySQL (mysql2/promise)
 
 Carpetas y archivos (dentro de BACKEND/):
   - app.js                      Aplicacion Express + apagado controlado + health check
   - config/                     entorno.js, baseDatos.js (pool mysql2), registro.js (Winston)
   - controllers/                17 controladores (traducen HTTP <-> servicio)
-  - services/                   17 servicios (reglas de negocio + transacciones)
-  - repositories/               16 repositorios (solo SQL parametrizado)
+  - services/                   17 servicios (reglas de negocio, transacciones y SQL parametrizado)
   - routes/                     Enrutadores /api/v1 (+ validacion Joi)
   - validators/                 13 esquemas Joi por modulo
   - models/                     18 entidades ES6 + comun.js (validadores de campos)

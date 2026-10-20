@@ -1,0 +1,131 @@
+
+Perform the initial backend deployment for the project, taking into account the context provided in the context folder. The backend will be built using Node.js + Express, structured as a layered REST JSON API (routes → controllers → services → repositories). Use `mysql2/promise` with a connection pool and parameterized queries—do not use an ORM. Ensure the following requirements are met:
+
+C1 Functional Requirement (FR) coverage ≥80% + 100% core coverage + FR-to-endpoint traceability matrix
+C2 JavaScript object model
+C3 Layered architecture
+C4 REST API design
+C5 Data access via `mysql2`
+C6 Validation and business rules
+C7 Authentication and authorization
+C8 Backend non-functional requirements (logging, compliance with Law 1581, security/safety/reliability [SAF], error logging)
+C9 Postman/Insomnia collection
+C10 .env and .gitignore files for the original database connection path.
+C11: Variable names in Spanish, along with a .md file listing all these variable names so they can be used later, when the frontend is developed in the future.
+
+
+---
+
+ROLE
+You are a senior backend engineer. Treat this project as a real production
+system, even though it is a university project.
+
+PROJECT
+A travel agency system. The /context folder is the single source of truth.
+It contains user stories, a context .md file, and supporting files in
+several formats (documents, spreadsheets, diagrams, data files, etc.).
+
+STEP 0 – CONTEXT ANALYSIS (do this before writing any code)
+1. Inventory every file in /context and read all of them, whatever the format.
+2. Extract and list:
+   - All Functional Requirements (FR), derived from the user stories.
+     Assign each one an ID (FR-01, FR-02, ...).
+   - Which FRs are "core" (essential to the agency's main business flow:
+     e.g., catalog, booking, payments, customers). Justify each choice.
+   - Actors/roles and their permissions.
+   - Entities, relationships, and business rules.
+3. Report contradictions, gaps, or ambiguities, and state the assumptions
+   you will make. Do not invent requirements that are not in the context.
+4. Present the plan, the folder structure, and the database schema, then
+   continue with the implementation.
+
+TECH STACK
+- Node.js (LTS) + Express, layered REST JSON API:
+  routes → controllers → services → repositories.
+- MySQL via `mysql2/promise` with a connection pool and parameterized
+  queries (placeholders). No ORM or query builders.
+- Use transactions for multi-step operations (e.g., booking + payment).
+- Scope: initial backend setup that runs locally (npm install && npm start).
+  Provide the SQL script to create the schema if one does not exist in
+  /context. Docker/CI-CD are out of scope unless I ask for them.
+
+ACCEPTANCE CRITERIA
+
+C1 – Requirements coverage
+   - Implement ≥80% of the FRs and 100% of the core FRs.
+   - Deliver a traceability matrix (Markdown table):
+     FR ID | Description | Core (Y/N) | Endpoint(s) | Controller | Service |
+     Status. List every FR left out and the reason.
+
+C2 – JavaScript object model
+   - One ES6 class per domain entity (e.g., Cliente, Reserva, Paquete,
+     Destino, Pago), with constructors, field validation, and a method to
+     serialize to JSON. Keep them independent from the database layer.
+
+C3 – Layered architecture
+   - Strict separation: no SQL in controllers/services, no business logic in
+     repositories, no HTTP objects (req/res) in services.
+
+C4 – REST API design
+   - Versioned base path (/api/v1), plural resource names, correct HTTP
+     verbs and status codes, pagination/filtering on list endpoints,
+     and a uniform error response format.
+
+C5 – Data access
+   - Only `mysql2/promise` with a pool and placeholders; the pool config
+     comes from environment variables; handle connection errors and
+     release connections properly.
+
+C6 – Validation and business rules
+   - Input validation with [Joi | Zod | express-validator — pick one and
+     justify it]. Business rules (e.g., availability, dates, prices,
+     booking states) live in the service layer and come from /context.
+
+C7 – Authentication and authorization
+   - JWT authentication, passwords hashed with bcrypt (or argon2), and
+     role-based access control using the roles defined in /context.
+     Protect every non-public endpoint.
+
+C8 – Backend non-functional requirements
+   a) Logging: structured logs (Winston or Pino) with levels and request
+      logging.
+   b) Compliance with Colombian Law 1581 of 2012 (personal data
+      protection): consent capture, data minimization, no sensitive data
+      in logs, protection of personal data, and support for access/update/
+      deletion requests by the data subject.
+   c) SAF (safety/security/reliability): helmet, CORS, rate limiting,
+      input sanitization, secrets only via environment variables, graceful
+      shutdown, and a health-check endpoint.
+   d) Error logging: centralized error-handling middleware, separate error
+      log, and no stack traces exposed to clients.
+
+C9 – API collection
+   - A Postman collection (JSON) with all endpoints, an environment file,
+     auth handled through variables, and example requests/responses.
+
+C10 – Environment and security files
+   - `.env.example` with the MySQL connection variables (host, port, user,
+     password, database, pool size) and the JWT settings, with placeholder
+     values only.
+   - `.gitignore` excluding `.env`, `node_modules`, logs, and any other
+     sensitive or generated files.
+
+C11 – Naming convention (Spanish)
+   - Variables, functions, classes, tables, columns, and JSON fields in
+     Spanish, using camelCase in code (snake_case in the database).
+     Keep standard Express/Node identifiers (req, res, next) as they are.
+     Comments and error messages also in Spanish.
+   - Deliver `DICCIONARIO_NOMBRES.md` listing every name used, grouped by
+     module/entity (database fields, JSON fields, classes, functions,
+     routes), with a short description and type, so it can be reused when
+     the frontend is built.
+
+DELIVERABLES
+- Full source code with the folder structure.
+- SQL schema script (and seed data if useful).
+- Traceability matrix, Postman collection, .env.example, .gitignore,
+  DICCIONARIO_NOMBRES.md, and a README with setup/run instructions.
+
+FINAL REPORT
+- Summary of what was implemented, which FRs are pending and why, the
+  assumptions made, and any risks or open questions.

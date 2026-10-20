@@ -5,10 +5,10 @@
  * Los modulos son datos maestros: solo se consultan.
  */
 
-const modulosRepositorio = require('../repositories/modulosRepositorio');
+const { pool } = require('../config/baseDatos');
 
 async function listarModulos({ soloActivos = false } = {}) {
-  const filas = await modulosRepositorio.listar({ soloActivos: soloActivos === true || soloActivos === 'true' });
+  const filas = await listar({ soloActivos: soloActivos === true || soloActivos === 'true' });
   return filas.map((fila) => ({
     idModulo: fila.id_modulo,
     nombreModulo: fila.nombre_modulo,
@@ -17,4 +17,20 @@ async function listarModulos({ soloActivos = false } = {}) {
   }));
 }
 
-module.exports = { listarModulos };
+async function listar({ soloActivos = false } = {}) {
+  const donde = soloActivos ? "WHERE estado_modulo = 'Activo'" : '';
+  const [filas] = await pool.query(
+    `SELECT id_modulo, nombre_modulo, descripcion, estado_modulo FROM modulos ${donde} ORDER BY id_modulo ASC`
+  );
+  return filas;
+}
+
+async function obtenerPorId(idModulo) {
+  const [filas] = await pool.query(
+    'SELECT id_modulo, nombre_modulo, descripcion, estado_modulo FROM modulos WHERE id_modulo = ?',
+    [idModulo]
+  );
+  return filas[0] || null;
+}
+
+module.exports = { listarModulos, datos: { obtenerPorId } };
