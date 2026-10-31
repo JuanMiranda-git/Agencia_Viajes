@@ -185,101 +185,58 @@ FINAL REPORT
 - Summary of what was implemented, which FRs are pending and why, the
   assumptions made, and any risks or open questions.
 
----
+-----------------
 
 FRONTEND REFERENCE
 
-Act as a frontend developer when this stage starts. Before creating or
-modifying components, use this context.
+# ROLE
+You are a senior front-end developer specialized in static websites built with semantic HTML5 and modern CSS, with strong UX and accessibility skills.
 
-Context
-The frontend is an SPA of HTML, CSS and vanilla JavaScript, with no
-framework and no bundler. It uses ES modules and is served over HTTP on
-port 5500. The design follows Atomic Design and the CSS follows an
-adaptation of ITCSS. The same hierarchy applies to JavaScript and to CSS.
+# OBJECTIVE
+Build a complete, static, visual-only website for a travel agency. The site is a showcase of how the final product will look. It targets all kinds of travelers: solo travelers, families, couples, adventurers, and groups.
 
-The five levels
-1. Atoms — js/atomos/ and css/03-atomos/
-   Indivisible pieces: button, field, label, icon, badge, loader. They do
-   not import other components (only utilities), know nothing about the
-   API or the state, and are pure presentation functions.
+# CONTEXT SOURCES (read these first)
+- All .md files and the `context/` folder: business info, tone of voice, destinations, services.
+- The design system file: the ONLY source for colors, typography, spacing, and component styles. Do not invent colors or fonts outside it.
+- The `img/` folder: use these images of places and people first. If extra images are needed, use only local placeholders or CSS-generated backgrounds (gradients/patterns). Never hotlink external images or invent URLs.
+If a context file is missing or contradictory, make the most reasonable assumption, and list it in `ASSUMPTIONS.md`. Do not stop to ask questions.
 
-2. Molecules — js/moleculas/ and css/04-moleculas/
-   Combine atoms to fulfill ONE function: form field, search bar,
-   paginator, card, notification, empty state. Stateful ones return an
-   object with `elemento` and public methods (for example `mostrarError`
-   and `obtenerValor`).
+# HARD CONSTRAINTS (verifiable)
+1. Zero JavaScript: no `<script>` tags, no .js files, no inline event handlers (`onclick`, etc.), no JS libraries or CDNs.
+2. Only HTML and CSS. No build tools, preprocessors, or frameworks.
+3. No connection to any backend, API, database, email service, or external service. No real `fetch`, no real form submission (`action` must be `#` or omitted).
+4. All data (destinations, prices, testimonials, names) must be clearly dummy data.
+5. No external dependencies, except optionally fonts already defined in the design system.
 
-3. Organisms — js/organismos/ and css/05-organismos/
-   Complete, autonomous sections: top bar, side navigation, data table,
-   modal, form, detail panel. They receive data and callbacks; they do not
-   call the API or decide the real content.
+# ARCHITECTURE: ATOMIC DESIGN (applies to HTML and CSS)
+Organize both in these levels:   
+- Atoms: buttons, links, headings, inputs, labels, icons, badges, images.
+- Molecules: search field, destination card, testimonial, price tag, nav link group, form field with label.
+- Organisms: header/navbar, hero, destinations grid, packages section, why-us, testimonials, footer, contact form.
+- Templates: reusable page layouts (page skeleton with header, main, footer).
+- Pages: the final assembled pages.
 
-4. Templates — js/plantillas/ and css/06-plantillas/
-   Assemble organisms and define the structure or layout. They have no
-   real content and do not call the API. Example: PanelAdministracion
-   places the bar, the navigation and the content area. Positioning
-   classes live here, not in the organism.
+Use BEM naming (`.card__title--featured`) and CSS custom properties for all design tokens. Because there is no JS, HTML cannot be componentized by includes: duplicate shared parts (header/footer) identically across pages and mark each with a comment such as `<!-- ORGANISM: header -->`.
 
-5. Pages — js/paginas/ and css/07-paginas/
-   A template with real content. It is the only level that can hold state,
-   call the services and orchestrate organisms. It must handle the four
-   states of the view: loading, empty, error and with data.
+# INTERACTIVITY WITHOUT JAVASCRIPT
+Use only CSS/HTML techniques: `<details>/<summary>` for FAQ, checkbox/radio hack or `:has()` for the mobile menu and tabs, `:target` for simple modals, `:hover`/`:focus-visible` for states, CSS scroll-snap for carousels.
 
-Supporting layers
-- js/servicios/clienteApi.js: the only place that uses fetch.
-- js/servicios/<entidad>.servicio.js: routes and API access per entity;
-  exported as singletons.
-- js/utiles/: safe DOM creation, formatting, validation and icons.
-- js/config/configuracion.js: API URL and frontend constants.
-- js/main.js: entry point, hash router and page registration.
-- index.html: the only HTML file; it contains the #aplicacion container.
+# UX & QUALITY REQUIREMENTS
+- Semantic HTML (`header`, `nav`, `main`, `section`, `article`, `footer`), one `h1` per page, logical heading order.
+- Accessibility: meaningful `alt` text, visible focus states, WCAG AA contrast, labels on all inputs, minimum 44px touch targets.
+- Clear primary call to action ("Plan my trip" / "Request a quote") visible above the fold on every page.
+- Sections that speak to different traveler profiles (solo, family, couple, adventure).
+- Images with `loading="lazy"`, explicit width/height to prevent layout shift, and `object-fit` for consistent crops.
+- Valid HTML5 aandnd clean, commented CSS.
 
-Composition flow
-index.html -> main.js -> template -> page -> organisms -> molecules -> atoms
-Data: page -> service -> clienteApi.js -> REST API
+# EXECUTION
+Work autonomously from start to finish without asking questions or waiting for confirmation. When something is ambiguous, decide, and document it in `ASSUMPTIONS.md`.
 
-Rules that must never be broken
-- Lower levels never import higher levels.
-- Pages are the only component level that calls the entity services;
-  main.js only uses clienteApi for the health check.
-- Only clienteApi.js uses fetch.
-- Atoms know nothing about the API, the global state or other components.
-- A molecule does not redefine the style of its atoms; it only organizes
-  them.
-- A template knows no real data; only structure and positioning.
-- Use `crear` and `textContent` for external data; never innerHTML with
-  data from the API or from forms.
-- Keep accessibility and responsive design: semantic tags, ARIA, visible
-  focus, contrast and the four states of the view.
-- JSON field names consumed by the frontend must be the Spanish names
-  listed in DICCIONARIO_NOMBRES.md.
-
-CSS and naming
-- css/main.css is the only entry point and uses @import in strict order:
-  01-tokens -> 02-base -> 03-atomos -> 04-moleculas -> 05-organismos ->
-  06-plantillas -> 07-paginas.
-- Each level has a prefix: `a-` atom, `m-` molecule, `o-` organism,
-  `t-` template, `p-` page.
-- Inside each component use BEM: `.a-boton` (block), `.a-boton__icono`
-  (element), `.a-boton--primario` (modifier).
-- Colors, typography, spacing and elevation come from 01-tokens; do not
-  write loose values or duplicate atom styles.
-- The file for `.a-boton` is always `css/03-atomos/_a-boton.css`.
-
-Real example (adapt to the agency's entities)
-PaginaClientes calls clienteServicio and composes CabeceraPagina,
-BarraBusqueda, TablaDatos, Modal, Formulario, Boton and Insignia.
-TablaDatos is generic: it receives columns, rows, actions and callbacks,
-but does not know whether the data are customers, bookings or packages.
-
-When creating a component
-1. Choose the level according to its responsibility, not its size.
-2. Create the JS file in js/<level>/ and its CSS in css/<NN-level>/ with
-   the corresponding prefix.
-3. Register the new CSS in css/main.css.
-4. Import and use it from the appropriate upper level.
-5. If it is a new page, register it in SECCIONES and in `paginas` in
-   js/main.js.
-6. Serve the frontend over HTTP and verify navigation, console, states,
-   accessibility and responsiveness.
+# DEFINITION OF DONE (self-check before finishing)
+- [ ] No `<script>` tag, .js file, or inline handler anywhere (verify with a search).
+- [ ] All pages link correctly to each other.
+- [ ] All colors come from the design system tokens.
+- [ ] Every image path exists in `img/`.
+- [ ] Layout works at 360px, with no horizontal scroll.
+- [ ] CSS and HTML follows the atoms → molecules → organisms → templates → pages order.
+- [ ] Final summary: file tree + list of assumptions.
