@@ -16,7 +16,6 @@
   background-color: var(--superficie-alta);
   box-shadow: var(--shadow-sm);
   transition: var(--transition-shadow), var(--transition-transform);
-  height: 500px;
 }
 
 .m-perfil:hover {

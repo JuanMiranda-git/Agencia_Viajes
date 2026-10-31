@@ -694,7 +694,7 @@ details > summary {
 }
 
 .boton--dorado {
-  background-color: red;
+  background-color: var(--dorado);
   color: var(--medianoche);
   box-shadow: var(--shadow-sm);
 }
