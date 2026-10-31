@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Cuéntanos tu próximo viaje. Formulario de demostración sin envío real, con información ficticia de contacto.">
+  <title>Contacto — Tours Out Here</title>
+  <link rel="icon" href="../../img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+  
+<a class="saltar-enlace" href="#contenido">Saltar al contenido</a>
+<!-- ORGANISM: header -->
+<header class="o-encabezado">
+  <div class="o-encabezado__barra contenedor">
+    <a class="o-marca" href="./index.html" aria-label="Tours Out Here, inicio">
+      <svg class="o-marca__icono" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="2"/><path d="M24 9l7 15-7 15-7-15 7-15z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="24" r="2.5" fill="currentColor"/></svg>
+      <span class="o-marca__texto">Tours <em>Out Here</em></span>
+    </a>
+    <input class="o-menu__control solo-lectores" type="checkbox" id="menu-principal">
+    <label class="o-menu__boton" for="menu-principal" aria-label="Abrir o cerrar el menú de navegación">
+      <span class="o-menu__linea"></span>
+      <span class="o-menu__linea"></span>
+      <span class="o-menu__linea"></span>
+    </label>
+    <nav class="o-navegacion" aria-label="Navegación principal">
+      <ul class="o-navegacion__lista">
+        <li><a class="o-navegacion__enlace" href="./index.html">Inicio</a></li>
+        <li><a class="o-navegacion__enlace" href="./destinos.html">Destinos</a></li>
+        <li><a class="o-navegacion__enlace" href="./paquetes.html">Paquetes</a></li>
+        <li><a class="o-navegacion__enlace" href="./nosotros.html">Nosotros</a></li>
+        <li><a class="o-navegacion__enlace" href="./contacto.html" aria-current="page">Contacto</a></li>
+      </ul>
+      <a class="boton boton--primario boton--sm o-navegacion__cta" href="./contacto.html">Planear mi viaje</a>
+    </nav>
+  </div>
+</header>
+
+  <main id="contenido" class="t-principal">
+    
+<!-- PAGE: contacto -->
+
+<!-- ORGANISM: cabecera de página interior -->
+<section class="o-pagina-hero" aria-labelledby="titulo-pagina">
+  <div class="contenedor">
+    <nav class="o-migas" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href="./index.html">Inicio</a></li>
+        <li aria-current="page">Contacto</li>
+      </ol>
+    </nav>
+    <div class="o-pagina-hero__rejilla">
+      <div class="o-pagina-hero__texto">
+        <p class="kicker">Contacto</p>
+        <h1 id="titulo-pagina">Hablemos de tu próximo viaje.</h1>
+        <p class="texto-lead">Cuéntanos lo que tengas claro y lo que no. Nosotros ayudamos a ponerle forma, fechas y presupuesto.</p>
+        <div class="t-acciones"><a class="boton boton--primario" href="#formulario">Escribir mi plan</a><a class="boton boton--secundario" href="#contacto-info">Ver oficina</a></div>
+      </div>
+      <div class="o-pagina-hero__media">
+        <img src="../../img/optimizadas/romaMujer.jpg" alt="Viajera paseando por una calle comercial" width="787" height="1400" loading="eager" fetchpriority="high" decoding="async">
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="seccion" aria-labelledby="contacto-titulo">
+  <div class="contenedor">
+    <div class="p-contacto__aviso">
+      <svg class="a-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 3 1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7L12 3Z"/></svg>
+      <span><strong>Demostración:</strong> este formulario no envía datos ni se conecta con ningún servicio. Es solo una muestra visual.</span>
+    </div>
+    <div class="o-contacto__rejilla">
+      <div>
+        <p class="kicker">Cuéntanos</p>
+        <h2 id="contacto-titulo">Tu plan empieza con una conversación.</h2>
+        <p class="texto-lead">Mientras más nos cuentes, mejor podemos imaginar el viaje contigo.</p>
+        <form class="o-formulario" id="formulario" action="#" method="get">
+          <fieldset class="o-formulario__rejilla">
+            <legend class="solo-lectores">Datos de contacto y preferencias</legend>
+            <label class="campo">
+              <span class="campo__etiqueta">Nombre completo <span class="campo__obligatorio" aria-hidden="true">*</span></span>
+              <input class="campo__control" type="text" name="nombre" id="nombre" autocomplete="name" required>
+            </label>
+            <label class="campo">
+              <span class="campo__etiqueta">Correo electrónico <span class="campo__obligatorio" aria-hidden="true">*</span></span>
+              <input class="campo__control" type="email" name="correo" id="correo" autocomplete="email" required>
+            </label>
+            <label class="campo">
+              <span class="campo__etiqueta">Teléfono</span>
+              <input class="campo__control" type="tel" name="telefono" id="telefono" autocomplete="tel" inputmode="tel">
+            </label>
+            <label class="campo">
+              <span class="campo__etiqueta">Destino de interés</span>
+              <select class="campo__control" name="destino" id="destino">
+                <option value="">Aún no lo sé</option>
+                <option>Cartagena</option>
+                <option>París</option>
+                <option>Roma</option>
+                <option>Kyoto</option>
+                <option>Berlín</option>
+                <option>Delhi</option>
+                <option>Río de Janeiro</option>
+              </select>
+            </label>
+            <label class="campo">
+              <span class="campo__etiqueta">Fecha aproximada</span>
+              <input class="campo__control" type="date" name="fecha" id="fecha">
+            </label>
+            <label class="campo">
+              <span class="campo__etiqueta">Número de viajeros</span>
+              <input class="campo__control" type="number" name="viajeros" id="viajeros" min="1" max="20" value="2" inputmode="numeric">
+            </label>
+            <label class="campo">
+              <span class="campo__etiqueta">Tipo de viaje</span>
+              <select class="campo__control" name="tipo" id="tipo">
+                <option>En pareja</option>
+                <option>En familia</option>
+                <option>Solo</option>
+                <option>Con amigos</option>
+                <option>Aventura</option>
+              </select>
+            </label>
+            <label class="campo o-formulario__ancho">
+              <span class="campo__etiqueta">¿Qué te gustaría hacer o sentir?</span>
+              <textarea class="campo__control" name="mensaje" id="mensaje" rows="5" placeholder="Ej.: playa tranquila, comida local, poco traslado, viajar con niños..."></textarea>
+            </label>
+            <label class="campo campo--opcion o-formulario__ancho">
+              <input type="checkbox" name="consentimiento" id="consentimiento" required>
+              <span>Acepto que Tours Out Here use mis datos para responder a esta solicitud. <span class="campo__obligatorio" aria-hidden="true">*</span></span>
+            </label>
+          </fieldset>
+          <div class="t-acciones">
+            <button class="boton boton--primario" type="submit">Enviar solicitud</button>
+            <a class="boton boton--secundario" href="./paquetes.html">Ver paquetes primero</a>
+          </div>
+          <p class="o-formulario__nota">Formulario de demostración: no envía datos ni conecta con ningún servicio. Los campos marcados con * son obligatorios.</p>
+        </form>
+      </div>
+      <aside class="o-info-contacto" id="contacto-info" aria-labelledby="info-titulo">
+        <div>
+          <p class="kicker">Oficina</p>
+          <h2 id="info-titulo">Estamos en Sabaneta.</h2>
+          <p class="texto-muted">Atención con cita previa para viajes personalizados. Datos ficticios de demostración.</p>
+        </div>
+        <ul class="o-info-contacto__lista">
+          <li class="o-info-contacto__item">
+            <svg class="a-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            <span><span class="o-info-contacto__titulo">Dirección</span><span class="o-info-contacto__dato">Calle 10 # 45-20, Sabaneta, Antioquia</span></span>
+          </li>
+          <li class="o-info-contacto__item">
+            <svg class="a-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6.4 6.4l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2Z"/></svg>
+            <span><span class="o-info-contacto__titulo">Teléfono</span><span class="o-info-contacto__dato">+57 300 000 0000</span></span>
+          </li>
+          <li class="o-info-contacto__item">
+            <svg class="a-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+            <span><span class="o-info-contacto__titulo">Correo</span><span class="o-info-contacto__dato">hola@toursouthere.demo</span></span>
+          </li>
+          <li class="o-info-contacto__item">
+            <svg class="a-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <span><span class="o-info-contacto__titulo">Horario</span><span class="o-info-contacto__dato">Lun a vie, 8:00 a 18:00 · Sábados, 9:00 a 13:00</span></span>
+          </li>
+        </ul>
+        <div class="o-mapa" role="img" aria-label="Mapa ilustrativo de la oficina en Sabaneta, Antioquia">
+          <div class="o-mapa__pin">
+            <svg class="a-icono a-icono--lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            <span>Sabaneta, Antioquia</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ORGANISM: qué pasa después -->
+<section class="seccion seccion--tenue" aria-labelledby="despues-titulo">
+  <div class="contenedor">
+    <div class="o-seccion__cabeza">
+      <div class="cabecera-seccion">
+        <p class="kicker">Después de escribir</p>
+        <h2 id="despues-titulo">Qué pasa con tu mensaje.</h2>
+        <p>Sin laberintos: tres pasos y una conversación honesta.</p>
+      </div>
+    </div>
+    <div class="o-pasos">
+      <article class="o-paso">
+        <span class="o-paso__numero" aria-hidden="true">1</span>
+        <h3 class="o-paso__titulo">Recibimos tu mensaje</h3>
+        <p class="o-paso__texto">Leemos lo que nos cuentas y revisamos fechas, destinos y número de viajeros.</p>
+      </article>
+      <article class="o-paso">
+        <span class="o-paso__numero" aria-hidden="true">2</span>
+        <h3 class="o-paso__titulo">Te contactamos</h3>
+        <p class="o-paso__texto">Te escribimos o llamamos para aclarar dudas y entender el tono del viaje.</p>
+      </article>
+      <article class="o-paso">
+        <span class="o-paso__numero" aria-hidden="true">3</span>
+        <h3 class="o-paso__titulo">Diseñamos tu viaje</h3>
+        <p class="o-paso__texto">Armamos una propuesta inicial y la ajustamos contigo hasta que se sienta tuya.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ORGANISM: preguntas frecuentes -->
+<section class="seccion" aria-labelledby="faq-contacto-titulo">
+  <div class="contenedor">
+    <div class="t-dos-columnas">
+      <div>
+        <p class="kicker">Dudas rápidas</p>
+        <h2 id="faq-contacto-titulo">Antes de escribir.</h2>
+        <p class="texto-lead">Si tu pregunta no está aquí, escríbenos: la conversación es gratis.</p>
+      </div>
+      <div class="o-faq">
+        <details>
+          <summary>¿Cuánto tarda la respuesta?</summary>
+          <div class="o-faq__respuesta"><p>En la demostración no hay respuestas reales. En un escenario real, responderíamos en menos de 24 horas hábiles.</p></div>
+        </details>
+        <details>
+          <summary>¿Necesito pagar para cotizar?</summary>
+          <div class="o-faq__respuesta"><p>No. La cotización es gratuita y sin compromiso. Solo necesitamos tu idea y un poco de contexto.</p></div>
+        </details>
+        <details>
+          <summary>¿Puedo viajar con niños?</summary>
+          <div class="o-faq__respuesta"><p>Sí. Diseñamos planes para familias con tiempos reales, actividades para distintas edades y espacios de descanso.</p></div>
+        </details>
+        <details>
+          <summary>¿Qué medios de pago aceptan?</summary>
+          <div class="o-faq__respuesta"><p>En este sitio de demostración no hay pagos reales. En producción se evaluarían transferencia, tarjeta y efectivo según el proveedor.</p></div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+  </main>
+  
+<!-- ORGANISM: footer -->
+<footer class="o-pie">
+  <div class="contenedor o-pie__rejilla">
+    <div class="o-pie__marca">
+      <a class="o-marca" href="./index.html" aria-label="Tours Out Here, inicio">
+        <svg class="o-marca__icono" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="2"/><path d="M24 9l7 15-7 15-7-15 7-15z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="24" r="2.5" fill="currentColor"/></svg>
+        <span class="o-marca__texto">Tours <em>Out Here</em></span>
+      </a>
+      <p class="o-pie__texto">Viajes diseñados a tu medida desde Sabaneta, Antioquia. Rutas nacionales e internacionales con acompañamiento cercano.</p>
+      <p class="o-pie__nota">Sitio de demostración: destinos, precios, testimonios y datos de contacto son ficticios.</p>
+    </div>
+    <nav aria-labelledby="pie-explorar">
+      <h2 class="o-pie__titulo" id="pie-explorar">Explorar</h2>
+      <ul class="o-pie__lista">
+        <li><a href="./destinos.html">Destinos</a></li>
+        <li><a href="./paquetes.html">Paquetes</a></li>
+        <li><a href="./nosotros.html">Nosotros</a></li>
+        <li><a href="./contacto.html">Contacto</a></li>
+        <li><a href="../01-atomos/atoms.html">Guía de estilo</a></li>
+      </ul>
+    </nav>
+    <nav aria-labelledby="pie-destinos">
+      <h2 class="o-pie__titulo" id="pie-destinos">Destinos</h2>
+      <ul class="o-pie__lista">
+        <li><a href="./destinos.html#lista-destinos">Cartagena</a></li>
+        <li><a href="./destinos.html#lista-destinos">París</a></li>
+        <li><a href="./destinos.html#lista-destinos">Kyoto</a></li>
+        <li><a href="./destinos.html#lista-destinos">Roma</a></li>
+        <li><a href="./destinos.html#lista-destinos">Río de Janeiro</a></li>
+      </ul>
+    </nav>
+    <div>
+      <h2 class="o-pie__titulo">Hablemos</h2>
+      <address class="o-pie__contacto">
+        <span>Calle 10 # 45-20, Sabaneta, Antioquia</span>
+        <span>+57 300 000 0000</span>
+        <span>hola@toursouthere.demo</span>
+        <span>Lun a vie, 8:00 a 18:00</span>
+      </address>
+      <a class="boton boton--dorado boton--sm" href="./contacto.html">Solicitar cotización</a>
+    </div>
+  </div>
+  <div class="contenedor o-pie__base">
+    <p>© 2026 Tours Out Here. Todos los derechos reservados.</p>
+    <p>Hecho con HTML y CSS. Sin JavaScript.</p>
+  </div>
+</footer>
+
+</body>
+</html>

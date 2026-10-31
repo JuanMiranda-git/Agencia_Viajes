@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Plantilla base del sitio: esqueleto de página con encabezado, contenido principal y pie.">
+  <title>Plantilla base — Guía de estilo — Tours Out Here</title>
+  <link rel="icon" href="../../img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body class="t-pagina">
+  
+<a class="saltar-enlace" href="#contenido">Saltar al contenido</a>
+<!-- ORGANISM: header -->
+<header class="o-encabezado">
+  <div class="o-encabezado__barra contenedor">
+    <a class="o-marca" href="../05-paginas/index.html" aria-label="Tours Out Here, inicio">
+      <svg class="o-marca__icono" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="2"/><path d="M24 9l7 15-7 15-7-15 7-15z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="24" r="2.5" fill="currentColor"/></svg>
+      <span class="o-marca__texto">Tours <em>Out Here</em></span>
+    </a>
+    <input class="o-menu__control solo-lectores" type="checkbox" id="menu-principal">
+    <label class="o-menu__boton" for="menu-principal" aria-label="Abrir o cerrar el menú de navegación">
+      <span class="o-menu__linea"></span>
+      <span class="o-menu__linea"></span>
+      <span class="o-menu__linea"></span>
+    </label>
+    <nav class="o-navegacion" aria-label="Navegación principal">
+      <ul class="o-navegacion__lista">
+        <li><a class="o-navegacion__enlace" href="../05-paginas/index.html">Inicio</a></li>
+        <li><a class="o-navegacion__enlace" href="../05-paginas/destinos.html">Destinos</a></li>
+        <li><a class="o-navegacion__enlace" href="../05-paginas/paquetes.html">Paquetes</a></li>
+        <li><a class="o-navegacion__enlace" href="../05-paginas/nosotros.html">Nosotros</a></li>
+        <li><a class="o-navegacion__enlace" href="../05-paginas/contacto.html">Contacto</a></li>
+      </ul>
+      <a class="boton boton--primario boton--sm o-navegacion__cta" href="../05-paginas/contacto.html">Planear mi viaje</a>
+    </nav>
+  </div>
+</header>
+
+  <main id="contenido" class="t-principal p-guia">
+    <div class="contenedor">
+      <nav class="o-migas" aria-label="Ruta de navegación">
+        <ol>
+          <li><a href="../05-paginas/index.html">Inicio</a></li>
+          <li><a href="../05-paginas/index.html">Guía de estilo</a></li>
+          <li aria-current="page">Plantillas</li>
+        </ol>
+      </nav>
+      <p class="kicker">Guía de estilo</p>
+      
+<!-- PAGE: plantilla base -->
+<h1>Plantilla base</h1>
+<p class="texto-lead">El esqueleto que comparten las cinco páginas finales. Solo estructura y posicionamiento: sin datos, sin contenido editorial.</p>
+
+<!-- ORGANISM: bloque de guía -->
+<section class="p-guia__bloque" id="plantilla-estructura" aria-labelledby="plantilla-estructura-titulo">
+  <p class="kicker">Estructura</p>
+  <h2 id="plantilla-estructura-titulo">Regiones de la página</h2>
+  <div class="p-guia__esqueleto">
+    <p class="p-guia__slot">Encabezado global · <span class="p-guia__codigo">header.o-encabezado</span></p>
+    <p class="p-guia__slot">Contenido principal · <span class="p-guia__codigo">main#contenido.t-principal</span><br>Una sola <span class="p-guia__codigo">h1</span> por página</p>
+    <p class="p-guia__slot">Pie global · <span class="p-guia__codigo">footer.o-pie</span></p>
+  </div>
+  <p class="p-guia__nota">El enlace “Saltar al contenido” es el primer elemento enfocable del documento y apunta a <span class="p-guia__codigo">#contenido</span>.</p>
+</section>
+
+<!-- ORGANISM: bloque de guía -->
+<section class="p-guia__bloque" id="plantilla-orden" aria-labelledby="plantilla-orden-titulo">
+  <p class="kicker">Orden</p>
+  <h2 id="plantilla-orden-titulo">De átomos a páginas</h2>
+  <table class="p-guia__tabla">
+    <caption>Cada nivel consume solo el anterior.</caption>
+    <thead><tr><th>Nivel</th><th>HTML</th><th>CSS</th></tr></thead>
+    <tbody>
+      <tr><td>1. Átomos</td><td><span class="p-guia__codigo">a-icono, a-estrellas, a-sello</span></td><td><span class="p-guia__codigo">03-atomos/_atomos.css</span></td></tr>
+      <tr><td>2. Moléculas</td><td><span class="p-guia__codigo">m-destino, m-paquete, m-testimonio, m-perfil</span></td><td><span class="p-guia__codigo">04-moleculas/_moleculas.css</span></td></tr>
+      <tr><td>3. Organismos</td><td><span class="p-guia__codigo">o-encabezado, o-hero, o-cta, o-pie, o-faq</span></td><td><span class="p-guia__codigo">05-organismos/_organismos.css</span></td></tr>
+      <tr><td>4. Plantillas</td><td><span class="p-guia__codigo">t-pagina, t-principal, t-rejilla, t-dos-columnas</span></td><td><span class="p-guia__codigo">06-plantillas/_plantillas.css</span></td></tr>
+      <tr><td>5. Páginas</td><td><span class="p-guia__codigo">p-filtros, m-modal, p-entrada</span></td><td><span class="p-guia__codigo">07-paginas/_paginas.css</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ORGANISM: bloque de guía -->
+<section class="p-guia__bloque" id="plantilla-paginas" aria-labelledby="plantilla-paginas-titulo">
+  <p class="kicker">Aplicación</p>
+  <h2 id="plantilla-paginas-titulo">Páginas construidas</h2>
+  <p class="texto-muted">Cada página reutiliza el mismo esqueleto y cambia solo el contenido de <span class="p-guia__codigo">main</span>.</p>
+  <ul class="p-guia__muestra">
+    <li><a class="boton boton--secundario" href="../05-paginas/index.html">Inicio</a></li>
+    <li><a class="boton boton--secundario" href="../05-paginas/destinos.html">Destinos</a></li>
+    <li><a class="boton boton--secundario" href="../05-paginas/paquetes.html">Paquetes</a></li>
+    <li><a class="boton boton--secundario" href="../05-paginas/nosotros.html">Nosotros</a></li>
+    <li><a class="boton boton--secundario" href="../05-paginas/contacto.html">Contacto</a></li>
+  </ul>
+</section>
+
+<!-- ORGANISM: bloque de guía -->
+<section class="p-guia__bloque" id="plantilla-interaccion" aria-labelledby="plantilla-interaccion-titulo">
+  <p class="kicker">Interacción</p>
+  <h2 id="plantilla-interaccion-titulo">Sin una línea de JavaScript</h2>
+  <ul class="p-guia__muestra">
+    <li class="p-guia__slot">Menú móvil<br><span class="p-guia__codigo">checkbox + label</span></li>
+    <li class="p-guia__slot">Filtros<br><span class="p-guia__codigo">:has() + radio</span></li>
+    <li class="p-guia__slot">Detalle de destino<br><span class="p-guia__codigo">:target</span></li>
+    <li class="p-guia__slot">Preguntas frecuentes<br><span class="p-guia__codigo">details</span></li>
+    <li class="p-guia__slot">Carrusel<br><span class="p-guia__codigo">scroll-snap</span></li>
+  </ul>
+  <p class="p-guia__nota">Si una función depende de <span class="p-guia__codigo">:has()</span>, el contenido sigue visible en navegadores antiguos: el filtro simplemente no oculta nada.</p>
+</section>
+
+      <p class="p-guia__volver">
+        <a class="p-guia__volver" href="../05-paginas/index.html">← Volver al sitio</a>
+      </p>
+    </div>
+  </main>
+  
+<!-- ORGANISM: footer -->
+<footer class="o-pie">
+  <div class="contenedor o-pie__rejilla">
+    <div class="o-pie__marca">
+      <a class="o-marca" href="../05-paginas/index.html" aria-label="Tours Out Here, inicio">
+        <svg class="o-marca__icono" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="2"/><path d="M24 9l7 15-7 15-7-15 7-15z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="24" r="2.5" fill="currentColor"/></svg>
+        <span class="o-marca__texto">Tours <em>Out Here</em></span>
+      </a>
+      <p class="o-pie__texto">Sitio de demostración de una agencia de viajes. Destinos, precios, testimonios y datos de contacto son ficticios.</p>
+      <p class="o-pie__nota">Hecho con HTML y CSS. Sin JavaScript.</p>
+    </div>
+    <nav aria-labelledby="pie-sitio">
+      <h2 class="o-pie__titulo" id="pie-sitio">Sitio</h2>
+      <ul class="o-pie__lista">
+        <li><a href="../05-paginas/index.html">Inicio</a></li>
+        <li><a href="../05-paginas/destinos.html">Destinos</a></li>
+        <li><a href="../05-paginas/paquetes.html">Paquetes</a></li>
+        <li><a href="../05-paginas/nosotros.html">Nosotros</a></li>
+        <li><a href="../05-paginas/contacto.html">Contacto</a></li>
+      </ul>
+    </nav>
+    <nav aria-labelledby="pie-guia">
+      <h2 class="o-pie__titulo" id="pie-guia">Guía atómica</h2>
+      <ul class="o-pie__lista">
+        <li><a href="../01-atomos/atoms.html">Átomos</a></li>
+        <li><a href="../02-moleculas/molecules.html">Moléculas</a></li>
+        <li><a href="../03-organismos/organisms.html">Organismos</a></li>
+        <li><a href="../04-plantillas/plantilla-base.html">Plantillas</a></li>
+        <li><a href="../05-paginas/index.html">Páginas</a></li>
+      </ul>
+    </nav>
+    <div>
+      <h2 class="o-pie__titulo">Alcance</h2>
+      <p class="o-pie__texto">Cinco niveles: átomos, moléculas, organismos, plantillas y páginas. Sin dependencias externas.</p>
+    </div>
+  </div>
+  <div class="contenedor o-pie__base">
+    <p>© 2026 Tours Out Here. Todos los derechos reservados.</p>
+    <p>Sin JavaScript, sin backend, sin servicios externos.</p>
+  </div>
+</footer>
+
+</body>
+</html>

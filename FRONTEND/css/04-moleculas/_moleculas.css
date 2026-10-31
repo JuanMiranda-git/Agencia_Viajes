@@ -1,0 +1,378 @@
+/*
+ * MOLÉCULAS — combinaciones de átomos con una sola responsabilidad.
+ * Organizan átomos; no redefinen sus estilos base.
+ */
+
+/* --- Perfil de viajero --------------------------------------------------- */
+
+.m-perfil {
+  position: relative;
+  display: grid;
+  gap: var(--space-05);
+  align-content: start;
+  padding: var(--space-15);
+  border: var(--border-width) solid var(--borde);
+  border-radius: var(--sitio-radio-caja);
+  background-color: var(--superficie-alta);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-shadow), var(--transition-transform);
+  height: 500px;
+}
+
+.m-perfil:hover {
+  border-color: var(--borde-fuerte);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.m-perfil__icono {
+  display: grid;
+  place-items: center;
+  inline-size: 3rem;
+  block-size: 3rem;
+  margin-block-end: var(--space-025);
+  border-radius: var(--radius);
+  background-color: var(--color-info-suave);
+  color: var(--color-primary);
+}
+
+.m-perfil__titulo {
+  margin: 0;
+  font-family: var(--ff-titulo);
+  font-size: var(--font-size-h4);
+}
+
+.m-perfil__texto {
+  margin: 0;
+  color: var(--texto-muted);
+  font-size: var(--font-size-body-sm);
+}
+
+.m-perfil__enlace {
+  margin-block-start: var(--space-05);
+  color: var(--color-primary);
+  font-size: var(--font-size-body-sm);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+}
+
+.m-perfil__enlace:hover {
+  text-decoration: underline;
+}
+
+/* --- Tarjeta de destino -------------------------------------------------- */
+
+.m-destino {
+  position: relative;
+}
+
+.m-destino .tarjeta__media {
+  position: relative;
+}
+
+.m-destino__pais {
+  position: absolute;
+  inset-block-start: var(--space-05);
+  inset-inline-start: var(--space-05);
+  z-index: var(--z-raised);
+  border-color: transparent;
+  background-color: var(--dorado);
+  color: var(--medianoche);
+}
+
+.m-destino__cuerpo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--card-gap);
+  padding: var(--card-padding);
+}
+
+.m-destino__cuerpo .tarjeta__kicker,
+.m-paquete__cuerpo .tarjeta__kicker {
+  margin: 0;
+}
+
+.m-destino__titulo {
+  margin: 0;
+  font-family: var(--ff-titulo);
+  font-size: var(--font-size-h4);
+}
+
+.m-destino__texto {
+  margin: 0;
+  color: var(--texto-muted);
+  font-size: var(--font-size-body-sm);
+}
+
+.m-destino__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--space-05);
+  margin-block-start: auto;
+  padding-block-start: var(--space-05);
+  border-block-start: var(--border-width) solid var(--borde);
+}
+
+.m-destino__precio {
+  color: var(--texto);
+  font-family: var(--ff-titulo);
+  font-size: var(--font-size-price);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-none);
+}
+
+.m-destino__precio small {
+  display: block;
+  color: var(--texto-muted);
+  font-family: var(--ff-cuerpo);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-regular);
+}
+
+.m-destino__enlace {
+  color: var(--color-primary);
+  font-size: var(--font-size-body-sm);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+}
+
+.m-destino__enlace:hover {
+  text-decoration: underline;
+}
+
+/* --- Tarjeta de paquete -------------------------------------------------- */
+
+.m-paquete {
+  position: relative;
+}
+
+.m-paquete .tarjeta__media {
+  position: relative;
+}
+
+.m-paquete__cinta {
+  position: absolute;
+  inset-block-start: var(--space-05);
+  inset-inline-end: var(--space-05);
+  z-index: var(--z-raised);
+}
+
+.m-paquete__cuerpo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-05);
+  padding: var(--card-padding);
+}
+
+.m-paquete__titulo {
+  margin: 0;
+  font-family: var(--ff-titulo);
+  font-size: var(--font-size-h4);
+}
+
+.m-paquete__texto {
+  margin: 0;
+  color: var(--texto-muted);
+  font-size: var(--font-size-body-sm);
+}
+
+.m-paquete__incluye {
+  display: grid;
+  gap: var(--space-025);
+  margin: var(--space-025) 0 0;
+  padding: 0;
+  color: var(--texto-muted);
+  font-size: var(--font-size-body-sm);
+  list-style: none;
+}
+
+.m-paquete__incluye li {
+  display: flex;
+  gap: var(--space-05);
+}
+
+.m-paquete__incluye li::before {
+  content: "\2713";
+  flex: none;
+  color: var(--color-exito);
+  font-weight: var(--font-weight-bold);
+}
+
+.m-paquete__pie {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--space-05);
+  margin-block-start: auto;
+  padding-block-start: var(--space-1);
+  border-block-start: var(--border-width) solid var(--borde);
+}
+
+.m-paquete__precio {
+  color: var(--texto);
+  font-family: var(--ff-titulo);
+  font-size: var(--font-size-price);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-none);
+}
+
+.m-paquete__precio small {
+  display: block;
+  color: var(--texto-muted);
+  font-family: var(--ff-cuerpo);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-regular);
+}
+
+.m-paquete__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-05);
+}
+
+/* --- Testimonio ---------------------------------------------------------- */
+
+.m-testimonio {
+  display: flex;
+  flex: 0 0 min(22rem, 85%);
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border: var(--border-width) solid var(--borde);
+  border-radius: var(--sitio-radio-caja);
+  background-color: var(--superficie-alta);
+  box-shadow: var(--shadow-sm);
+  scroll-snap-align: start;
+}
+
+.m-testimonio__cita {
+  margin: 0;
+  color: var(--texto);
+  font-family: var(--ff-cuerpo);
+  font-size: var(--font-size-lead);
+  line-height: var(--line-height-relaxed);
+}
+
+.m-testimonio__cita::before {
+  content: "\201C";
+  color: var(--dorado);
+  font-family: var(--ff-titulo);
+  font-size: 2.5em;
+  line-height: 0;
+  vertical-align: -0.35em;
+}
+
+.m-testimonio__pie {
+  display: flex;
+  align-items: center;
+  gap: var(--space-05);
+  margin-block-start: auto;
+  padding-block-start: var(--space-1);
+  border-block-start: var(--border-width) solid var(--borde);
+}
+
+.m-testimonio__avatar {
+  display: block;
+  flex: none;
+  inline-size: var(--avatar-size);
+  block-size: var(--avatar-size);
+  overflow: hidden;
+  border-radius: 50%;
+  background-color: var(--superficie-tenue);
+}
+
+.m-testimonio__avatar img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.m-testimonio__avatar--iniciales {
+  display: grid;
+  place-items: center;
+  color: var(--texto-inverse);
+  background-color: var(--primario);
+  font-family: var(--ff-titulo);
+  font-size: var(--font-size-body-sm);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.m-testimonio__nombre {
+  display: block;
+  color: var(--texto);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+}
+
+.m-testimonio__destino {
+  display: block;
+  color: var(--texto-muted);
+  font-size: var(--font-size-caption);
+}
+
+/* --- Dato / cifra -------------------------------------------------------- */
+
+.m-dato {
+  display: grid;
+  gap: var(--space-025);
+}
+
+.m-dato__valor {
+  color: var(--texto);
+  font-family: var(--ff-titulo);
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-none);
+}
+
+.m-dato__etiqueta {
+  color: var(--texto-muted);
+  font-size: var(--font-size-body-sm);
+}
+
+.seccion--oscura .m-dato__valor {
+  color: var(--texto-inverse);
+}
+
+.seccion--oscura .m-dato__etiqueta {
+  color: var(--texto-inverse-muted);
+}
+
+/* --- Buscador (molécula de ejemplo / guía) ------------------------------- */
+
+.m-buscador {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-05);
+  padding: var(--space-05);
+  border: var(--border-width) solid var(--borde);
+  border-radius: var(--radius-pill);
+  background-color: var(--superficie-alta);
+  box-shadow: var(--shadow-sm);
+}
+
+.m-buscador__campo {
+  flex: 1 1 12rem;
+  min-inline-size: 0;
+}
+
+.m-buscador__campo input {
+  inline-size: 100%;
+  min-block-size: var(--control-height);
+  padding-inline: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--texto);
+}
+
+.m-buscador__campo input:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: var(--focus-ring-offset);
+}

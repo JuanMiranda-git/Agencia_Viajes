@@ -1,0 +1,46 @@
+/*
+ * Base del sitio. El reset y la tipografía viven en desingSystem.css;
+ * aquí solo se ajusta el esqueleto de página y detalles globales.
+ */
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100vh;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+address {
+  font-style: normal;
+}
+
+figure,
+blockquote {
+  margin: 0;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* Los enlaces internos deben dejar ver el título bajo el encabezado fijo. */
+:target {
+  scroll-margin-block-start: calc(var(--sitio-alto-encabezado) + var(--space-05));
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+summary {
+  list-style: none;
+}
+
+/* Las imágenes decorativas no deben capturar clics ni selección. */
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+}

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Paquetes turísticos de demostración para playa, cultura, aventura y familia, con precios y condiciones ficticias.">
+  <title>Paquetes — Tours Out Here</title>
+  <link rel="icon" href="../../img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+  
+<a class="saltar-enlace" href="#contenido">Saltar al contenido</a>
+<!-- ORGANISM: header -->
+<header class="o-encabezado">
+  <div class="o-encabezado__barra contenedor">
+    <a class="o-marca" href="./index.html" aria-label="Tours Out Here, inicio">
+      <svg class="o-marca__icono" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="2"/><path d="M24 9l7 15-7 15-7-15 7-15z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="24" r="2.5" fill="currentColor"/></svg>
+      <span class="o-marca__texto">Tours <em>Out Here</em></span>
+    </a>
+    <input class="o-menu__control solo-lectores" type="checkbox" id="menu-principal">
+    <label class="o-menu__boton" for="menu-principal" aria-label="Abrir o cerrar el menú de navegación">
+      <span class="o-menu__linea"></span>
+      <span class="o-menu__linea"></span>
+      <span class="o-menu__linea"></span>
+    </label>
+    <nav class="o-navegacion" aria-label="Navegación principal">
+      <ul class="o-navegacion__lista">
+        <li><a class="o-navegacion__enlace" href="./index.html">Inicio</a></li>
+        <li><a class="o-navegacion__enlace" href="./destinos.html">Destinos</a></li>
+        <li><a class="o-navegacion__enlace" href="./paquetes.html" aria-current="page">Paquetes</a></li>
+        <li><a class="o-navegacion__enlace" href="./nosotros.html">Nosotros</a></li>
+        <li><a class="o-navegacion__enlace" href="./contacto.html">Contacto</a></li>
+      </ul>
+      <a class="boton boton--primario boton--sm o-navegacion__cta" href="./contacto.html">Planear mi viaje</a>
+    </nav>
+  </div>
+</header>
+
+  <main id="contenido" class="t-principal">
+    
+<!-- PAGE: paquetes -->
+
+<!-- ORGANISM: cabecera de página interior -->
+<section class="o-pagina-hero" aria-labelledby="titulo-pagina">
+  <div class="contenedor">
+    <nav class="o-migas" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href="./index.html">Inicio</a></li>
+        <li aria-current="page">Paquetes</li>
+      </ol>
+    </nav>
+    <div class="o-pagina-hero__rejilla">
+      <div class="o-pagina-hero__texto">
+        <p class="kicker">Paquetes</p>
+        <h1 id="titulo-pagina">Paquetes para viajar sin complicaciones.</h1>
+        <p class="texto-lead">Una base bien pensada, ajustable a tu ritmo. Estos son ejemplos de demostración para mostrar cómo se vería el catálogo.</p>
+        <div class="t-acciones"><a class="boton boton--primario" href="#lista-paquetes">Ver paquetes</a><a class="boton boton--secundario" href="./contacto.html">Pedir cotización</a></div>
+      </div>
+      <div class="o-pagina-hero__media">
+        <img src="../../img/optimizadas/kyotoMujer.jpg" alt="Viajera sentada en una terraza con plantas" width="900" height="1350" loading="eager" fetchpriority="high" decoding="async">
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="seccion" id="lista-paquetes" aria-labelledby="lista-paquetes-titulo">
+  <div class="contenedor p-paquetes">
+    <div class="o-seccion__cabeza">
+      <div class="cabecera-seccion">
+        <p class="kicker">Catálogo de demostración</p>
+        <h2 id="lista-paquetes-titulo">Un punto de partida, no una camisa de fuerza.</h2>
+        <p>Filtra por estilo y revisa lo que incluye cada propuesta. Todo se puede conversar.</p>
+      </div>
+    </div>
+    
+<!-- MOLECULE: filtros con :has() -->
+<div class="p-filtros" role="group" aria-label="Filtrar paquetes por estilo">
+  <label class="p-filtros__opcion"><input class="solo-lectores" type="radio" name="filtro-paquetes" id="filtro-paquetes-todos" checked> Todos</label>
+  <label class="p-filtros__opcion"><input class="solo-lectores" type="radio" name="filtro-paquetes" id="filtro-paquetes-playa"> Playa</label>
+  <label class="p-filtros__opcion"><input class="solo-lectores" type="radio" name="filtro-paquetes" id="filtro-paquetes-cultura"> Cultura</label>
+  <label class="p-filtros__opcion"><input class="solo-lectores" type="radio" name="filtro-paquetes" id="filtro-paquetes-aventura"> Aventura</label>
+  <label class="p-filtros__opcion"><input class="solo-lectores" type="radio" name="filtro-paquetes" id="filtro-paquetes-familia"> Familia</label>
+</div>
+
+    <div class="p-paquetes__rejilla">
+      
+<!-- MOLECULE: tarjeta de paquete -->
+<article class="tarjeta m-paquete m-paquete--playa m-paquete--familia p-paquetes__destacado">
+  <div class="tarjeta__media">
+    <span class="insignia insignia--dorada m-paquete__cinta">Más vendido</span>
+    <img src="../../img/optimizadas/cartagenaColombia.jpg" alt="Vista aérea de la ciudad amurallada de Cartagena" width="1400" height="1008" loading="lazy" decoding="async">
+  </div>
+  <div class="m-paquete__cuerpo">
+    <p class="tarjeta__kicker">4 días / 3 noches</p>
+    <h3 class="m-paquete__titulo">Cartagena esencial</h3>
+    <p class="m-paquete__texto">Cuatro días para cambiar el ruido por el sonido del mar.</p>
+    <ul class="m-paquete__incluye"><li>Hospedaje 3 noches</li><li>Desayunos</li><li>City tour</li><li>Traslados</li></ul>
+    <div class="m-paquete__pie">
+      <p class="m-paquete__precio">$1.890.000<small>Por persona</small></p>
+      <div class="m-paquete__acciones">
+        <a class="boton boton--primario boton--sm" href="./contacto.html">Solicitar cotización</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- MOLECULE: tarjeta de paquete -->
+<article class="tarjeta m-paquete m-paquete--cultura ">
+  <div class="tarjeta__media">
+    <span class="insignia insignia--dorada m-paquete__cinta">Romántico</span>
+    <img src="../../img/optimizadas/parisFrancia.jpg" alt="Torre Eiffel con visitantes al atardecer" width="1400" height="950" loading="lazy" decoding="async">
+  </div>
+  <div class="m-paquete__cuerpo">
+    <p class="tarjeta__kicker">7 días / 6 noches</p>
+    <h3 class="m-paquete__titulo">París sin prisa</h3>
+    <p class="m-paquete__texto">Siete días para mirar la ciudad, no solo fotografiarla.</p>
+    <ul class="m-paquete__incluye"><li>Vuelos</li><li>Hotel 6 noches</li><li>Desayunos</li><li>Museo incluido</li></ul>
+    <div class="m-paquete__pie">
+      <p class="m-paquete__precio">$6.450.000<small>Por persona</small></p>
+      <div class="m-paquete__acciones">
+        <a class="boton boton--primario boton--sm" href="./contacto.html">Solicitar cotización</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- MOLECULE: tarjeta de paquete -->
+<article class="tarjeta m-paquete m-paquete--cultura ">
+  <div class="tarjeta__media">
+    <span class="insignia insignia--dorada m-paquete__cinta">Temporada</span>
+    <img src="../../img/optimizadas/kyotoJapon.jpg" alt="Pagoda de Kyoto sobre los tejados de la ciudad" width="1400" height="933" loading="lazy" decoding="async">
+  </div>
+  <div class="m-paquete__cuerpo">
+    <p class="tarjeta__kicker">8 días / 7 noches</p>
+    <h3 class="m-paquete__titulo">Kyoto y los cerezos</h3>
+    <p class="m-paquete__texto">Ocho días de templos, jardines y silencio bien administrado.</p>
+    <ul class="m-paquete__incluye"><li>Vuelos</li><li>Ryokan 3 noches</li><li>JR Pass</li><li>Tours guiados</li></ul>
+    <div class="m-paquete__pie">
+      <p class="m-paquete__precio">$8.900.000<small>Por persona</small></p>
+      <div class="m-paquete__acciones">
+        <a class="boton boton--primario boton--sm" href="./contacto.html">Solicitar cotización</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- MOLECULE: tarjeta de paquete -->
+<article class="tarjeta m-paquete m-paquete--cultura m-paquete--familia ">
+  <div class="tarjeta__media">
+    <span class="insignia insignia--dorada m-paquete__cinta">Familiar</span>
+    <img src="../../img/optimizadas/romaItalia.jpg" alt="Coliseo de Roma bajo un cielo despejado" width="1400" height="933" loading="lazy" decoding="async">
+  </div>
+  <div class="m-paquete__cuerpo">
+    <p class="tarjeta__kicker">6 días / 5 noches</p>
+    <h3 class="m-paquete__titulo">Roma a tu ritmo</h3>
+    <p class="m-paquete__texto">Seis días con lo esencial bien elegido y tiempo para el helado.</p>
+    <ul class="m-paquete__incluye"><li>Vuelos</li><li>Hotel 5 noches</li><li>Desayunos</li><li>City tour</li></ul>
+    <div class="m-paquete__pie">
+      <p class="m-paquete__precio">$5.980.000<small>Por persona</small></p>
+      <div class="m-paquete__acciones">
+        <a class="boton boton--primario boton--sm" href="./contacto.html">Solicitar cotización</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- MOLECULE: tarjeta de paquete -->
+<article class="tarjeta m-paquete m-paquete--cultura m-paquete--aventura ">
+  <div class="tarjeta__media">
+    <span class="insignia insignia--dorada m-paquete__cinta">Creativo</span>
+    <img src="../../img/optimizadas/berlinAlemania.jpg" alt="Casas tradicionales de entramado de madera en una plaza alemana" width="1400" height="933" loading="lazy" decoding="async">
+  </div>
+  <div class="m-paquete__cuerpo">
+    <p class="tarjeta__kicker">6 días / 5 noches</p>
+    <h3 class="m-paquete__titulo">Berlín creativo</h3>
+    <p class="m-paquete__texto">Seis días de arte, memoria y barrios que no se parecen a nada.</p>
+    <ul class="m-paquete__incluye"><li>Vuelos</li><li>Hotel 5 noches</li><li>Desayunos</li><li>Museos</li></ul>
+    <div class="m-paquete__pie">
+      <p class="m-paquete__precio">$6.120.000<small>Por persona</small></p>
+      <div class="m-paquete__acciones">
+        <a class="boton boton--primario boton--sm" href="./contacto.html">Solicitar cotización</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- MOLECULE: tarjeta de paquete -->
+<article class="tarjeta m-paquete m-paquete--cultura m-paquete--aventura ">
+  <div class="tarjeta__media">
+    <span class="insignia insignia--dorada m-paquete__cinta">Nuevo</span>
+    <img src="../../img/optimizadas/delhIndia.jpg" alt="Taj Mahal al amanecer" width="1400" height="933" loading="lazy" decoding="async">
+  </div>
+  <div class="m-paquete__cuerpo">
+    <p class="tarjeta__kicker">9 días / 8 noches</p>
+    <h3 class="m-paquete__titulo">Delhi y el norte</h3>
+    <p class="m-paquete__texto">Nueve días para un primer encuentro con India, con guía local.</p>
+    <ul class="m-paquete__incluye"><li>Vuelos</li><li>Hoteles 8 noches</li><li>Desayunos</li><li>Guía local</li></ul>
+    <div class="m-paquete__pie">
+      <p class="m-paquete__precio">$7.450.000<small>Por persona</small></p>
+      <div class="m-paquete__acciones">
+        <a class="boton boton--primario boton--sm" href="./contacto.html">Solicitar cotización</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- MOLECULE: tarjeta de paquete -->
+<article class="tarjeta m-paquete m-paquete--playa m-paquete--aventura ">
+  <div class="tarjeta__media">
+    <span class="insignia insignia--dorada m-paquete__cinta">Con energía</span>
+    <img src="../../img/optimizadas/rioBrasil.jpg" alt="Cristo Redentor y la bahía de Guanabara" width="1400" height="1050" loading="lazy" decoding="async">
+  </div>
+  <div class="m-paquete__cuerpo">
+    <p class="tarjeta__kicker">5 días / 4 noches</p>
+    <h3 class="m-paquete__titulo">Río con energía</h3>
+    <p class="m-paquete__texto">Cinco días de playa, miradores y música en vivo.</p>
+    <ul class="m-paquete__incluye"><li>Vuelos</li><li>Hotel 4 noches</li><li>Desayunos</li><li>Tour de miradores</li></ul>
+    <div class="m-paquete__pie">
+      <p class="m-paquete__precio">$4.750.000<small>Por persona</small></p>
+      <div class="m-paquete__acciones">
+        <a class="boton boton--primario boton--sm" href="./contacto.html">Solicitar cotización</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+    </div>
+    <p class="p-paquetes__nota">Datos de demostración: precios, duraciones, salidas y disponibilidad son ficticios. No hay compra ni pago real.</p>
+  </div>
+</section>
+
+<!-- ORGANISM: cómo funciona -->
+<section class="seccion seccion--tenue" aria-labelledby="pasos-titulo">
+  <div class="contenedor">
+    <div class="o-seccion__cabeza">
+      <div class="cabecera-seccion">
+        <p class="kicker">Así de simple</p>
+        <h2 id="pasos-titulo">De la idea al itinerario.</h2>
+        <p>Sin formularios eternos ni reuniones innecesarias.</p>
+      </div>
+    </div>
+    <div class="o-pasos">
+      <article class="o-paso">
+        <span class="o-paso__numero" aria-hidden="true">1</span>
+        <h3 class="o-paso__titulo">Cuéntanos</h3>
+        <p class="o-paso__texto">Fechas, personas, presupuesto y ese detalle que te haría feliz. Con eso empezamos.</p>
+      </article>
+      <article class="o-paso">
+        <span class="o-paso__numero" aria-hidden="true">2</span>
+        <h3 class="o-paso__titulo">Diseñamos</h3>
+        <p class="o-paso__texto">Armamos una propuesta con ritmo, traslados y tiempos reales. La ajustamos contigo.</p>
+      </article>
+      <article class="o-paso">
+        <span class="o-paso__numero" aria-hidden="true">3</span>
+        <h3 class="o-paso__titulo">Viaja</h3>
+        <p class="o-paso__texto">Confirmamos todo y te acompañamos antes, durante y después del viaje.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<section class="seccion seccion--tenue" aria-labelledby="faq-paquetes-titulo">
+  <div class="contenedor">
+    <div class="t-dos-columnas">
+      <div>
+        <p class="kicker">Antes de reservar</p>
+        <h2 id="faq-paquetes-titulo">Preguntas frecuentes.</h2>
+        <p class="texto-lead">Respuestas claras para que puedas decidir sin llamar tres veces.</p>
+      </div>
+      <div class="o-faq">
+        <details>
+          <summary>¿Los precios son por persona?</summary>
+          <div class="o-faq__respuesta"><p>Sí. Los valores publicados son por persona en acomodación doble. En la demostración son precios ficticios y no incluyen impuestos ni cargos no especificados.</p></div>
+        </details>
+        <details>
+          <summary>¿Puedo personalizar un paquete?</summary>
+          <div class="o-faq__respuesta"><p>Sí. Todos los paquetes son una base: ajustamos días, vuelos, hospedaje y actividades según tu plan y tu presupuesto.</p></div>
+        </details>
+        <details>
+          <summary>¿Qué pasa si necesito cancelar?</summary>
+          <div class="o-faq__respuesta"><p>Las condiciones dependen de los proveedores y del momento de la cancelación. En este sitio de demostración no existen reservas reales.</p></div>
+        </details>
+        <details>
+          <summary>¿Trabajan con viajeros solos?</summary>
+          <div class="o-faq__respuesta"><p>Sí. Diseñamos rutas y acompañamiento para quienes viajan solos, con espacios de libertad y puntos de contacto claros.</p></div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="o-cta" aria-labelledby="paquetes-cta-titulo">
+  <div class="contenedor o-cta__caja">
+    <div class="o-cta__texto">
+      <p class="kicker">¿Ya tienes una idea?</p>
+      <h2 id="paquetes-cta-titulo">La convertimos en un plan que funcione.</h2>
+      <p>Cuéntanos qué te gustaría y te respondemos con una propuesta inicial.</p>
+    </div>
+    <div class="o-cta__acciones">
+      <a class="boton boton--dorado" href="./contacto.html">Solicitar cotización</a>
+      <a class="boton boton--secundario" href="./destinos.html">Explorar destinos</a>
+    </div>
+  </div>
+</section>
+
+  </main>
+  
+<!-- ORGANISM: footer -->
+<footer class="o-pie">
+  <div class="contenedor o-pie__rejilla">
+    <div class="o-pie__marca">
+      <a class="o-marca" href="./index.html" aria-label="Tours Out Here, inicio">
+        <svg class="o-marca__icono" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="2"/><path d="M24 9l7 15-7 15-7-15 7-15z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="24" r="2.5" fill="currentColor"/></svg>
+        <span class="o-marca__texto">Tours <em>Out Here</em></span>
+      </a>
+      <p class="o-pie__texto">Viajes diseñados a tu medida desde Sabaneta, Antioquia. Rutas nacionales e internacionales con acompañamiento cercano.</p>
+      <p class="o-pie__nota">Sitio de demostración: destinos, precios, testimonios y datos de contacto son ficticios.</p>
+    </div>
+    <nav aria-labelledby="pie-explorar">
+      <h2 class="o-pie__titulo" id="pie-explorar">Explorar</h2>
+      <ul class="o-pie__lista">
+        <li><a href="./destinos.html">Destinos</a></li>
+        <li><a href="./paquetes.html">Paquetes</a></li>
+        <li><a href="./nosotros.html">Nosotros</a></li>
+        <li><a href="./contacto.html">Contacto</a></li>
+        <li><a href="../01-atomos/atoms.html">Guía de estilo</a></li>
+      </ul>
+    </nav>
+    <nav aria-labelledby="pie-destinos">
+      <h2 class="o-pie__titulo" id="pie-destinos">Destinos</h2>
+      <ul class="o-pie__lista">
+        <li><a href="./destinos.html#lista-destinos">Cartagena</a></li>
+        <li><a href="./destinos.html#lista-destinos">París</a></li>
+        <li><a href="./destinos.html#lista-destinos">Kyoto</a></li>
+        <li><a href="./destinos.html#lista-destinos">Roma</a></li>
+        <li><a href="./destinos.html#lista-destinos">Río de Janeiro</a></li>
+      </ul>
+    </nav>
+    <div>
+      <h2 class="o-pie__titulo">Hablemos</h2>
+      <address class="o-pie__contacto">
+        <span>Calle 10 # 45-20, Sabaneta, Antioquia</span>
+        <span>+57 300 000 0000</span>
+        <span>hola@toursouthere.demo</span>
+        <span>Lun a vie, 8:00 a 18:00</span>
+      </address>
+      <a class="boton boton--dorado boton--sm" href="./contacto.html">Solicitar cotización</a>
+    </div>
+  </div>
+  <div class="contenedor o-pie__base">
+    <p>© 2026 Tours Out Here. Todos los derechos reservados.</p>
+    <p>Hecho con HTML y CSS. Sin JavaScript.</p>
+  </div>
+</footer>
+
+</body>
+</html>

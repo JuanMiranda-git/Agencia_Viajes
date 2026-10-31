@@ -1,39 +1,46 @@
 # AGENTS.md
 
-## Repo structure
-- `FRONTEND/`: Static HTML/CSS only (no JavaScript). Entry `FRONTEND/html/index.html`. Styles: `FRONTEND/css/styles.css`, `FRONTEND/css/desingSystem.css` (canonical design tokens).
-- `BACKEND/`: Express + MySQL2, `package.json` defines deps (express, mysql2, dotenv, cors). App source directories (controllers, routes, models, services, middleware, config, utils) are currently empty. `database/datos_agencia_viajes.sql` is the schema for `tourmanager`.
-- `Agencia_Viajes_Contexto/`: Authoritative requirements (SRS, user stories, wireframes, cases). Read these for business rules/UX contracts.
-- `SDD-agencia-viajes.md`, `SDD-backend-agencia-viajes.md`: Implementation contracts; front-end SDD is authoritative for palette/tokens.
+## Repo map
+- `FRONTEND/`: customer-facing single-page site, brand **"Tours Out Here"**. `BACKEND/`: **TourManager** REST API (Express 5, CommonJS, MySQL). The two brands are intentional; do not unify them.
+- Backend entry: `BACKEND/index.js` → `app.js`. `app.js` calls `listen()` at module load, so requiring the app starts a server (no test-only app export).
+- Layer code lives in `BACKEND/src/`; ignore stale flat `BACKEND/controllers/` paths in git history/README.
+- Requirements: `Agencia_Viajes_Contexto/`; SRS is under `Requisitos (SRS)/`, not the repo root. Wireframes use the admin brand "TourManager".
+- Backend docs: `BACKEND/docs/MATRIZ_TRAZABILIDAD.md` (RF ↔ endpoint), `DICCIONARIO_NOMBRES.md` (naming, entities, states). `promt.txt` is the original backend build brief (criteria C1–C11).
+- No CI, lint, test framework, root manifest, or OpenCode config.
 
-## Business rules (must honor)
-- Booking (`Reserva`) is for a **Vuelo OR a Paquete, never both**.
-- **Total is computed at booking time and never changes afterwards**.
-- Confirmation number format: **`AV-YYYYMMDD-XXXX`**, generated at confirmation.
-- Query-string contract (back-end future): `vuelo.html?aerolinea=...&precio=...`, `reserva.html?tipo=vuelo&titulo=...`, `confirmacion.html?n=...&total=...`.
-- UI text in **Spanish**; currency **COP** (format `$1.234.567`).
-- Wireframes reference brand **"TourManager"** (admin layout).
+## Commands (verified)
+```bash
+cd BACKEND
+npm install
+cp .env.example .env   # JWT_CLAVE must be >= 16 chars; entorno.js throws on require otherwise
+npm start              # node index.js; PUERTO=3111 in current .env (default 3000)
+npm run dev            # node --watch index.js
+find src -name '*.js' -print0 | xargs -0 -n1 node --check   # only working syntax check
+```
+- `npm run check` is **broken**: it points to a missing `scripts/check-syntax.js`.
+- Import DB: `mysql -u <user> -p < database/agencia_viajes.sql` (file creates/uses schema `tourmanager`). The README's `datos_agencia_viajes.sql` does not exist.
+- API base `http://localhost:3111/api/v1`; health `GET /api/v1/salud`; Postman collection in `BACKEND/postman/` (no auth headers).
 
-## Design system
-- Treat `FRONTEND/css/desingSystem.css` as the canonical source of design tokens. Do not guess palette values; if conflicting, trust that file per SDD §5.2.
+## Backend conventions
+- Layers: routes → controllers → services → MySQL. `src/models/` are DB-independent domain classes (extend `ModeloBase`, private `#datos`), **not repositories**; all SQL/transactions belong in services.
+- Services export named operations plus a `datos` sub-object for cross-service access (e.g. `paquetesService.datos.obtenerPorId`).
+- Input validation: Joi schemas in `src/validators/*Validador.js`, wired as `validar('body'|'query'|'params')(schema)`.
+- Throw `AppError` factories (`reglaNegocio`, `noEncontrado`, …); `middleware/errorHandler.js` renders `{ ok:false, codigo, mensaje, detalles? }`. Success uses `utils/respuesta.js` → `{ ok:true, mensaje, datos, meta? }` (root `/` is a legacy `exito` exception).
+- Auth is **disabled for development**: `src/middleware/contextoDesarrollo.js` injects a fake `Administrador` (`idUsuario: null`) and `src/routes/index.js` mounts it before all routers. No JWT/role guards; controllers still require `req.usuario` for audit. Re-enable by removing that middleware and restoring guards from `middleware/autenticacion.js`.
+- `postman/README_POSTMAN.md` is the manual verification guide (full route catalog, no token needed); the collection has no `Authorization` headers. API base `http://localhost:3111/api/v1`; health `GET /api/v1/salud`.
+- DB pool: `mysql2/promise` in `config/database.js` (`dateStrings: true`, `decimalNumbers: true`); use `conTransaccion(fn)` for multi-step writes.
+- Naming: Spanish camelCase for variables/JSON, snake_case for DB, files `modulo.controller.js` / `.service.js` / `.routes.js`. See `DICCIONARIO_NOMBRES.md`.
+- Business rules: a reservation is for a **package only** (schema has no standalone flights/hotels); total is computed at creation and immutable; `AV-YYYYMMDD-XXXX` is generated only on confirmation; states `Pendiente → Confirmada → Cancelada`.
+- Demo users: `admin1@tourmanager.com` / `Admin123*`, `cliente@tourmanager.com` / `Cliente123*`.
 
-## Backend
-- Database schema: `BACKEND/database/datos_agencia_viajes.sql` (MySQL, schema `tourmanager`). Use utf8mb4.
-- Dependencies present: express ^5.3.0, mysql2 ^3.24.6, dotenv ^18.0.8, cors ^2.8.6. No npm scripts defined.
-- App code paths expected under BACKEND: `controllers/`, `routes/`, `models/`, `services/`, `middleware/`, `config/`, `utils/`. They are empty currently.
-- Avoid adding JS to FRONTEND unless explicitly requested; project is HTML/CSS-only for frontend phase.
+## Frontend
+- `html/index.html` loads `../css/main.css` and `../javascript/main.js`, but **`FRONTEND/javascript/main.js` does not exist**; today the page renders an empty `#aplicacion` shell. JS is expected here, not forbidden.
+- `css/main.css` is the only stylesheet importer: `desingSystem.css` (canonical tokens + base elements) first, then the numbered `01-tokens` … `07-paginas` partials. Put new styles in the matching layer and add the `@import` in `main.css`.
+- `css/styles.css` is not imported anywhere; editing it has no effect.
+- Define raw design values only in `desingSystem.css` (Midnight & Gold: `--primario #2000B8`, `--dorado #B8A200`, `--medianoche #000338`); `01-tokens/_tokens.css` is an alias layer over those tokens.
+- Only `index.html` exists; the old `vuelo.html` / `reserva.html` / `confirmacion.html` query-string contract is not implemented.
+- UI text Spanish; currency COP formatted `$1.234.567`.
 
-## Commands
-- Backend (from `BACKEND/`): run app with `node <entry>` (no start script). If creating entry, prefer `app.js`/`server.js` and document in README/package.json if needed.
-- DB: import schema via `mysql` (e.g. `mysql -u <user> -p tourmanager < database/datos_agencia_viajes.sql`).
-
-## Investigation priority
-1. `SDD-agencia-viajes.md`, `SDD-backend-agencia-viajes.md`
-2. `Agencia_Viajes_Contexto/SRS-Agencia_Viajes-v1.0.md`, `Agencia_Viajes_Contexto/historias-usuario-Agencia_Viajes.md`
-3. `BACKEND/database/datos_agencia_viajes.sql`, `FRONTEND/css/desingSystem.css`
-4. Wireframes in `Agencia_Viajes_Contexto/Wireframe/` (UX contracts)
-5. Existing instruction files: none found (no AGENTS.md/CLAUDE.md/.cursor/). Keep this file minimal and repo-specific.
-
-## Notes
-- Do not invent npm scripts or tooling not present. Prefer executable sources over prose.
-- If docs conflict with schema/scripts, trust executable sources (schema, CSS tokens, package.json).
+## Known doc drift (trust code)
+- README says `node app.js` and port 3000; actual entry is `index.js` and current `.env` uses 3111.
+- `MATRIZ_TRAZABILIDAD.md` links the SRS at the repo root; the real path is `Agencia_Viajes_Contexto/Requisitos (SRS)/SRS-Agencia_Viajes-v1.0.md`.

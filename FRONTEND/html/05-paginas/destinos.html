@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Destinos nacionales e internacionales con paquetes de demostración: Cartagena, París, Kyoto, Roma, Berlín, Delhi y Río de Janeiro.">
+  <title>Destinos — Tours Out Here</title>
+  <link rel="icon" href="../../img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+  
+<a class="saltar-enlace" href="#contenido">Saltar al contenido</a>
+<!-- ORGANISM: header -->
+<header class="o-encabezado">
+  <div class="o-encabezado__barra contenedor">
+    <a class="o-marca" href="./index.html" aria-label="Tours Out Here, inicio">
+      <svg class="o-marca__icono" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="2"/><path d="M24 9l7 15-7 15-7-15 7-15z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="24" r="2.5" fill="currentColor"/></svg>
+      <span class="o-marca__texto">Tours <em>Out Here</em></span>
+    </a>
+    <input class="o-menu__control solo-lectores" type="checkbox" id="menu-principal">
+    <label class="o-menu__boton" for="menu-principal" aria-label="Abrir o cerrar el menú de navegación">
+      <span class="o-menu__linea"></span>
+      <span class="o-menu__linea"></span>
+      <span class="o-menu__linea"></span>
+    </label>
+    <nav class="o-navegacion" aria-label="Navegación principal">
+      <ul class="o-navegacion__lista">
+        <li><a class="o-navegacion__enlace" href="./index.html">Inicio</a></li>
+        <li><a class="o-navegacion__enlace" href="./destinos.html" aria-current="page">Destinos</a></li>
+        <li><a class="o-navegacion__enlace" href="./paquetes.html">Paquetes</a></li>
+        <li><a class="o-navegacion__enlace" href="./nosotros.html">Nosotros</a></li>
+        <li><a class="o-navegacion__enlace" href="./contacto.html">Contacto</a></li>
+      </ul>
+      <a class="boton boton--primario boton--sm o-navegacion__cta" href="./contacto.html">Planear mi viaje</a>
+    </nav>
+  </div>
+</header>
+
+  <main id="contenido" class="t-principal">
+    
+<!-- PAGE: destinos -->
+
+<!-- ORGANISM: cabecera de página interior -->
+<section class="o-pagina-hero" aria-labelledby="titulo-pagina">
+  <div class="contenedor">
+    <nav class="o-migas" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href="./index.html">Inicio</a></li>
+        <li aria-current="page">Destinos</li>
+      </ol>
+    </nav>
+    <div class="o-pagina-hero__rejilla">
+      <div class="o-pagina-hero__texto">
+        <p class="kicker">Destinos</p>
+        <h1 id="titulo-pagina">Destinos que se vuelven historias.</h1>
+        <p class="texto-lead">Siete lugares para empezar a imaginar. Cada uno tiene un ritmo distinto; nosotros lo ajustamos al tuyo.</p>
+        <div class="t-acciones"><a class="boton boton--primario" href="#lista-destinos">Ver destinos</a><a class="boton boton--secundario" href="./contacto.html">Planear mi viaje</a></div>
+      </div>
+      <div class="o-pagina-hero__media">
+        <img src="../../img/optimizadas/cartagenaMujer.jpg" alt="Viajera caminando por una calle colonial de Cartagena" width="900" height="1125" loading="eager" fetchpriority="high" decoding="async">
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="seccion" id="lista-destinos" aria-labelledby="lista-destinos-titulo">
+  <div class="contenedor p-destinos">
+    <div class="o-seccion__cabeza">
+      <div class="cabecera-seccion">
+        <p class="kicker">Catálogo de demostración</p>
+        <h2 id="lista-destinos-titulo">Elige por dónde empezar.</h2>
+        <p>Usa los filtros para ver una región. Los detalles se abren sin JavaScript, con enlaces internos.</p>
+      </div>
+    </div>
+    
+<!-- MOLECULE: filtros con :has() -->
+<div class="p-filtros" role="group" aria-label="Filtrar destinos por región">
+  <label class="p-filtros__opcion"><input class="solo-lectores" type="radio" name="filtro-destinos" id="filtro-destinos-todos" checked> Todos</label>
+  <label class="p-filtros__opcion"><input class="solo-lectores" type="radio" name="filtro-destinos" id="filtro-destinos-colombia"> Colombia</label>
+  <label class="p-filtros__opcion"><input class="solo-lectores" type="radio" name="filtro-destinos" id="filtro-destinos-europa"> Europa</label>
+  <label class="p-filtros__opcion"><input class="solo-lectores" type="radio" name="filtro-destinos" id="filtro-destinos-asia"> Asia</label>
+  <label class="p-filtros__opcion"><input class="solo-lectores" type="radio" name="filtro-destinos" id="filtro-destinos-america"> América</label>
+</div>
+
+    <div class="p-destinos__rejilla">
+      
+<!-- MOLECULE: tarjeta de destino -->
+<article class="tarjeta m-destino m-destino--colombia">
+  <div class="tarjeta__media">
+    <span class="insignia m-destino__pais">Colombia</span>
+    <img src="../../img/optimizadas/cartagenaColombia.jpg" alt="Vista aérea de la ciudad amurallada de Cartagena y el mar Caribe" width="1400" height="1008" loading="lazy" decoding="async">
+  </div>
+  <div class="m-destino__cuerpo">
+    <p class="tarjeta__kicker">4 días / 3 noches</p>
+    <h3 class="m-destino__titulo">Cartagena esencial</h3>
+    <p class="m-destino__texto">Murallas, mar Caribe y atardeceres que se quedan contigo.</p>
+    <div class="m-destino__meta">
+      <p class="m-destino__precio">$1.890.000<small>Desde / por persona</small></p>
+      <a class="m-destino__enlace" href="#modal-cartagena">Ver detalle <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</article>
+
+<!-- MOLECULE: tarjeta de destino -->
+<article class="tarjeta m-destino m-destino--europa">
+  <div class="tarjeta__media">
+    <span class="insignia m-destino__pais">Francia</span>
+    <img src="../../img/optimizadas/parisFrancia.jpg" alt="Torre Eiffel vista desde el parque, con visitantes al atardecer" width="1400" height="950" loading="lazy" decoding="async">
+  </div>
+  <div class="m-destino__cuerpo">
+    <p class="tarjeta__kicker">7 días / 6 noches</p>
+    <h3 class="m-destino__titulo">París sin prisa</h3>
+    <p class="m-destino__texto">Cafés, museos y paseos que merecen una segunda vuelta.</p>
+    <div class="m-destino__meta">
+      <p class="m-destino__precio">$6.450.000<small>Desde / por persona</small></p>
+      <a class="m-destino__enlace" href="#modal-paris">Ver detalle <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</article>
+
+<!-- MOLECULE: tarjeta de destino -->
+<article class="tarjeta m-destino m-destino--asia">
+  <div class="tarjeta__media">
+    <span class="insignia m-destino__pais">Japón</span>
+    <img src="../../img/optimizadas/kyotoJapon.jpg" alt="Pagoda de Kyoto al atardecer sobre los tejados de la ciudad" width="1400" height="933" loading="lazy" decoding="async">
+  </div>
+  <div class="m-destino__cuerpo">
+    <p class="tarjeta__kicker">8 días / 7 noches</p>
+    <h3 class="m-destino__titulo">Kyoto y los cerezos</h3>
+    <p class="m-destino__texto">Templos, jardines y silencio para desconectar de verdad.</p>
+    <div class="m-destino__meta">
+      <p class="m-destino__precio">$8.900.000<small>Desde / por persona</small></p>
+      <a class="m-destino__enlace" href="#modal-kyoto">Ver detalle <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</article>
+
+<!-- MOLECULE: tarjeta de destino -->
+<article class="tarjeta m-destino m-destino--europa">
+  <div class="tarjeta__media">
+    <span class="insignia m-destino__pais">Italia</span>
+    <img src="../../img/optimizadas/romaItalia.jpg" alt="Coliseo de Roma bajo un cielo despejado" width="1400" height="933" loading="lazy" decoding="async">
+  </div>
+  <div class="m-destino__cuerpo">
+    <p class="tarjeta__kicker">6 días / 5 noches</p>
+    <h3 class="m-destino__titulo">Roma a tu ritmo</h3>
+    <p class="m-destino__texto">Ruinas, piazzas y comida que sabe a domingo.</p>
+    <div class="m-destino__meta">
+      <p class="m-destino__precio">$5.980.000<small>Desde / por persona</small></p>
+      <a class="m-destino__enlace" href="#modal-roma">Ver detalle <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</article>
+
+<!-- MOLECULE: tarjeta de destino -->
+<article class="tarjeta m-destino m-destino--europa">
+  <div class="tarjeta__media">
+    <span class="insignia m-destino__pais">Alemania</span>
+    <img src="../../img/optimizadas/berlinAlemania.jpg" alt="Plaza con casas tradicionales de entramado de madera en Alemania" width="1400" height="933" loading="lazy" decoding="async">
+  </div>
+  <div class="m-destino__cuerpo">
+    <p class="tarjeta__kicker">6 días / 5 noches</p>
+    <h3 class="m-destino__titulo">Berlín creativo</h3>
+    <p class="m-destino__texto">Historia, arte y una energía que no se explica: se camina.</p>
+    <div class="m-destino__meta">
+      <p class="m-destino__precio">$6.120.000<small>Desde / por persona</small></p>
+      <a class="m-destino__enlace" href="#modal-berlin">Ver detalle <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</article>
+
+<!-- MOLECULE: tarjeta de destino -->
+<article class="tarjeta m-destino m-destino--asia">
+  <div class="tarjeta__media">
+    <span class="insignia m-destino__pais">India</span>
+    <img src="../../img/optimizadas/delhIndia.jpg" alt="Taj Mahal al amanecer, en Agra" width="1400" height="933" loading="lazy" decoding="async">
+  </div>
+  <div class="m-destino__cuerpo">
+    <p class="tarjeta__kicker">9 días / 8 noches</p>
+    <h3 class="m-destino__titulo">Delhi y el norte</h3>
+    <p class="m-destino__texto">Color, especias y una historia que se siente en cada calle.</p>
+    <div class="m-destino__meta">
+      <p class="m-destino__precio">$7.450.000<small>Desde / por persona</small></p>
+      <a class="m-destino__enlace" href="#modal-delhi">Ver detalle <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</article>
+
+<!-- MOLECULE: tarjeta de destino -->
+<article class="tarjeta m-destino m-destino--america">
+  <div class="tarjeta__media">
+    <span class="insignia m-destino__pais">Brasil</span>
+    <img src="../../img/optimizadas/rioBrasil.jpg" alt="Cristo Redentor sobre el Corcovado con la bahía de Guanabara al fondo" width="1400" height="1050" loading="lazy" decoding="async">
+  </div>
+  <div class="m-destino__cuerpo">
+    <p class="tarjeta__kicker">5 días / 4 noches</p>
+    <h3 class="m-destino__titulo">Río con energía</h3>
+    <p class="m-destino__texto">Playas, miradores y samba hasta que el cuerpo diga basta.</p>
+    <div class="m-destino__meta">
+      <p class="m-destino__precio">$4.750.000<small>Desde / por persona</small></p>
+      <a class="m-destino__enlace" href="#modal-rio">Ver detalle <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</article>
+
+    </div>
+    <p class="p-destinos__nota">Datos de demostración: precios, duraciones y salidas son ficticios. Las imágenes son locales.</p>
+  </div>
+</section>
+
+
+<!-- ORGANISM: modal de destino (se abre con :target) -->
+<div class="m-modal" id="modal-cartagena" role="dialog" aria-labelledby="modal-cartagena-titulo">
+  <a class="m-modal__fondo" href="#lista-destinos" aria-label="Cerrar detalle"></a>
+  <div class="m-modal__caja">
+    <a class="m-modal__cerrar" href="#lista-destinos" aria-label="Cerrar detalle">×</a>
+    <div class="m-modal__media">
+      <img src="../../img/optimizadas/cartagenaColombia.jpg" alt="Vista aérea de la ciudad amurallada de Cartagena y el mar Caribe" width="1400" height="1008" loading="lazy" decoding="async">
+    </div>
+    <div class="m-modal__contenido">
+      <p class="kicker">Colombia</p>
+      <h2 id="modal-cartagena-titulo">Cartagena esencial</h2>
+      <p>Una introducción tranquila al Caribe colombiano: ciudad amurallada, sabores locales y una tarde de mar sin prisa.</p>
+      <dl class="m-modal__datos">
+        <div><dt>Duración</dt><dd>4 días / 3 noches</dd></div>
+        <div><dt>Ideal para</dt><dd>Parejas y familias</dd></div>
+        <div><dt>Salidas</dt><dd>Todo el año</dd></div>
+        <div><dt>Desde</dt><dd>$1.890.000</dd></div>
+      </dl>
+      <ul class="m-modal__lista"><li>Hospedaje 3 noches</li><li>Desayunos</li><li>City tour por la ciudad amurallada</li><li>Traslados aeropuerto–hotel</li></ul>
+      <div class="t-acciones">
+        <a class="boton boton--primario" href="./contacto.html">Solicitar cotización</a>
+        <a class="boton boton--secundario" href="./paquetes.html">Ver paquetes</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ORGANISM: modal de destino (se abre con :target) -->
+<div class="m-modal" id="modal-paris" role="dialog" aria-labelledby="modal-paris-titulo">
+  <a class="m-modal__fondo" href="#lista-destinos" aria-label="Cerrar detalle"></a>
+  <div class="m-modal__caja">
+    <a class="m-modal__cerrar" href="#lista-destinos" aria-label="Cerrar detalle">×</a>
+    <div class="m-modal__media">
+      <img src="../../img/optimizadas/parisFrancia.jpg" alt="Torre Eiffel vista desde el parque, con visitantes al atardecer" width="1400" height="950" loading="lazy" decoding="async">
+    </div>
+    <div class="m-modal__contenido">
+      <p class="kicker">Francia</p>
+      <h2 id="modal-paris-titulo">París sin prisa</h2>
+      <p>Un plan para conocer París sin correr: un museo por día, barrios con historia y tiempo real para sentarse en una terraza.</p>
+      <dl class="m-modal__datos">
+        <div><dt>Duración</dt><dd>7 días / 6 noches</dd></div>
+        <div><dt>Ideal para</dt><dd>Parejas y viajeros culturales</dd></div>
+        <div><dt>Salidas</dt><dd>Marzo a octubre</dd></div>
+        <div><dt>Desde</dt><dd>$6.450.000</dd></div>
+      </dl>
+      <ul class="m-modal__lista"><li>Vuelos ida y vuelta</li><li>Hotel 6 noches</li><li>Desayunos</li><li>Entrada a un museo</li><li>Traslados</li></ul>
+      <div class="t-acciones">
+        <a class="boton boton--primario" href="./contacto.html">Solicitar cotización</a>
+        <a class="boton boton--secundario" href="./paquetes.html">Ver paquetes</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ORGANISM: modal de destino (se abre con :target) -->
+<div class="m-modal" id="modal-kyoto" role="dialog" aria-labelledby="modal-kyoto-titulo">
+  <a class="m-modal__fondo" href="#lista-destinos" aria-label="Cerrar detalle"></a>
+  <div class="m-modal__caja">
+    <a class="m-modal__cerrar" href="#lista-destinos" aria-label="Cerrar detalle">×</a>
+    <div class="m-modal__media">
+      <img src="../../img/optimizadas/kyotoJapon.jpg" alt="Pagoda de Kyoto al atardecer sobre los tejados de la ciudad" width="1400" height="933" loading="lazy" decoding="async">
+    </div>
+    <div class="m-modal__contenido">
+      <p class="kicker">Japón</p>
+      <h2 id="modal-kyoto-titulo">Kyoto y los cerezos</h2>
+      <p>Una ruta lenta por Kyoto y sus alrededores, con ryokan, jardines y tiempo para caminar sin mapa.</p>
+      <dl class="m-modal__datos">
+        <div><dt>Duración</dt><dd>8 días / 7 noches</dd></div>
+        <div><dt>Ideal para</dt><dd>Viajeros culturales y parejas</dd></div>
+        <div><dt>Salidas</dt><dd>Marzo a mayo</dd></div>
+        <div><dt>Desde</dt><dd>$8.900.000</dd></div>
+      </dl>
+      <ul class="m-modal__lista"><li>Vuelos ida y vuelta</li><li>Ryokan 3 noches</li><li>Hotel 4 noches</li><li>JR Pass regional</li><li>Tours guiados</li></ul>
+      <div class="t-acciones">
+        <a class="boton boton--primario" href="./contacto.html">Solicitar cotización</a>
+        <a class="boton boton--secundario" href="./paquetes.html">Ver paquetes</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ORGANISM: modal de destino (se abre con :target) -->
+<div class="m-modal" id="modal-roma" role="dialog" aria-labelledby="modal-roma-titulo">
+  <a class="m-modal__fondo" href="#lista-destinos" aria-label="Cerrar detalle"></a>
+  <div class="m-modal__caja">
+    <a class="m-modal__cerrar" href="#lista-destinos" aria-label="Cerrar detalle">×</a>
+    <div class="m-modal__media">
+      <img src="../../img/optimizadas/romaItalia.jpg" alt="Coliseo de Roma bajo un cielo despejado" width="1400" height="933" loading="lazy" decoding="async">
+    </div>
+    <div class="m-modal__contenido">
+      <p class="kicker">Italia</p>
+      <h2 id="modal-roma-titulo">Roma a tu ritmo</h2>
+      <p>Roma en seis días, con lo esencial bien elegido y espacio para perderse en Trastevere al atardecer.</p>
+      <dl class="m-modal__datos">
+        <div><dt>Duración</dt><dd>6 días / 5 noches</dd></div>
+        <div><dt>Ideal para</dt><dd>Familias y parejas</dd></div>
+        <div><dt>Salidas</dt><dd>Abril a octubre</dd></div>
+        <div><dt>Desde</dt><dd>$5.980.000</dd></div>
+      </dl>
+      <ul class="m-modal__lista"><li>Vuelos ida y vuelta</li><li>Hotel 5 noches</li><li>Desayunos</li><li>City tour</li><li>Traslados</li></ul>
+      <div class="t-acciones">
+        <a class="boton boton--primario" href="./contacto.html">Solicitar cotización</a>
+        <a class="boton boton--secundario" href="./paquetes.html">Ver paquetes</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ORGANISM: modal de destino (se abre con :target) -->
+<div class="m-modal" id="modal-berlin" role="dialog" aria-labelledby="modal-berlin-titulo">
+  <a class="m-modal__fondo" href="#lista-destinos" aria-label="Cerrar detalle"></a>
+  <div class="m-modal__caja">
+    <a class="m-modal__cerrar" href="#lista-destinos" aria-label="Cerrar detalle">×</a>
+    <div class="m-modal__media">
+      <img src="../../img/optimizadas/berlinAlemania.jpg" alt="Plaza con casas tradicionales de entramado de madera en Alemania" width="1400" height="933" loading="lazy" decoding="async">
+    </div>
+    <div class="m-modal__contenido">
+      <p class="kicker">Alemania</p>
+      <h2 id="modal-berlin-titulo">Berlín creativo</h2>
+      <p>Una ciudad para leer, caminar y volver a mirar. Arte contemporáneo, memoria histórica y barrios con vida propia.</p>
+      <dl class="m-modal__datos">
+        <div><dt>Duración</dt><dd>6 días / 5 noches</dd></div>
+        <div><dt>Ideal para</dt><dd>Viajeros curiosos</dd></div>
+        <div><dt>Salidas</dt><dd>Todo el año</dd></div>
+        <div><dt>Desde</dt><dd>$6.120.000</dd></div>
+      </dl>
+      <ul class="m-modal__lista"><li>Vuelos ida y vuelta</li><li>Hotel 5 noches</li><li>Desayunos</li><li>Museos seleccionados</li><li>Transporte urbano</li></ul>
+      <div class="t-acciones">
+        <a class="boton boton--primario" href="./contacto.html">Solicitar cotización</a>
+        <a class="boton boton--secundario" href="./paquetes.html">Ver paquetes</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ORGANISM: modal de destino (se abre con :target) -->
+<div class="m-modal" id="modal-delhi" role="dialog" aria-labelledby="modal-delhi-titulo">
+  <a class="m-modal__fondo" href="#lista-destinos" aria-label="Cerrar detalle"></a>
+  <div class="m-modal__caja">
+    <a class="m-modal__cerrar" href="#lista-destinos" aria-label="Cerrar detalle">×</a>
+    <div class="m-modal__media">
+      <img src="../../img/optimizadas/delhIndia.jpg" alt="Taj Mahal al amanecer, en Agra" width="1400" height="933" loading="lazy" decoding="async">
+    </div>
+    <div class="m-modal__contenido">
+      <p class="kicker">India</p>
+      <h2 id="modal-delhi-titulo">Delhi y el norte</h2>
+      <p>Un primer acercamiento al norte de India con acompañamiento local, ritmo cuidado y espacios para sorprenderse.</p>
+      <dl class="m-modal__datos">
+        <div><dt>Duración</dt><dd>9 días / 8 noches</dd></div>
+        <div><dt>Ideal para</dt><dd>Aventureros y viajeros culturales</dd></div>
+        <div><dt>Salidas</dt><dd>Octubre a marzo</dd></div>
+        <div><dt>Desde</dt><dd>$7.450.000</dd></div>
+      </dl>
+      <ul class="m-modal__lista"><li>Vuelos ida y vuelta</li><li>Hoteles 8 noches</li><li>Desayunos</li><li>Guía local</li><li>Traslados</li></ul>
+      <div class="t-acciones">
+        <a class="boton boton--primario" href="./contacto.html">Solicitar cotización</a>
+        <a class="boton boton--secundario" href="./paquetes.html">Ver paquetes</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ORGANISM: modal de destino (se abre con :target) -->
+<div class="m-modal" id="modal-rio" role="dialog" aria-labelledby="modal-rio-titulo">
+  <a class="m-modal__fondo" href="#lista-destinos" aria-label="Cerrar detalle"></a>
+  <div class="m-modal__caja">
+    <a class="m-modal__cerrar" href="#lista-destinos" aria-label="Cerrar detalle">×</a>
+    <div class="m-modal__media">
+      <img src="../../img/optimizadas/rioBrasil.jpg" alt="Cristo Redentor sobre el Corcovado con la bahía de Guanabara al fondo" width="1400" height="1050" loading="lazy" decoding="async">
+    </div>
+    <div class="m-modal__contenido">
+      <p class="kicker">Brasil</p>
+      <h2 id="modal-rio-titulo">Río con energía</h2>
+      <p>Río en modo disfrute: playa, miradores, un paseo por Santa Teresa y noches con música en vivo.</p>
+      <dl class="m-modal__datos">
+        <div><dt>Duración</dt><dd>5 días / 4 noches</dd></div>
+        <div><dt>Ideal para</dt><dd>Amigos y parejas</dd></div>
+        <div><dt>Salidas</dt><dd>Todo el año</dd></div>
+        <div><dt>Desde</dt><dd>$4.750.000</dd></div>
+      </dl>
+      <ul class="m-modal__lista"><li>Vuelos ida y vuelta</li><li>Hotel 4 noches</li><li>Desayunos</li><li>Tour de miradores</li><li>Traslados</li></ul>
+      <div class="t-acciones">
+        <a class="boton boton--primario" href="./contacto.html">Solicitar cotización</a>
+        <a class="boton boton--secundario" href="./paquetes.html">Ver paquetes</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<section class="o-cta" aria-labelledby="destinos-cta-titulo">
+  <div class="contenedor o-cta__caja">
+    <div class="o-cta__texto">
+      <p class="kicker">¿No sabes cuál elegir?</p>
+      <h2 id="destinos-cta-titulo">Te ayudamos a cruzar los datos.</h2>
+      <p>Cuéntanos cuántos días tienes, con quién viajas y qué te gustaría sentir. Nosotros proponemos.</p>
+    </div>
+    <div class="o-cta__acciones">
+      <a class="boton boton--dorado" href="./contacto.html">Hablar con un asesor</a>
+      <a class="boton boton--secundario" href="./paquetes.html">Ver paquetes</a>
+    </div>
+  </div>
+</section>
+
+  </main>
+  
+<!-- ORGANISM: footer -->
+<footer class="o-pie">
+  <div class="contenedor o-pie__rejilla">
+    <div class="o-pie__marca">
+      <a class="o-marca" href="./index.html" aria-label="Tours Out Here, inicio">
+        <svg class="o-marca__icono" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="2"/><path d="M24 9l7 15-7 15-7-15 7-15z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="24" r="2.5" fill="currentColor"/></svg>
+        <span class="o-marca__texto">Tours <em>Out Here</em></span>
+      </a>
+      <p class="o-pie__texto">Viajes diseñados a tu medida desde Sabaneta, Antioquia. Rutas nacionales e internacionales con acompañamiento cercano.</p>
+      <p class="o-pie__nota">Sitio de demostración: destinos, precios, testimonios y datos de contacto son ficticios.</p>
+    </div>
+    <nav aria-labelledby="pie-explorar">
+      <h2 class="o-pie__titulo" id="pie-explorar">Explorar</h2>
+      <ul class="o-pie__lista">
+        <li><a href="./destinos.html">Destinos</a></li>
+        <li><a href="./paquetes.html">Paquetes</a></li>
+        <li><a href="./nosotros.html">Nosotros</a></li>
+        <li><a href="./contacto.html">Contacto</a></li>
+        <li><a href="../01-atomos/atoms.html">Guía de estilo</a></li>
+      </ul>
+    </nav>
+    <nav aria-labelledby="pie-destinos">
+      <h2 class="o-pie__titulo" id="pie-destinos">Destinos</h2>
+      <ul class="o-pie__lista">
+        <li><a href="./destinos.html#lista-destinos">Cartagena</a></li>
+        <li><a href="./destinos.html#lista-destinos">París</a></li>
+        <li><a href="./destinos.html#lista-destinos">Kyoto</a></li>
+        <li><a href="./destinos.html#lista-destinos">Roma</a></li>
+        <li><a href="./destinos.html#lista-destinos">Río de Janeiro</a></li>
+      </ul>
+    </nav>
+    <div>
+      <h2 class="o-pie__titulo">Hablemos</h2>
+      <address class="o-pie__contacto">
+        <span>Calle 10 # 45-20, Sabaneta, Antioquia</span>
+        <span>+57 300 000 0000</span>
+        <span>hola@toursouthere.demo</span>
+        <span>Lun a vie, 8:00 a 18:00</span>
+      </address>
+      <a class="boton boton--dorado boton--sm" href="./contacto.html">Solicitar cotización</a>
+    </div>
+  </div>
+  <div class="contenedor o-pie__base">
+    <p>© 2026 Tours Out Here. Todos los derechos reservados.</p>
+    <p>Hecho con HTML y CSS. Sin JavaScript.</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+/*
+ * ÁTOMOS — piezas indivisibles.
+ * No conocen la API, el estado ni otros componentes.
+ */
+
+.a-icono {
+  flex: none;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  color: currentColor;
+}
+
+.a-icono--lg {
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+}
+
+.a-icono--xl {
+  inline-size: 3.5rem;
+  block-size: 3.5rem;
+}
+
+.a-estrellas {
+  display: inline-flex;
+  gap: 0.1em;
+  color: var(--dorado);
+  font-size: var(--font-size-body-sm);
+  letter-spacing: 0.08em;
+  line-height: var(--line-height-none);
+}
+
+.a-flecha::after {
+  content: "\2192";
+  display: inline-block;
+  margin-inline-start: var(--space-025);
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+a:hover > .a-flecha::after,
+a:focus-visible > .a-flecha::after {
+  transform: translateX(0.2em);
+}
+
+.a-punto {
+  color: var(--texto-tenue);
+}
+
+.a-sello {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-025);
+  color: var(--color-acento-texto);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}

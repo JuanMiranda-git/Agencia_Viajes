@@ -1,0 +1,73 @@
+'use strict';
+
+/**
+ * Entidad de dominio: Interaccion CRM (RF-CRM-01..03).
+ */
+
+const { validarTexto, validarEntero, validarEnumeracion, validarFecha } = require('./comun');
+
+const TIPOS = ['Llamada', 'Correo', 'Reunion', 'Encuesta'];
+
+class InteraccionCrm {
+  #idInteraccion;
+  #idCliente;
+  #tipoInteraccion;
+  #fechaInteraccion;
+  #descripcion;
+  #resultado;
+
+  constructor({
+    idInteraccion = null,
+    idCliente,
+    tipoInteraccion,
+    fechaInteraccion = null,
+    descripcion = null,
+    resultado = null
+  } = {}) {
+    this.#idInteraccion = validarEntero(idInteraccion, 'idInteraccion', { obligatorio: false, minimo: 1 });
+    this.#idCliente = validarEntero(idCliente, 'idCliente', { minimo: 1 });
+    this.#tipoInteraccion = validarEnumeracion(tipoInteraccion, 'tipoInteraccion', TIPOS);
+    this.#fechaInteraccion = validarFecha(fechaInteraccion, 'fechaInteraccion', { obligatorio: false });
+    this.#descripcion = validarTexto(descripcion, 'descripcion', { obligatorio: false, maximo: 2000 });
+    this.#resultado = validarTexto(resultado, 'resultado', { obligatorio: false, maximo: 250 });
+  }
+
+  get idInteraccion() {
+    return this.#idInteraccion;
+  }
+
+  get idCliente() {
+    return this.#idCliente;
+  }
+
+  get tipoInteraccion() {
+    return this.#tipoInteraccion;
+  }
+
+  get fechaInteraccion() {
+    return this.#fechaInteraccion;
+  }
+
+  get descripcion() {
+    return this.#descripcion;
+  }
+
+  get resultado() {
+    return this.#resultado;
+  }
+
+  aJSON() {
+    return {
+      idInteraccion: this.#idInteraccion,
+      idCliente: this.#idCliente,
+      tipoInteraccion: this.#tipoInteraccion,
+      fechaInteraccion: this.#fechaInteraccion,
+      descripcion: this.#descripcion,
+      resultado: this.#resultado
+    };
+  }
+}
+
+InteraccionCrm.TIPOS = TIPOS;
+
+module.exports = InteraccionCrm;

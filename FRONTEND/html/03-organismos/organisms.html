@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Organismos del sistema: hero, cinta de destinos, perfiles, preguntas frecuentes y llamado a la acción.">
+  <title>Organismos — Guía de estilo — Tours Out Here</title>
+  <link rel="icon" href="../../img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body class="t-pagina">
+  
+<a class="saltar-enlace" href="#contenido">Saltar al contenido</a>
+<!-- ORGANISM: header -->
+<header class="o-encabezado">
+  <div class="o-encabezado__barra contenedor">
+    <a class="o-marca" href="../05-paginas/index.html" aria-label="Tours Out Here, inicio">
+      <svg class="o-marca__icono" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="2"/><path d="M24 9l7 15-7 15-7-15 7-15z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="24" r="2.5" fill="currentColor"/></svg>
+      <span class="o-marca__texto">Tours <em>Out Here</em></span>
+    </a>
+    <input class="o-menu__control solo-lectores" type="checkbox" id="menu-principal">
+    <label class="o-menu__boton" for="menu-principal" aria-label="Abrir o cerrar el menú de navegación">
+      <span class="o-menu__linea"></span>
+      <span class="o-menu__linea"></span>
+      <span class="o-menu__linea"></span>
+    </label>
+    <nav class="o-navegacion" aria-label="Navegación principal">
+      <ul class="o-navegacion__lista">
+        <li><a class="o-navegacion__enlace" href="../05-paginas/index.html">Inicio</a></li>
+        <li><a class="o-navegacion__enlace" href="../05-paginas/destinos.html">Destinos</a></li>
+        <li><a class="o-navegacion__enlace" href="../05-paginas/paquetes.html">Paquetes</a></li>
+        <li><a class="o-navegacion__enlace" href="../05-paginas/nosotros.html">Nosotros</a></li>
+        <li><a class="o-navegacion__enlace" href="../05-paginas/contacto.html">Contacto</a></li>
+      </ul>
+      <a class="boton boton--primario boton--sm o-navegacion__cta" href="../05-paginas/contacto.html">Planear mi viaje</a>
+    </nav>
+  </div>
+</header>
+
+  <main id="contenido" class="t-principal p-guia">
+    <div class="contenedor">
+      <nav class="o-migas" aria-label="Ruta de navegación">
+        <ol>
+          <li><a href="../05-paginas/index.html">Inicio</a></li>
+          <li><a href="../05-paginas/index.html">Guía de estilo</a></li>
+          <li aria-current="page">Organismos</li>
+        </ol>
+      </nav>
+      <p class="kicker">Guía de estilo</p>
+      
+<!-- PAGE: organismos -->
+<h1>Organismos</h1>
+<p class="texto-lead">Secciones completas y autónomas. Reciben contenido y lo disponen; no consultan datos ni deciden la navegación global.</p>
+
+<!-- ORGANISM: hero (muestra) -->
+<section class="o-hero" aria-labelledby="organismo-hero-titulo">
+  <img class="o-hero__fondo" src="../../img/optimizadas/rioBrasil.jpg" alt="" width="1400" height="1050" loading="lazy" decoding="async">
+  <div class="o-hero__velo"></div>
+  <div class="contenedor o-hero__contenido">
+    <p class="kicker o-hero__kicker">Organismo: hero</p>
+    <h2 id="organismo-hero-titulo" class="titulo-hero o-hero__titulo">La primera impresión también se diseña.</h2>
+    <p class="o-hero__texto">Imagen de fondo, velo para garantizar contraste, kicker, título, texto, acciones y cifras. En la portada el título es el <span class="p-guia__codigo">h1</span>; aquí baja a <span class="p-guia__codigo">h2</span> para respetar la jerarquía.</p>
+    <div class="o-hero__acciones">
+      <a class="boton boton--dorado boton--lg" href="../05-paginas/paquetes.html">Explorar paquetes</a>
+      <a class="boton boton--secundario boton--lg" href="../05-paginas/contacto.html">Planear mi viaje</a>
+    </div>
+    <ul class="o-hero__datos">
+      <li class="m-dato"><span class="m-dato__valor">+1.200</span><span class="m-dato__etiqueta">viajeros acompañados</span></li>
+      <li class="m-dato"><span class="m-dato__valor">12</span><span class="m-dato__etiqueta">destinos curados</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ORGANISM: cinta de destinos -->
+<div class="o-cinta">
+  <div class="contenedor">
+    <ul class="o-cinta__lista">
+      <li>Cartagena</li><li>París</li><li>Kyoto</li><li>Roma</li><li>Berlín</li><li>Delhi</li><li>Río de Janeiro</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ORGANISM: perfiles de viajero -->
+<section class="seccion" aria-labelledby="organismo-perfiles-titulo">
+  <div class="contenedor">
+    <div class="o-seccion__cabeza">
+      <div class="cabecera-seccion">
+        <p class="kicker">Organismo: perfiles</p>
+        <h2 id="organismo-perfiles-titulo">¿Cómo te gusta viajar?</h2>
+        <p>Cuatro perfiles con el mismo peso visual. La rejilla se adapta sin media queries rígidas.</p>
+      </div>
+    </div>
+    <div class="o-perfiles__rejilla">
+      <article class="m-perfil">
+        <span class="m-perfil__icono"><svg class="a-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+        <h3 class="m-perfil__titulo">Viajero solo</h3>
+        <p class="m-perfil__texto">Para perderte, encontrarte y volver con otra mirada.</p>
+        <a class="m-perfil__enlace" href="../05-paginas/paquetes.html">Ver ideas <span aria-hidden="true">→</span></a>
+      </article>
+      <article class="m-perfil">
+        <span class="m-perfil__icono"><svg class="a-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m5 12 4 4L19 6"/></svg></span>
+        <h3 class="m-perfil__titulo">En pareja</h3>
+        <p class="m-perfil__texto">Escapadas de dos, sin prisa y con detalles que importan.</p>
+        <a class="m-perfil__enlace" href="../05-paginas/paquetes.html">Ver ideas <span aria-hidden="true">→</span></a>
+      </article>
+      <article class="m-perfil">
+        <span class="m-perfil__icono"><svg class="a-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+        <h3 class="m-perfil__titulo">En familia</h3>
+        <p class="m-perfil__texto">Viajes pensados para todas las edades y todos los ritmos.</p>
+        <a class="m-perfil__enlace" href="../05-paginas/paquetes.html">Ver ideas <span aria-hidden="true">→</span></a>
+      </article>
+      <article class="m-perfil">
+        <span class="m-perfil__icono"><svg class="a-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m5 12 4 4L19 6"/></svg></span>
+        <h3 class="m-perfil__titulo">Aventura</h3>
+        <p class="m-perfil__texto">Naturaleza, caminos y adrenalina con paisaje.</p>
+        <a class="m-perfil__enlace" href="../05-paginas/paquetes.html">Ver ideas <span aria-hidden="true">→</span></a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ORGANISM: preguntas frecuentes -->
+<section class="seccion seccion--tenue" aria-labelledby="organismo-faq-titulo">
+  <div class="contenedor">
+    <div class="t-dos-columnas">
+      <div>
+        <p class="kicker">Organismo: FAQ</p>
+        <h2 id="organismo-faq-titulo">Preguntas frecuentes.</h2>
+        <p class="texto-lead">La interacción es nativa: <span class="p-guia__codigo">&lt;details&gt;</span> y <span class="p-guia__codigo">&lt;summary&gt;</span>. Funciona con teclado, lector de pantalla y sin JavaScript.</p>
+      </div>
+      <div class="o-faq">
+        <details>
+          <summary>¿Cómo se abre esta respuesta?</summary>
+          <div class="o-faq__respuesta"><p>Con un elemento nativo del navegador. No hay script, ni estado artificial, ni dependencias.</p></div>
+        </details>
+        <details>
+          <summary>¿Puedo abrir varias a la vez?</summary>
+          <div class="o-faq__respuesta"><p>Sí. Cada <span class="p-guia__codigo">details</span> es independiente; el usuario decide cuánto quiere leer.</p></div>
+        </details>
+        <details>
+          <summary>¿Y si el navegador no soporta estilos?</summary>
+          <div class="o-faq__respuesta"><p>El contenido sigue siendo accesible: el marcado semántico es la base, el CSS solo lo presenta.</p></div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ORGANISM: llamado a la acción -->
+<section class="o-cta" aria-labelledby="organismo-cta-titulo">
+  <div class="contenedor o-cta__caja">
+    <div class="o-cta__texto">
+      <p class="kicker">Organismo: CTA</p>
+      <h2 id="organismo-cta-titulo">Una acción clara al final de cada recorrido.</h2>
+      <p>El CTA repite la acción principal, no inventa una nueva. Sobre fondo medianoche, los botones invierten su contraste.</p>
+    </div>
+    <div class="o-cta__acciones">
+      <a class="boton boton--dorado" href="../05-paginas/contacto.html">Solicitar cotización</a>
+      <a class="boton boton--secundario" href="../05-paginas/paquetes.html">Ver paquetes</a>
+    </div>
+  </div>
+</section>
+
+<p class="p-guia__nota">El encabezado y el pie se repiten de forma idéntica en todas las páginas finales y llevan un comentario <span class="p-guia__codigo">&lt;!-- ORGANISM: header --&gt;</span> para localizarlos.</p>
+
+      <p class="p-guia__volver">
+        <a class="p-guia__volver" href="../05-paginas/index.html">← Volver al sitio</a>
+      </p>
+    </div>
+  </main>
+  
+<!-- ORGANISM: footer -->
+<footer class="o-pie">
+  <div class="contenedor o-pie__rejilla">
+    <div class="o-pie__marca">
+      <a class="o-marca" href="../05-paginas/index.html" aria-label="Tours Out Here, inicio">
+        <svg class="o-marca__icono" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="2"/><path d="M24 9l7 15-7 15-7-15 7-15z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="24" r="2.5" fill="currentColor"/></svg>
+        <span class="o-marca__texto">Tours <em>Out Here</em></span>
+      </a>
+      <p class="o-pie__texto">Sitio de demostración de una agencia de viajes. Destinos, precios, testimonios y datos de contacto son ficticios.</p>
+      <p class="o-pie__nota">Hecho con HTML y CSS. Sin JavaScript.</p>
+    </div>
+    <nav aria-labelledby="pie-sitio">
+      <h2 class="o-pie__titulo" id="pie-sitio">Sitio</h2>
+      <ul class="o-pie__lista">
+        <li><a href="../05-paginas/index.html">Inicio</a></li>
+        <li><a href="../05-paginas/destinos.html">Destinos</a></li>
+        <li><a href="../05-paginas/paquetes.html">Paquetes</a></li>
+        <li><a href="../05-paginas/nosotros.html">Nosotros</a></li>
+        <li><a href="../05-paginas/contacto.html">Contacto</a></li>
+      </ul>
+    </nav>
+    <nav aria-labelledby="pie-guia">
+      <h2 class="o-pie__titulo" id="pie-guia">Guía atómica</h2>
+      <ul class="o-pie__lista">
+        <li><a href="../01-atomos/atoms.html">Átomos</a></li>
+        <li><a href="../02-moleculas/molecules.html">Moléculas</a></li>
+        <li><a href="../03-organismos/organisms.html">Organismos</a></li>
+        <li><a href="../04-plantillas/plantilla-base.html">Plantillas</a></li>
+        <li><a href="../05-paginas/index.html">Páginas</a></li>
+      </ul>
+    </nav>
+    <div>
+      <h2 class="o-pie__titulo">Alcance</h2>
+      <p class="o-pie__texto">Cinco niveles: átomos, moléculas, organismos, plantillas y páginas. Sin dependencias externas.</p>
+    </div>
+  </div>
+  <div class="contenedor o-pie__base">
+    <p>© 2026 Tours Out Here. Todos los derechos reservados.</p>
+    <p>Sin JavaScript, sin backend, sin servicios externos.</p>
+  </div>
+</footer>
+
+</body>
+</html>

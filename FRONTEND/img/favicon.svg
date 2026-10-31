@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="Tours Out Here">
+  <rect width="48" height="48" rx="12" fill="#000338"/>
+  <circle cx="24" cy="24" r="16" fill="none" stroke="#B8A200" stroke-width="2"/>
+  <path d="M24 12l6 12-6 12-6-12 6-12z" fill="none" stroke="#B8A200" stroke-width="2" stroke-linejoin="round"/>
+  <circle cx="24" cy="24" r="2" fill="#B8A200"/>
+</svg>

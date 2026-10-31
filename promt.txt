@@ -1,24 +1,23 @@
+Perform the initial backend deployment for the project, taking into account the context provided in the context folder. The backend will be built using Node.js + Express, structured as a layered REST JSON API (routes → controllers → services → models/database). Use `mysql2/promise` with a connection pool and parameterized queries—do not use an ORM. Ensure the following requirements are met:
 
-Perform the initial backend deployment for the project, taking into account the context provided in the context folder. The backend will be built using Node.js + Express, structured as a layered REST JSON API (routes → controllers → services → repositories). Use `mysql2/promise` with a connection pool and parameterized queries—do not use an ORM. Ensure the following requirements are met:
-
-C1 Functional Requirement (FR) coverage ≥80% + 100% core coverage + FR-to-endpoint traceability matrix
-C2 JavaScript object model
-C3 Layered architecture
-C4 REST API design
-C5 Data access via `mysql2`
-C6 Validation and business rules
-C7 Authentication and authorization
-C8 Backend non-functional requirements (logging, compliance with Law 1581, security/safety/reliability [SAF], error logging)
-C9 Postman/Insomnia collection
-C10 .env and .gitignore files for the original database connection path.
-C11: Variable names in Spanish, along with a .md file listing all these variable names so they can be used later, when the frontend is developed in the future.
-
+C1  Functional Requirement (FR) 100% core coverage + FR-to-endpoint traceability matrix
+C2  JavaScript object model
+C3  Layered architecture
+C4  REST API design
+C5  Data access via `mysql2`
+C6  Request flow and responsibility of each layer
+C7  Rules that must never be broken (cross-cutting conventions)
+C8  Verification of the running backend
+C9  Future frontend conventions (reference only; the frontend is NOT built in this task)
+C10 .env and .gitignore files for the original database connection path
+C11 Variable names in Spanish, along with a .md file listing all these variable names so they can be used later, when the frontend is developed in the future.
 
 ---
 
 ROLE
-You are a senior backend engineer. Treat this project as a real production
-system, even though it is a university project.
+You are a senior full-stack engineer. Treat this project as a real production
+system. Before proposing or writing changes, use the architecture context
+defined in this document.
 
 PROJECT
 A travel agency system. The /context folder is the single source of truth.
@@ -40,19 +39,59 @@ STEP 0 – CONTEXT ANALYSIS (do this before writing any code)
    continue with the implementation.
 
 TECH STACK
-- Node.js (LTS) + Express, layered REST JSON API:
-  routes → controllers → services → repositories.
-- MySQL via `mysql2/promise` with a connection pool and parameterized
-  queries (placeholders). No ORM or query builders.
+- Node.js (LTS, 18+) + Express 5, layered REST JSON API:
+  routes → controllers → services → models/database.
+- CommonJS modules, object-oriented programming with private fields (#),
+  manual SQL, no ORM.
+- MySQL via `mysql2/promise` with a connection pool and CRUD catalog in the sql script, to 
+  create four endpoints for each object in the `models` folder, 
+  using the GET, POST, PUT, and PATCH methods.
 - Use transactions for multi-step operations (e.g., booking + payment).
 - Scope: initial backend setup that runs locally (npm install && npm start).
-  Provide the SQL script to create the schema if one does not exist in
-  /context. Docker/CI-CD are out of scope unless I ask for them.
+
+ARCHITECTURE CONTEXT
+The central rule is the separation of responsibilities: each layer only
+talks to the next one.
+
+Real order of a request
+1. index.js: starts the process, verifies the MySQL connection and handles
+   the server shutdown.
+2. config/express.js: creates the app and registers CORS, JSON parsing,
+   logger, routes and error handling.
+3. routes/index.js: mounts /api/v1 and delegates to the router of each entity.
+4. routes/*.routes.js: declares verb + URL + middlewares + controller.
+5. controllers/*.controller.js: extracts params/query/body, calls the
+   service and builds the HTTP response.
+6. services/*.service.js: validates, applies business rules, queries the
+   database and returns domain objects.
+7. models/*.js: represent a row as an object (private attributes,
+   getters/setters and toJSON).
+8. config/database.js: MySQL pool and parameterized queries.
+
+middleware/ and utils/ are cross-cutting: errors, logs, parameter
+validation, authentication/authorization (JWT and roles), responses,
+dates, formatting, constants and AppError.
+
+Responsibility of each layer
+- routes: contain no logic; they only connect a URL to a controller and
+  its middlewares.
+- controllers: thin; they write no SQL and apply no business rules.
+- services: the only place with SQL and business rules; they use
+  db.ejecutar / obtenerUno / conTransaccion.
+- models: know nothing about HTTP or MySQL; they run no queries.
+- database: knows nothing about Express or the domain.
+
+Example (adapt to the real entities found in /context): POST /api/v1/clientes
+routes/cliente.routes.js -> clienteController.crear
+-> cliente.service.js crear() normalizes, validates, instantiates Cliente
+   and runs the INSERT
+-> models/Cliente.js represents the result and its toJSON()
+-> the controller responds 201 with respuesta.creado() and a Location header.
 
 ACCEPTANCE CRITERIA
 
 C1 – Requirements coverage
-   - Implement ≥80% of the FRs and 100% of the core FRs.
+   - Implement 100% FRs and 100% of the core FRs.
    - Deliver a traceability matrix (Markdown table):
      FR ID | Description | Core (Y/N) | Endpoint(s) | Controller | Service |
      Status. List every FR left out and the reason.
@@ -61,47 +100,63 @@ C2 – JavaScript object model
    - One ES6 class per domain entity (e.g., Cliente, Reserva, Paquete,
      Destino, Pago), with constructors, field validation, and a method to
      serialize to JSON. Keep them independent from the database layer.
+     The reserved parameters for each class must be assigned using '#'
+     followed by the parameter name in camelCase.
+   - Each model exposes getters/setters and toJSON(); it does not know
+     HTTP or MySQL and does not execute queries.
 
 C3 – Layered architecture
-   - Strict separation: no SQL in controllers/services, no business logic in
-     repositories, no HTTP objects (req/res) in services.
+   - Strict separation: no SQL in controllers/routes, no business logic in
+     models, no HTTP objects (req/res) in services.
+   - The flow is always routes -> controllers -> services -> models/database.
+   - Routes contain no logic; controllers are thin; services are the only
+     place with SQL and business rules; the database layer does not know
+     Express or the domain.
 
 C4 – REST API design
    - Versioned base path (/api/v1), plural resource names, correct HTTP
      verbs and status codes, pagination/filtering on list endpoints,
      and a uniform error response format.
+   - Successful responses use the envelope { ok, mensaje, datos, meta }
+     built exclusively through utils/respuesta.js.
 
 C5 – Data access
    - Only `mysql2/promise` with a pool and placeholders; the pool config
      comes from environment variables; handle connection errors and
      release connections properly.
+   - Every query uses `?` placeholders and a parameters array; never
+     concatenate values into SQL.
 
-C6 – Validation and business rules
-   - Input validation with [Joi | Zod | express-validator — pick one and
-     justify it]. Business rules (e.g., availability, dates, prices,
-     booking states) live in the service layer and come from /context.
+C6 – Request flow and responsibility of each layer
+   - Implement the request flow and the layer responsibilities described
+     in ARCHITECTURE CONTEXT.
+   - Controllers and services are exported as singletons:
+     module.exports = new X().
+   - When adding an entity, create its model, service, controller and
+     router, then mount the router in routes/index.js.
+   - Locate the correct layer first, according to the responsibility of the
+     change, before writing code.
 
-C7 – Authentication and authorization
-   - JWT authentication, passwords hashed with bcrypt (or argon2), and
-     role-based access control using the roles defined in /context.
-     Protect every non-public endpoint.
+C7 – Rules that must never be broken
+   - The flow is routes -> controllers -> services -> models/database.
+   - No controller writes SQL; no model knows HTTP.
+   - Errors are thrown with AppError and handled by
+     middleware/errorHandler.js.
+   - Async handlers are wrapped with capturarAsync.
+   - Services filter fields with whitelists and map camelCase (API) to
+     snake_case (database columns).
+   - Keep Spanish in code, comments, messages and documentation. Write
+     didactic comments, and preserve existing ones when modifying code.
 
-C8 – Backend non-functional requirements
-   a) Logging: structured logs (Winston or Pino) with levels and request
-      logging.
-   b) Compliance with Colombian Law 1581 of 2012 (personal data
-      protection): consent capture, data minimization, no sensitive data
-      in logs, protection of personal data, and support for access/update/
-      deletion requests by the data subject.
-   c) SAF (safety/security/reliability): helmet, CORS, rate limiting,
-      input sanitization, secrets only via environment variables, graceful
-      shutdown, and a health-check endpoint.
-   d) Error logging: centralized error-handling middleware, separate error
-      log, and no stack traces exposed to clients.
+C8 – Verification
+   - Verify with GET /api/v1/salud (health check) and with a real request
+     to every endpoint created or modified.
 
-C9 – API collection
-   - A Postman collection (JSON) with all endpoints, an environment file,
-     auth handled through variables, and example requests/responses.
+C9 – Future frontend conventions (reference only)
+   - The frontend is NOT part of this task. These conventions are included
+     so that the backend contract (JSON field names, endpoints, response
+     envelope and error format) is compatible with the frontend that will
+     be built later. See "FRONTEND REFERENCE" at the end of this document.
 
 C10 – Environment and security files
    - `.env.example` with the MySQL connection variables (host, port, user,
@@ -129,3 +184,102 @@ DELIVERABLES
 FINAL REPORT
 - Summary of what was implemented, which FRs are pending and why, the
   assumptions made, and any risks or open questions.
+
+---
+
+FRONTEND REFERENCE
+
+Act as a frontend developer when this stage starts. Before creating or
+modifying components, use this context.
+
+Context
+The frontend is an SPA of HTML, CSS and vanilla JavaScript, with no
+framework and no bundler. It uses ES modules and is served over HTTP on
+port 5500. The design follows Atomic Design and the CSS follows an
+adaptation of ITCSS. The same hierarchy applies to JavaScript and to CSS.
+
+The five levels
+1. Atoms — js/atomos/ and css/03-atomos/
+   Indivisible pieces: button, field, label, icon, badge, loader. They do
+   not import other components (only utilities), know nothing about the
+   API or the state, and are pure presentation functions.
+
+2. Molecules — js/moleculas/ and css/04-moleculas/
+   Combine atoms to fulfill ONE function: form field, search bar,
+   paginator, card, notification, empty state. Stateful ones return an
+   object with `elemento` and public methods (for example `mostrarError`
+   and `obtenerValor`).
+
+3. Organisms — js/organismos/ and css/05-organismos/
+   Complete, autonomous sections: top bar, side navigation, data table,
+   modal, form, detail panel. They receive data and callbacks; they do not
+   call the API or decide the real content.
+
+4. Templates — js/plantillas/ and css/06-plantillas/
+   Assemble organisms and define the structure or layout. They have no
+   real content and do not call the API. Example: PanelAdministracion
+   places the bar, the navigation and the content area. Positioning
+   classes live here, not in the organism.
+
+5. Pages — js/paginas/ and css/07-paginas/
+   A template with real content. It is the only level that can hold state,
+   call the services and orchestrate organisms. It must handle the four
+   states of the view: loading, empty, error and with data.
+
+Supporting layers
+- js/servicios/clienteApi.js: the only place that uses fetch.
+- js/servicios/<entidad>.servicio.js: routes and API access per entity;
+  exported as singletons.
+- js/utiles/: safe DOM creation, formatting, validation and icons.
+- js/config/configuracion.js: API URL and frontend constants.
+- js/main.js: entry point, hash router and page registration.
+- index.html: the only HTML file; it contains the #aplicacion container.
+
+Composition flow
+index.html -> main.js -> template -> page -> organisms -> molecules -> atoms
+Data: page -> service -> clienteApi.js -> REST API
+
+Rules that must never be broken
+- Lower levels never import higher levels.
+- Pages are the only component level that calls the entity services;
+  main.js only uses clienteApi for the health check.
+- Only clienteApi.js uses fetch.
+- Atoms know nothing about the API, the global state or other components.
+- A molecule does not redefine the style of its atoms; it only organizes
+  them.
+- A template knows no real data; only structure and positioning.
+- Use `crear` and `textContent` for external data; never innerHTML with
+  data from the API or from forms.
+- Keep accessibility and responsive design: semantic tags, ARIA, visible
+  focus, contrast and the four states of the view.
+- JSON field names consumed by the frontend must be the Spanish names
+  listed in DICCIONARIO_NOMBRES.md.
+
+CSS and naming
+- css/main.css is the only entry point and uses @import in strict order:
+  01-tokens -> 02-base -> 03-atomos -> 04-moleculas -> 05-organismos ->
+  06-plantillas -> 07-paginas.
+- Each level has a prefix: `a-` atom, `m-` molecule, `o-` organism,
+  `t-` template, `p-` page.
+- Inside each component use BEM: `.a-boton` (block), `.a-boton__icono`
+  (element), `.a-boton--primario` (modifier).
+- Colors, typography, spacing and elevation come from 01-tokens; do not
+  write loose values or duplicate atom styles.
+- The file for `.a-boton` is always `css/03-atomos/_a-boton.css`.
+
+Real example (adapt to the agency's entities)
+PaginaClientes calls clienteServicio and composes CabeceraPagina,
+BarraBusqueda, TablaDatos, Modal, Formulario, Boton and Insignia.
+TablaDatos is generic: it receives columns, rows, actions and callbacks,
+but does not know whether the data are customers, bookings or packages.
+
+When creating a component
+1. Choose the level according to its responsibility, not its size.
+2. Create the JS file in js/<level>/ and its CSS in css/<NN-level>/ with
+   the corresponding prefix.
+3. Register the new CSS in css/main.css.
+4. Import and use it from the appropriate upper level.
+5. If it is a new page, register it in SECCIONES and in `paginas` in
+   js/main.js.
+6. Serve the frontend over HTTP and verify navigation, console, states,
+   accessibility and responsiveness.

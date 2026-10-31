@@ -1,42 +1,50 @@
 # Diccionario de nombres - Backend TourManager
 
-Criterio C11: código en español, nombres en `camelCase`, base de datos en
-`snake_case`, y este diccionario agrupado por módulo/entidad.
+Criterio C11: dominio en espanol (`camelCase`), base de datos en `snake_case`,
+sufijos de capa en ingles (`controller`, `service`, `routes`, `model`) y este
+diccionario agrupado por modulo/entidad.
 
 ## 1. Convenciones
 
-| Elemento | Convención | Ejemplo |
+| Elemento | Convencion | Ejemplo |
 |----------|------------|---------|
-| Archivos | Español, `camelCase` con sufijo de capa | `reservasControlador.js`, `reservasServicio.js`, `reservasRutas.js`, `reservasValidador.js` |
-| Clases de dominio | `PascalCase` | `Reserva`, `PaqueteTuristico` |
-| Variables y funciones | `camelCase` en español | `confirmarReserva`, `numeroReserva` |
-| Tablas y columnas (MySQL) | `snake_case` en español | `paquetes_turisticos`, `num_pasajeros` |
+| Archivos de capa | `modulo.controller.js`, `modulo.service.js`, `modulo.routes.js` | `reservas.controller.js` |
+| Clases de dominio | `PascalCase` en espanol | `Reserva`, `PaqueteTuristico` |
+| Clases de capa | `PascalCase` + sufijo espanol | `ReservasControlador`, `ReservasServicio` |
+| Instancias exportadas | `camelCase` + sufijo ingles | `reservasController`, `reservasService` |
+| Variables y funciones | `camelCase` en espanol | `confirmarReserva`, `numeroReserva` |
+| Tablas y columnas MySQL | `snake_case` en espanol | `paquetes_turisticos`, `num_pasajeros` |
 | Constantes | `MAYUSCULAS_CON_GUION_BAJO` | `ROL_ADMINISTRADOR` |
-| Interfaz Express | `req`, `res`, `next` (se mantienen en inglés por ser API estándar) | `req.body`, `res.status` |
+| Interfaz Express | `req`, `res`, `next` | `req.body`, `res.status` |
+| Campos JSON de salida | `camelCase` | `idReserva`, `estadoReserva`, `fechaViaje` |
 
-## 2. Entidades de dominio (modelo ↔ tabla)
+## 2. Entidades de dominio (modelo <-> tabla)
 
-| Modelo (`models/`) | Tabla MySQL | Descripción | Métodos de dominio |
+Todos los modelos extienden `ModeloBase`, guardan su estado en un campo privado
+`#datos`, exponen getters de solo lectura y `aJSON()`/`toJSON()`.
+
+| Modelo (`models/`) | Tabla MySQL | Descripcion | Metodos de dominio |
 |--------------------|-------------|-------------|--------------------|
-| `Rol` | `roles` | Rol de acceso (Administrador, Cliente) | `aJSON()` |
+| `ModeloBase` | - | Base comun con `#datos` y copia inmutable | `aJSON()`, `toJSON()` |
+| `Rol` | `roles` | Rol de acceso | `estaActivo()` |
 | `Modulo` | `modulos` | Permiso asignable a un rol | `aJSON()` |
-| `Usuario` | `usuarios` | Usuario del sistema; nunca expone contraseña | `estaActivo()`, `esAdministrador()`, `aJSON()` |
-| `Cliente` | `clientes` | Cliente de la agencia (Ley 1581) | `nombreCompleto()`, `dioConsentimiento()`, `aJSON()` |
-| `Proveedor` | `proveedores` | Empresa proveedora | `esDeTransporte()`, `aJSON()` |
+| `Usuario` | `usuarios` | Usuario del sistema; no expone contrasena | `estaActivo()`, `esAdministrador()` |
+| `Cliente` | `clientes` | Cliente de la agencia (Ley 1581) | `nombreCompleto()`, `dioConsentimiento()` |
+| `Proveedor` | `proveedores` | Empresa proveedora | `esDeTransporte()` |
 | `ServicioProveedor` | `servicios_proveedor` | Servicio ofrecido por un proveedor | `aJSON()` |
-| `Contrato` | `contratos` | Contrato con proveedor (RN-02) | `estaVigente(fecha)`, `aJSON()` |
-| `Otrosi` | `contratos_otrosi` | Modificación de contrato con historial | `aJSON()` |
-| `PaqueteTuristico` | `paquetes_turisticos` | Paquete turístico vendible | `estaActivo()`, `estaDisponiblePara(fechaViaje)`, `aJSON()` |
-| `ServicioPaquete` | `servicios_paquete` (+ `PAQUETE_SERVICIO`) | Servicio incluido en un paquete | `aJSON()` |
-| `Itinerario` | `itinerarios` | Actividad programada de un paquete | `estaActivo()`, `aJSON()` |
-| `Reserva` | `reservas` | Reserva de un paquete por un cliente | `calcularTotal(precio, pasajeros)`, `puedeTransicionarA()`, `confirmar(numero)`, `cancelar()`, `esDeCliente(id)`, `aJSON()` |
-| `Venta` | `ventas` | Venta asociada a una reserva confirmada | `validarReservaConfirmada()`, `validarMontoContraReserva()`, `marcarPagada()`, `cancelar()`, `aJSON()` |
-| `Pago` | (objeto de valor, no tabla) | Intento de pago de una venta | `procesar()`, `estaPagado()`, `aJSON()` |
-| `Transporte` | `transporte` | Medio de transporte asignado a un paquete | `estaDisponible()`, `aJSON()` |
-| `InteraccionCrm` | `crm` | Interacción con un cliente | `aJSON()` |
-| `Retroalimentacion` | `retroalimentacion` | Calificación (1-5) de un paquete | `aJSON()` |
-| `TokenRecuperacion` | `tokens_recuperacion_clave` | Token de un solo uso para restablecer clave | `estaVigente(fecha)`, `aJSON()` |
-| `comun.js` | - | Validadores de campos compartidos | `validarTexto`, `validarEmail`, `validarEntero`, `validarDecimal`, `validarEnumeracion`, `validarFecha` |
+| `Contrato` | `contratos` | Contrato con proveedor (RN-02) | `estaVigente(fecha)` |
+| `Otrosi` | `contratos_otrosi` | Modificacion de contrato con historial | `aJSON()` |
+| `PaqueteTuristico` | `paquetes_turisticos` | Paquete turistico vendible | `estaActivo()`, `estaDisponiblePara(fecha)` |
+| `ServicioPaquete` | `servicios_paquete` + `PAQUETE_SERVICIO` | Servicio incluido en un paquete | `aJSON()` |
+| `Itinerario` | `itinerarios` | Actividad programada de un paquete | `estaActivo()` |
+| `Reserva` | `reservas` | Reserva de un paquete por un cliente | `Reserva.calcularTotal(precio, pasajeros)`, `puedeTransicionarA()`, `confirmar(numero)`, `cancelar()`, `esDeCliente(id)` |
+| `Venta` | `ventas` | Venta asociada a una reserva confirmada | `validarReservaConfirmada()`, `validarMontoContraReserva()`, `pagar()`, `cancelar()` |
+| `Pago` | (objeto de valor) | Intento de pago de una venta | `procesar()`, `estaPagado()` |
+| `Transporte` | `transporte` | Medio de transporte asignado a un paquete | `estaDisponible()` |
+| `InteraccionCrm` | `crm` | Interaccion con un cliente | `aJSON()` |
+| `Retroalimentacion` | `retroalimentacion` | Calificacion (1-5) de un paquete | `aJSON()` |
+| `TokenRecuperacion` | `tokens_recuperacion_clave` | Token de un solo uso | `estaVigente(fecha)` |
+| `comun.js` | - | Validadores compartidos | `validarTexto`, `validarEmail`, `validarEntero`, `validarDecimal`, `validarEnumeracion`, `validarFecha` |
 
 ## 3. Estados y enumeraciones
 
@@ -46,127 +54,81 @@ Criterio C11: código en español, nombres en `camelCase`, base de datos en
 | `Contrato` | `estadoContrato` | `Vigente`, `Vencido`, `Cancelado` |
 | `Transporte` | `estadoTransporte` | `Disponible`, `No Disponible`, `Mantenimiento` |
 | `Transporte` | `tipoTransporte` | `Avion`, `Autobus`, `Tren`, `Ferry`, `Coche` |
-| `Reserva` | `estadoReserva` | `Pendiente` → `Confirmada` → `Cancelada` (transiciones controladas) |
-| `Venta` | `estadoVenta` | `Pendiente` → `Pagado` → `Cancelado` |
+| `Reserva` | `estadoReserva` | `Pendiente` -> `Confirmada` -> `Cancelada` |
+| `Venta` | `estadoVenta` | `Pendiente` -> `Pagado` -> `Cancelado` |
 | `Venta`/`Pago` | `metodoPago` | `Tarjeta`, `Transferencia`, `Efectivo` |
 | `Proveedor` | `tipoServicio` | `Hotel`, `Aerolinea`, `Guia`, `Restaurante`, `Transporte`, `Otro` |
 | `ServicioPaquete` | `tipoServicio` | `Transporte`, `Hospedaje`, `Actividad`, `Seguro`, `Comida` |
 | `InteraccionCrm` | `tipoInteraccion` | `Llamada`, `Correo`, `Reunion`, `Encuesta` |
-| Roles de acceso (SRS 2.3) | `nombreRol` | `Administrador`, `Cliente` |
+| Usuario | `nombreRol` | `Administrador`, `Cliente` |
 
 ## 4. Formato de respuestas y errores
 
 | Elemento | Estructura |
 |----------|------------|
-| Éxito simple | `{ "exito": true, "datos": {...} }` |
-| Éxito con mensaje | `{ "exito": true, "mensaje": "...", "datos": {...} }` |
-| Listados | `{ "exito": true, "datos": [...], "paginacion": { pagina, limite, total, totalPaginas } }` |
-| Error | `{ "exito": false, "error": { "codigo": "...", "mensaje": "...", "detalles": [...] } }` |
+| Exito simple | `{ "ok": true, "mensaje": "...", "datos": {...} }` |
+| Listado | `{ "ok": true, "mensaje": "...", "datos": [...], "meta": { "paginacion": {...} } }` |
+| Error | `{ "ok": false, "codigo": "...", "mensaje": "...", "detalles": [...] }` |
 
-| Código de error | HTTP | Significado |
+| Codigo de error | HTTP | Significado |
 |-----------------|------|-------------|
-| `SOLICITUD_INVALIDA` | 400 | Falló la validación de entrada (incluye `detalles` por campo) |
-| `NO_AUTENTICADO` | 401 | Falta token, token inválido o expirado |
+| `SOLICITUD_INVALIDA` | 400 | Fallo la validacion de entrada (incluye `detalles` por campo) |
+| `NO_AUTENTICADO` | 401 | Falta token, token invalido/expirado o sesion revocada |
 | `PROHIBIDO` | 403 | El rol o el propietario no tiene permiso |
 | `RECURSO_NO_ENCONTRADO` | 404 | El recurso solicitado no existe |
-| `RUTA_NO_ENCONTRADA` | 404 | La ruta no está registrada |
-| `CONFLICTO` / `DUPLICADO` | 409 | Valor único duplicado (correo, documento, número de contrato/otrosí) |
-| `REGLA_NEGOCIO` | 422 | Violación de regla de negocio (cupo, transición, contrato vigente, Ley 1581) |
-| `DEMASIADAS_PETICIONES` / `DEMASIADOS_INTENTOS` | 429 | Rate limiting global / de autenticación |
+| `RUTA_NO_ENCONTRADA` | 404 | La ruta no esta registrada |
+| `CONFLICTO` / `DUPLICADO` | 409 | Valor unico duplicado |
+| `REGLA_NEGOCIO` | 422 | Violacion de regla de negocio |
+| `DEMASIADAS_PETICIONES` / `DEMASIADOS_INTENTOS` | 429 | Rate limiting global / autenticacion |
 | `ERROR_INTERNO` | 500 | Error inesperado (sin trazas al cliente) |
 | `BD_NO_DISPONIBLE` | 503 | MySQL no disponible |
 
-## 5. Configuración y utilidades (`config/`, `utils/`)
+## 5. Configuracion, utilidades y middleware
 
-| Archivo | Exporta | Descripción |
+| Archivo | Exporta | Descripcion |
 |---------|---------|-------------|
-| `config/entorno.js` | `entorno` | Lectura y validación de variables de entorno (falla si `JWT_CLAVE` < 16) |
-| `config/baseDatos.js` | `pool`, `probarConexion`, `ejecutarTransaccion`, `cerrarPool` | Pool mysql2/promise, transacciones y apagado |
-| `config/registro.js` | `registro` | Logger Winston (`logs/error.log`, `logs/combinado.log`, consola) |
-| `utils/ErrorApi.js` | `ErrorApi` | Error de aplicación con estado HTTP y código (`solicitudInvalida`, `noAutenticado`, `prohibido`, `noEncontrado`, `conflicto`, `reglaNegocio`, `interno`) |
-| `utils/jwt.js` | `firmarToken`, `verificarToken` | Firma/verificación JWT (carga: `sub`, `correo`, `nombreUsuario`, `rol`) |
+| `config/entorno.js` | `entorno` | Variables de entorno validadas; falla si `JWT_CLAVE` < 16 |
+| `config/database.js` | `pool`, `ejecutar`, `ejecutarEn`, `obtenerUno`, `obtenerTodos`, `probarConexion`, `conTransaccion`, `cerrarPool` | Pool MySQL, helpers de consulta, transacciones y apagado |
+| `config/express.js` | `crearApp` | Middleware global, rutas, 404 y manejador de errores |
+| `config/registro.js` | `registro` | Logger Winston |
+| `utils/AppError.js` | `AppError` | Error operacional con estado HTTP y codigo |
+| `utils/capturarAsync.js` | `capturarAsync` | Envuelve handlers async y delega errores a `next` |
+| `utils/jwt.js` | `firmarToken`, `verificarToken` | JWT con `sub`, `jti`, `correo`, `nombreUsuario`, `rol` |
 | `utils/claves.js` | `hashearClave`, `compararClave` | bcryptjs con 12 rondas |
-| `utils/paginacion.js` | `normalizarPaginacion`, `metadatosPaginacion` | Parámetros `pagina`/`limite` (10 por defecto, máximo 100) |
-| `utils/respuesta.js` | `responderExito`, `responderCreado`, `responderLista`, `responderMensaje` | Formato uniforme de respuestas |
-| `utils/numeroReserva.js` | `generarNumeroReserva` | Genera `AV-YYYYMMDD-XXXX` (alfabeto sin caracteres ambiguos) |
-| `utils/pdfComprobante.js` | `enviarComprobanteReserva`, `enviarComprobanteVenta`, `formatearCOP` | Comprobantes PDF (PDFKit) y formato COP `$1.234.567` |
-| `utils/manejadorAsincrono.js` | `manejadorAsincrono` | Envuelve controladores async hacia el manejador central |
+| `utils/paginacion.js` | `normalizarPaginacion`, `metadatosPaginacion` | `pagina`/`limite` (10 por defecto, maximo 100) |
+| `utils/respuesta.js` | `responderExito`, `responderCreado`, `responderLista`, `responderMensaje` | Envelope C4 |
+| `utils/numeroReserva.js` | `generarNumeroReserva` | Genera `AV-YYYYMMDD-XXXX` |
+| `utils/pdfComprobante.js` | `enviarComprobanteReserva`, `enviarComprobanteVenta`, `formatearCOP` | Comprobantes PDF y COP |
+| `middleware/autenticacion.js` | `verificarAutenticacion`, `autorizarRoles`, `soloAdministrador`, `administradorOCliente` | JWT + RBAC + revocacion |
+| `middleware/validacion.js` | `validar(fuente)` | Validacion Joi de `body`/`query`/`params` |
+| `middleware/errorHandler.js` | `rutaNoEncontrada`, `manejarErrores` | 404 y traduccion central de errores |
+| `middleware/saneamiento.js` | `saneamiento` | Recorta textos y elimina bytes nulos |
+| `middleware/limitadores.js` | `limitadorGlobal`, `limitadorAutenticacion` | Rate limiting |
+| `middleware/registroPeticiones.js` | `registroPeticiones` | `X-Request-Id` + log de acceso |
 
-## 6. Middleware (`middleware/`)
+## 6. Capas y modulos
 
-| Archivo | Middleware | Descripción |
-|---------|------------|-------------|
-| `autenticacion.js` | `verificarAutenticacion`, `autorizarRoles`, `soloAdministrador`, `administradorOCliente` | JWT + RBAC |
-| `validacion.js` | `validar(fuente)` | Validación Joi de `body`/`query`/`params` |
-| `saneamiento.js` | `saneamiento` | Recorta textos y elimina bytes nulos |
-| `limitadores.js` | `limitadorGlobal`, `limitadorAutenticacion` | Rate limiting (300/15 min global; 20/15 min auth) |
-| `registroPeticiones.js` | `registroPeticiones` | `X-Request-Id` + log de acceso |
-| `manejadorErrores.js` | `rutaNoEncontrada`, `manejadorErrores` | 404 y traducción central de errores |
+Cada modulo tiene controlador, servicio, rutas y validador. Los controladores y
+servicios exportan una instancia singleton de su clase.
 
-## 7. Capas y módulos (`controllers/`, `services/`, `routes/`, `validators/`)
-
-Cada módulo de negocio tiene controlador, servicio, rutas y validador (cuando
-aplica). El SQL parametrizado vive dentro de su servicio, no en una capa aparte.
-
-| Módulo | Controlador | Servicio (incluye SQL) | Rutas | Validador |
-|--------|-------------|------------------------|-------|-----------|
-| Roles | `rolesControlador.js` | `rolesServicio.js` | `rolesRutas.js` | `rolesValidador.js` |
-| Usuarios | `usuariosControlador.js` | `usuariosServicio.js` | `usuariosRutas.js` | `usuariosValidador.js` |
-| Autenticación | `autenticacionControlador.js` | `autenticacionServicio.js` | `autenticacionRutas.js` | `autenticacionValidador.js` |
-| Clientes | `clientesControlador.js` | `clientesServicio.js` | `clientesRutas.js` | `clientesValidador.js` |
-| Proveedores | `proveedoresControlador.js` | `proveedoresServicio.js` | `proveedoresRutas.js` | `proveedoresValidador.js` |
-| Contratos | `contratosControlador.js` | `contratosServicio.js` | `contratosRutas.js` | `contratosValidador.js` |
-| Paquetes | `paquetesControlador.js` | `paquetesServicio.js` | `paquetesRutas.js` | `paquetesValidador.js` |
-| Itinerarios | `itinerariosControlador.js` | `itinerariosServicio.js` | `itinerariosRutas.js` | `itinerariosValidador.js` |
-| Reservas | `reservasControlador.js` | `reservasServicio.js` | `reservasRutas.js` | `reservasValidador.js` |
-| Ventas | `ventasControlador.js` | `ventasServicio.js` | `ventasRutas.js` | `ventasValidador.js` |
-| Transporte | `transporteControlador.js` | `transporteServicio.js` | `transporteRutas.js` | `transporteValidador.js` |
-| CRM | `crmControlador.js` | `crmServicio.js` | `crmRutas.js` | `crmValidador.js` |
-| Retroalimentación | `retroalimentacionControlador.js` | `retroalimentacionServicio.js` | `retroalimentacionRutas.js` | `retroalimentacionValidador.js` |
-| Informes | `informesControlador.js` | `informesServicio.js` | `informesRutas.js` | - |
-| Bitácora | `bitacoraControlador.js` | `bitacoraServicio.js` | `bitacoraRutas.js` | - |
-| Módulos | `modulosControlador.js` | `modulosServicio.js` | `modulosRutas.js` | - |
-| Salud | `saludControlador.js` | - | `saludRutas.js` | - |
-
-Reglas de capas (C3):
-1. Las rutas solo enlazan validación + middleware + controlador.
-2. Los controladores solo traducen HTTP ↔ servicio (sin SQL, sin reglas).
-3. Los servicios contienen las reglas de negocio, las transacciones y el SQL
-   parametrizado de su dominio (sin `req`/`res`).
-4. Cuando un servicio necesita SQL de otro dominio, consume las funciones
-   internas que el servicio dueño expone en `datos` (por ejemplo
-   `bitacoraServicio.datos.registrar`).
-
-## 8. Variables de entorno (`.env` / `.env.example`)
-
-| Variable | Descripción | Valor por defecto |
-|----------|-------------|-------------------|
-| `NODE_ENV` | Entorno de ejecución | `development` |
-| `PUERTO` | Puerto HTTP | `3000` |
-| `BD_HOST`, `BD_PUERTO` | Host y puerto de MySQL | `localhost`, `3306` |
-| `BD_USUARIO`, `BD_CLAVE`, `BD_NOMBRE` | Credenciales y esquema | - , - , `tourmanager` |
-| `BD_POOL_MAX`, `BD_POOL_MIN` | Tamaño del pool | `10`, `0` |
-| `JWT_CLAVE` | Secreto de firma (mínimo 16 caracteres) | - (obligatorio) |
-| `JWT_EXPIRACION` | Vigencia del token | `8h` |
-| `CORS_ORIGENES` | Orígenes permitidos (separados por coma) | `http://localhost:5500,http://127.0.0.1:5500` |
-| `LOG_NIVEL` | Nivel de registro | `info` |
-
-## 9. Parámetros de consulta comunes
-
-| Parámetro | Uso | Notas |
-|-----------|-----|-------|
-| `pagina` | Número de página | Entero ≥ 1, por defecto 1 |
-| `limite` | Tamaño de página | Entero 1-100, por defecto 10 |
-| `nombre`, `correo`, `estado` | Filtros de listado | Según módulo (usuarios, clientes, proveedores, paquetes, roles) |
-| `fechaDesde`, `fechaHasta` | Rangos de fecha | Reservas, ventas, contratos, informes (formato `AAAA-MM-DD`) |
-| `idPaquete`, `idCliente`, `idProveedor` | Filtros por relación | Según módulo |
-
-## 10. Tablas adicionales de la base de datos
-
-| Tabla | Propósito |
-|-------|-----------|
-| `roles_modulos` | Asignación rol ↔ módulo (RF-ROL-07) |
-| `bitacora` | Auditoría de operaciones (RNF-SEG-02) |
-| `configuraciones` | Parámetros del sistema (`cupo_maximo_viaje`, `prefijo_reserva`) |
-| `tokens_recuperacion_clave` | Tokens de recuperación de contraseña |
-| `PAQUETE_SERVICIO` | Relación paquete ↔ servicio (nombre heredado del esquema original) |
+| Modulo | Controlador | Servicio | Rutas | Validador |
+|--------|-------------|----------|-------|-----------|
+| Roles | `roles.controller.js` | `roles.service.js` | `roles.routes.js` | `rolesValidador.js` |
+| Usuarios | `usuarios.controller.js` | `usuarios.service.js` | `usuarios.routes.js` | `usuariosValidador.js` |
+| Autenticacion | `autenticacion.controller.js` | `autenticacion.service.js` | `autenticacion.routes.js` | `autenticacionValidador.js` |
+| Clientes | `clientes.controller.js` | `clientes.service.js` | `clientes.routes.js` | `clientesValidador.js` |
+| Proveedores | `proveedores.controller.js` | `proveedores.service.js` | `proveedores.routes.js` | `proveedoresValidador.js` |
+| Contratos | `contratos.controller.js` | `contratos.service.js` | `contratos.routes.js` | `contratosValidador.js` |
+| Paquetes | `paquetes.controller.js` | `paquetes.service.js` | `paquetes.routes.js` | `paquetesValidador.js` |
+| Itinerarios | `itinerarios.controller.js` | `itinerarios.service.js` | `itinerarios.routes.js` | `itinerariosValidador.js` |
+| Reservas | `reservas.controller.js` | `reservas.service.js` | `reservas.routes.js` | `reservasValidador.js` |
+| Ventas | `ventas.controller.js` | `ventas.service.js` | `ventas.routes.js` | `ventasValidador.js` |
+| Transporte | `transporte.controller.js` | `transporte.service.js` | `transporte.routes.js` | `transporteValidador.js` |
+| CRM | `crm.controller.js` | `crm.service.js` | `crm.routes.js` | `crmValidador.js` |
+| Retroalimentacion | `retroalimentacion.controller.js` | `retroalimentacion.service.js` | `retroalimentacion.routes.js` | `retroalimentacionValidador.js` |
+| Informes | `informes.controller.js` | `informes.service.js` | `informes.routes.js` | - |
+| Modulos | `modulos.controller.js` | `modulos.service.js` | `modulos.routes.js` | - |
+| Bitacora | `bitacora.controller.js` | `bitacora.service.js` | `bitacora.routes.js` | - |
+| Sesiones | - | `sesiones.service.js` | - | - |
+| Configuraciones | - | `configuraciones.service.js` | - | - |
+| Salud | `salud.controller.js` | - | `salud.routes.js` | - |

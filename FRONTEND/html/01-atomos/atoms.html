@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Átomos del sistema visual: color, tipografía, botones, insignias, iconos y campos.">
+  <title>Átomos — Guía de estilo — Tours Out Here</title>
+  <link rel="icon" href="../../img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body class="t-pagina">
+  
+<a class="saltar-enlace" href="#contenido">Saltar al contenido</a>
+<!-- ORGANISM: header -->
+<header class="o-encabezado">
+  <div class="o-encabezado__barra contenedor">
+    <a class="o-marca" href="../05-paginas/index.html" aria-label="Tours Out Here, inicio">
+      <svg class="o-marca__icono" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="2"/><path d="M24 9l7 15-7 15-7-15 7-15z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="24" r="2.5" fill="currentColor"/></svg>
+      <span class="o-marca__texto">Tours <em>Out Here</em></span>
+    </a>
+    <input class="o-menu__control solo-lectores" type="checkbox" id="menu-principal">
+    <label class="o-menu__boton" for="menu-principal" aria-label="Abrir o cerrar el menú de navegación">
+      <span class="o-menu__linea"></span>
+      <span class="o-menu__linea"></span>
+      <span class="o-menu__linea"></span>
+    </label>
+    <nav class="o-navegacion" aria-label="Navegación principal">
+      <ul class="o-navegacion__lista">
+        <li><a class="o-navegacion__enlace" href="../05-paginas/index.html">Inicio</a></li>
+        <li><a class="o-navegacion__enlace" href="../05-paginas/destinos.html">Destinos</a></li>
+        <li><a class="o-navegacion__enlace" href="../05-paginas/paquetes.html">Paquetes</a></li>
+        <li><a class="o-navegacion__enlace" href="../05-paginas/nosotros.html">Nosotros</a></li>
+        <li><a class="o-navegacion__enlace" href="../05-paginas/contacto.html">Contacto</a></li>
+      </ul>
+      <a class="boton boton--primario boton--sm o-navegacion__cta" href="../05-paginas/contacto.html">Planear mi viaje</a>
+    </nav>
+  </div>
+</header>
+
+  <main id="contenido" class="t-principal p-guia">
+    <div class="contenedor">
+      <nav class="o-migas" aria-label="Ruta de navegación">
+        <ol>
+          <li><a href="../05-paginas/index.html">Inicio</a></li>
+          <li><a href="../05-paginas/index.html">Guía de estilo</a></li>
+          <li aria-current="page">Átomos</li>
+        </ol>
+      </nav>
+      <p class="kicker">Guía de estilo</p>
+      
+<!-- PAGE: átomos -->
+<h1>Átomos</h1>
+<p class="texto-lead">Las piezas indivisibles del sistema: color, tipografía, botones, insignias, iconos y campos. Ningún átomo conoce el contenido de una página.</p>
+
+
+<!-- ORGANISM: bloque de guía -->
+<section class="p-guia__bloque" id="atomo-color" aria-labelledby="atomo-color-titulo">
+  <p class="kicker">Componente</p>
+  <h2 id="atomo-color-titulo">Color</h2>
+  <p class="texto-muted">Todos los valores viven en css/desingSystem.css. Ninguna otra hoja define colores crudos.</p>
+  <div class="p-guia__muestra">      <div class="p-guia__color">
+        <span class="p-guia__color-muestra p-guia__color-muestra--primario" aria-hidden="true"></span>
+        <span class="p-guia__color-nombre">--primario</span>
+        <span class="p-guia__color-valor">#2000B8</span>
+      </div>
+      <div class="p-guia__color">
+        <span class="p-guia__color-muestra p-guia__color-muestra--medianoche" aria-hidden="true"></span>
+        <span class="p-guia__color-nombre">--medianoche</span>
+        <span class="p-guia__color-valor">#000338</span>
+      </div>
+      <div class="p-guia__color">
+        <span class="p-guia__color-muestra p-guia__color-muestra--dorado" aria-hidden="true"></span>
+        <span class="p-guia__color-nombre">--dorado</span>
+        <span class="p-guia__color-valor">#B8A200</span>
+      </div>
+      <div class="p-guia__color">
+        <span class="p-guia__color-muestra p-guia__color-muestra--ambar" aria-hidden="true"></span>
+        <span class="p-guia__color-nombre">--ambar</span>
+        <span class="p-guia__color-valor">#F4A020</span>
+      </div>
+      <div class="p-guia__color">
+        <span class="p-guia__color-muestra p-guia__color-muestra--oliva" aria-hidden="true"></span>
+        <span class="p-guia__color-nombre">--oliva</span>
+        <span class="p-guia__color-valor">#635A00</span>
+      </div>
+      <div class="p-guia__color">
+        <span class="p-guia__color-muestra p-guia__color-muestra--superficie" aria-hidden="true"></span>
+        <span class="p-guia__color-nombre">--superficie</span>
+        <span class="p-guia__color-valor">#FDF6E4</span>
+      </div>
+      <div class="p-guia__color">
+        <span class="p-guia__color-muestra p-guia__color-muestra--alta" aria-hidden="true"></span>
+        <span class="p-guia__color-nombre">--superficie-alta</span>
+        <span class="p-guia__color-valor">#FFFDF7</span>
+      </div>
+      <div class="p-guia__color">
+        <span class="p-guia__color-muestra p-guia__color-muestra--tenue" aria-hidden="true"></span>
+        <span class="p-guia__color-nombre">--superficie-tenue</span>
+        <span class="p-guia__color-valor">#F5EEDB</span>
+      </div>
+      <div class="p-guia__color">
+        <span class="p-guia__color-muestra p-guia__color-muestra--texto" aria-hidden="true"></span>
+        <span class="p-guia__color-nombre">--texto</span>
+        <span class="p-guia__color-valor">#000338</span>
+      </div>
+      <div class="p-guia__color">
+        <span class="p-guia__color-muestra p-guia__color-muestra--exito" aria-hidden="true"></span>
+        <span class="p-guia__color-nombre">--color-exito</span>
+        <span class="p-guia__color-valor">#1B6E3C</span>
+      </div>
+      <div class="p-guia__color">
+        <span class="p-guia__color-muestra p-guia__color-muestra--error" aria-hidden="true"></span>
+        <span class="p-guia__color-nombre">--color-error</span>
+        <span class="p-guia__color-valor">#A4161A</span>
+      </div>
+      <div class="p-guia__color">
+        <span class="p-guia__color-muestra p-guia__color-muestra--aviso" aria-hidden="true"></span>
+        <span class="p-guia__color-nombre">--color-aviso</span>
+        <span class="p-guia__color-valor">#8A5300</span>
+      </div></div><table class="p-guia__tabla"><caption>Reglas de contraste y uso</caption><thead><tr><th>Token</th><th>Uso</th></tr></thead><tbody><tr><td><span class="p-guia__codigo">--medianoche</span></td><td>Texto normal y fondos oscuros (≈16:1 sobre crema).</td></tr><tr><td><span class="p-guia__codigo">--color-acento-texto</span></td><td>Dorado legible sobre fondos claros (≈7:1).</td></tr><tr><td><span class="p-guia__codigo">--dorado</span></td><td>Solo como acento, borde o fondo con texto medianoche.</td></tr><tr><td><span class="p-guia__codigo">--color-focus</span></td><td>Anillo de foco visible en todos los elementos interactivos.</td></tr></tbody></table>
+</section>
+
+
+
+<!-- ORGANISM: bloque de guía -->
+<section class="p-guia__bloque" id="atomo-tipografia" aria-labelledby="atomo-tipografia-titulo">
+  <p class="kicker">Componente</p>
+  <h2 id="atomo-tipografia-titulo">Tipografía</h2>
+  <p class="texto-muted">Dos familias locales y una escala fija. Los títulos van en romanos; la cursiva se reserva para énfasis dentro de párrafos.</p>
+  
+    <div class="p-guia__muestra">
+      <p class="titulo-hero p-guia__titulo-muestra">Un viaje que se siente tuyo</p>
+    </div>
+    <p class="texto-lead">Texto de entrada: una frase que invita a seguir leyendo y explica el valor de la propuesta.</p>
+    <p>Párrafo base. La tipografía de cuerpo se usa para descripciones, respuestas y contenido largo. <strong>Negrita</strong> para énfasis real, <em>cursiva</em> solo dentro de un párrafo.</p>
+    <p class="texto-muted">Texto secundario: contexto, notas y metadatos.</p>
+    <p class="kicker">Kicker de sección</p>
+    <h2>Encabezado de nivel 2</h2>
+    <h3>Encabezado de nivel 3</h3>
+    <h4>Encabezado de nivel 4</h4>
+    <p class="o-formulario__nota">Texto auxiliar o nota legal, en tamaño caption.</p>
+
+</section>
+
+
+
+<!-- ORGANISM: bloque de guía -->
+<section class="p-guia__bloque" id="atomo-botones" aria-labelledby="atomo-botones-titulo">
+  <p class="kicker">Componente</p>
+  <h2 id="atomo-botones-titulo">Botones</h2>
+  <p class="texto-muted">Un solo componente con variantes de jerarquía y tamaño. El texto describe la acción, no la forma.</p>
+  
+    <div class="p-guia__muestra">
+      <a class="boton boton--primario" href="../05-paginas/contacto.html">Acción principal</a>
+      <a class="boton boton--secundario" href="../05-paginas/paquetes.html">Acción secundaria</a>
+      <a class="boton boton--dorado" href="../05-paginas/contacto.html">Acento dorado</a>
+      <a class="boton boton--fantasma" href="../05-paginas/destinos.html">Acción fantasma</a>
+    </div>
+    <div class="p-guia__muestra">
+      <a class="boton boton--primario boton--sm" href="../05-paginas/contacto.html">Tamaño sm</a>
+      <a class="boton boton--primario boton--lg" href="../05-paginas/contacto.html">Tamaño lg</a>
+      <button class="boton boton--secundario" type="button">Elemento button</button>
+      <a class="boton boton--primario boton--bloque" href="../05-paginas/contacto.html">Botón de bloque</a>
+    </div>
+    <p class="p-guia__nota">Todos los botones miden al menos 44 px de alto. El foco visible usa <span class="p-guia__codigo">--color-focus</span> y nunca se elimina.</p>
+
+</section>
+
+
+
+<!-- ORGANISM: bloque de guía -->
+<section class="p-guia__bloque" id="atomo-insignias" aria-labelledby="atomo-insignias-titulo">
+  <p class="kicker">Componente</p>
+  <h2 id="atomo-insignias-titulo">Insignias, iconos y enlaces</h2>
+  <p class="texto-muted">Las insignias comunican estado o categoría; los iconos siempre acompañan a un texto o llevan etiqueta accesible.</p>
+  
+    <div class="p-guia__muestra">
+      <span class="insignia">Neutral</span>
+      <span class="insignia insignia--dorada">Destacado</span>
+      <span class="insignia insignia--info">Informativo</span>
+      <span class="insignia insignia--confirmada">Confirmada</span>
+      <span class="insignia insignia--pendiente">Pendiente</span>
+      <span class="insignia insignia--cancelada">Cancelada</span>
+    </div>
+    <div class="p-guia__muestra">
+      <p class="a-estrellas" role="img" aria-label="5 de 5 estrellas">★★★★★</p>
+      <span class="a-sello">Hecho a medida</span>
+      <span class="a-punto">Texto separado con punto medio</span>
+      <a class="m-destino__enlace a-flecha" href="../05-paginas/destinos.html">Enlace con flecha</a>
+    </div>
+    <div class="p-guia__muestra">
+      <span class="m-perfil__icono"><svg class="a-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+      <span class="m-perfil__icono"><svg class="a-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m5 12 4 4L19 6"/></svg></span>
+      <span class="a-icono a-icono--lg"><svg class="a-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+      <span class="a-icono a-icono--xl"><svg class="a-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m5 12 4 4L19 6"/></svg></span>
+    </div>
+
+</section>
+
+
+
+<!-- ORGANISM: bloque de guía -->
+<section class="p-guia__bloque" id="atomo-campos" aria-labelledby="atomo-campos-titulo">
+  <p class="kicker">Componente</p>
+  <h2 id="atomo-campos-titulo">Campos de formulario</h2>
+  <p class="texto-muted">Etiqueta siempre visible, ayuda y error asociados, y objetivos táctiles de 44 px como mínimo.</p>
+  
+    <div class="o-formulario">
+      <div class="o-formulario__rejilla">
+        <label class="campo">
+          <span class="campo__etiqueta">Nombre completo <span class="campo__obligatorio" aria-hidden="true">*</span></span>
+          <input class="campo__control" type="text" placeholder="Ej.: Ana Restrepo" required>
+        </label>
+        <label class="campo">
+          <span class="campo__etiqueta">Correo electrónico <span class="campo__obligatorio" aria-hidden="true">*</span></span>
+          <input class="campo__control" type="email" placeholder="ana@ejemplo.com" required>
+        </label>
+        <label class="campo">
+          <span class="campo__etiqueta">Destino de interés</span>
+          <select class="campo__control">
+            <option>Aún no lo sé</option>
+            <option>Cartagena</option>
+            <option>Kyoto</option>
+          </select>
+        </label>
+        <label class="campo campo--error">
+          <span class="campo__etiqueta">Teléfono</span>
+          <input class="campo__control" type="tel" value="300" aria-describedby="ayuda-telefono">
+          <span class="campo__error" id="ayuda-telefono">Escribe un número de 10 dígitos.</span>
+        </label>
+        <label class="campo o-formulario__ancho">
+          <span class="campo__etiqueta">¿Qué te gustaría hacer?</span>
+          <textarea class="campo__control" rows="3" placeholder="Playas tranquilas, comida local, poco traslado..."></textarea>
+          <span class="campo__ayuda">Cuéntanos en tus palabras; no hay respuestas incorrectas.</span>
+        </label>
+        <label class="campo campo--opcion o-formulario__ancho">
+          <input type="checkbox" checked>
+          <span>Acepto el tratamiento de mis datos para esta solicitud.</span>
+        </label>
+      </div>
+      <p class="o-formulario__nota">Campo, etiqueta, ayuda y error comparten el mismo componente <span class="p-guia__codigo">.campo</span>.</p>
+    </div>
+
+</section>
+
+
+      <p class="p-guia__volver">
+        <a class="p-guia__volver" href="../05-paginas/index.html">← Volver al sitio</a>
+      </p>
+    </div>
+  </main>
+  
+<!-- ORGANISM: footer -->
+<footer class="o-pie">
+  <div class="contenedor o-pie__rejilla">
+    <div class="o-pie__marca">
+      <a class="o-marca" href="../05-paginas/index.html" aria-label="Tours Out Here, inicio">
+        <svg class="o-marca__icono" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="2"/><path d="M24 9l7 15-7 15-7-15 7-15z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="24" r="2.5" fill="currentColor"/></svg>
+        <span class="o-marca__texto">Tours <em>Out Here</em></span>
+      </a>
+      <p class="o-pie__texto">Sitio de demostración de una agencia de viajes. Destinos, precios, testimonios y datos de contacto son ficticios.</p>
+      <p class="o-pie__nota">Hecho con HTML y CSS. Sin JavaScript.</p>
+    </div>
+    <nav aria-labelledby="pie-sitio">
+      <h2 class="o-pie__titulo" id="pie-sitio">Sitio</h2>
+      <ul class="o-pie__lista">
+        <li><a href="../05-paginas/index.html">Inicio</a></li>
+        <li><a href="../05-paginas/destinos.html">Destinos</a></li>
+        <li><a href="../05-paginas/paquetes.html">Paquetes</a></li>
+        <li><a href="../05-paginas/nosotros.html">Nosotros</a></li>
+        <li><a href="../05-paginas/contacto.html">Contacto</a></li>
+      </ul>
+    </nav>
+    <nav aria-labelledby="pie-guia">
+      <h2 class="o-pie__titulo" id="pie-guia">Guía atómica</h2>
+      <ul class="o-pie__lista">
+        <li><a href="../01-atomos/atoms.html">Átomos</a></li>
+        <li><a href="../02-moleculas/molecules.html">Moléculas</a></li>
+        <li><a href="../03-organismos/organisms.html">Organismos</a></li>
+        <li><a href="../04-plantillas/plantilla-base.html">Plantillas</a></li>
+        <li><a href="../05-paginas/index.html">Páginas</a></li>
+      </ul>
+    </nav>
+    <div>
+      <h2 class="o-pie__titulo">Alcance</h2>
+      <p class="o-pie__texto">Cinco niveles: átomos, moléculas, organismos, plantillas y páginas. Sin dependencias externas.</p>
+    </div>
+  </div>
+  <div class="contenedor o-pie__base">
+    <p>© 2026 Tours Out Here. Todos los derechos reservados.</p>
+    <p>Sin JavaScript, sin backend, sin servicios externos.</p>
+  </div>
+</footer>
+
+</body>
+</html>

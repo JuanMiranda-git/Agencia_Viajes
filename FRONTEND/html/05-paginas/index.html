@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Agencia de viajes en Sabaneta, Antioquia. Paquetes turísticos nacionales e internacionales diseñados a tu medida.">
+  <title>Inicio — Tours Out Here</title>
+  <link rel="icon" href="../../img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+  
+<!-- ORGANISM: header -->
+<header class="o-encabezado">
+  <div class="o-encabezado__barra contenedor">
+    <a class="o-marca" href="./index.html" aria-label="Tours Out Here, inicio">
+      <svg class="o-marca__icono" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="2"/><path d="M24 9l7 15-7 15-7-15 7-15z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="24" r="2.5" fill="currentColor"/></svg>
+      <span class="o-marca__texto">Tours <em>Out Here</em></span>
+    </a>
+    <input class="o-menu__control solo-lectores" type="checkbox" id="menu-principal">
+    <label class="o-menu__boton" for="menu-principal" aria-label="Abrir o cerrar el menú de navegación">
+      <span class="o-menu__linea"></span>
+      <span class="o-menu__linea"></span>
+      <span class="o-menu__linea"></span>
+    </label>
+    <nav class="o-navegacion" aria-label="Navegación principal">
+      <ul class="o-navegacion__lista">
+        <li><a class="o-navegacion__enlace" href="./index.html" aria-current="page">Inicio</a></li>
+        <li><a class="o-navegacion__enlace" href="./destinos.html">Destinos</a></li>
+        <li><a class="o-navegacion__enlace" href="./paquetes.html">Paquetes</a></li>
+        <li><a class="o-navegacion__enlace" href="./nosotros.html">Nosotros</a></li>
+        <li><a class="o-navegacion__enlace" href="./contacto.html">Contacto</a></li>
+      </ul>
+      <a class="boton boton--primario boton--sm o-navegacion__cta" href="./contacto.html">Planear mi viaje</a>
+    </nav>
+  </div>
+</header>
+
+  <main id="contenido" class="t-principal">
+    
+<!-- PAGE: inicio -->
+<section class="o-hero" aria-labelledby="hero-titulo">
+  <img class="o-hero__fondo" src="../../img/optimizadas/rioBrasil.jpg" alt="" width="1400" height="1050" loading="eager" fetchpriority="high" decoding="async">
+  <div class="o-hero__velo"></div>
+  <div class="contenedor o-hero__contenido">
+    <p class="kicker o-hero__kicker">Agencia de viajes en Sabaneta, Antioquia</p>
+    <h1 id="hero-titulo" class="titulo-hero o-hero__titulo">Viajes que se sienten como una historia.</h1>
+    <p class="o-hero__texto">Diseñamos experiencias para viajeros solos, parejas, familias y aventureros. Tú eliges el destino; nosotros tejemos el resto.</p>
+    <div class="o-hero__acciones">
+      <a class="boton boton--dorado boton--lg" href="./paquetes.html">Explorar paquetes</a>
+      <a class="boton boton--secundario boton--lg" href="./contacto.html">Planear mi viaje</a>
+    </div>
+    <ul class="o-hero__datos">
+      <li class="m-dato"><span class="m-dato__valor">+1.200</span><span class="m-dato__etiqueta">viajeros acompañados</span></li>
+      <li class="m-dato"><span class="m-dato__valor">4.9/5</span><span class="m-dato__etiqueta">valoración promedio</span></li>
+      <li class="m-dato"><span class="m-dato__valor">12</span><span class="m-dato__etiqueta">destinos curados</span></li>
+      <li class="m-dato"><span class="m-dato__valor">9 años</span><span class="m-dato__etiqueta">creando viajes</span></li>
+
+    </ul>
+  </div>
+</section>
+
+<!-- ORGANISM: cinta de destinos -->
+<div class="o-cinta">
+  <div class="contenedor">
+    <ul class="o-cinta__lista">
+      <li>Cartagena</li><li>París</li><li>Kyoto</li><li>Roma</li><li>Berlín</li><li>Delhi</li><li>Río de Janeiro</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ORGANISM: perfiles de viajero -->
+<section class="seccion" aria-labelledby="perfiles-titulo">
+  <div class="contenedor">
+    <div class="o-seccion__cabeza">
+      <div class="cabecera-seccion">
+        <p class="kicker">Viaja a tu manera</p>
+        <h2 id="perfiles-titulo">¿Cómo te gusta viajar?</h2>
+        <p>No todos los viajes se parecen. Por eso empezamos por ti, no por el destino.</p>
+      </div>
+    </div>
+    <div class="o-perfiles__rejilla">
+      
+<!-- MOLECULE: perfil de viajero -->
+<article class="m-perfil">
+  <span class="m-perfil__icono"><svg class="a-icono a-icono--lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2.2 4.8-4.8 2.2 2.2-4.8 4.8-2.2Z"/></svg></span>
+  <h3 class="m-perfil__titulo">Viajero solo</h3>
+  <p class="m-perfil__texto">Para perderte, encontrarte y volver con otra mirada.</p>
+  <a class="m-perfil__enlace" href="./paquetes.html">Ver ideas <span aria-hidden="true">→</span></a>
+</article>
+
+<!-- MOLECULE: perfil de viajero -->
+<article class="m-perfil">
+  <span class="m-perfil__icono"><svg class="a-icono a-icono--lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg></span>
+  <h3 class="m-perfil__titulo">En pareja</h3>
+  <p class="m-perfil__texto">Escapadas de dos, sin prisa y con detalles que importan.</p>
+  <a class="m-perfil__enlace" href="./paquetes.html">Ver ideas <span aria-hidden="true">→</span></a>
+</article>
+
+<!-- MOLECULE: perfil de viajero -->
+<article class="m-perfil">
+  <span class="m-perfil__icono"><svg class="a-icono a-icono--lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+  <h3 class="m-perfil__titulo">En familia</h3>
+  <p class="m-perfil__texto">Viajes pensados para todas las edades y todos los ritmos.</p>
+  <a class="m-perfil__enlace" href="./paquetes.html">Ver ideas <span aria-hidden="true">→</span></a>
+</article>
+
+<!-- MOLECULE: perfil de viajero -->
+<article class="m-perfil">
+  <span class="m-perfil__icono"><svg class="a-icono a-icono--lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m3 20 6-11 4 7 2-3 6 7H3Z"/><path d="m9 9 2-3 2 3"/></svg></span>
+  <h3 class="m-perfil__titulo">Aventura</h3>
+  <p class="m-perfil__texto">Naturaleza, caminos y adrenalina con paisaje.</p>
+  <a class="m-perfil__enlace" href="./paquetes.html">Ver ideas <span aria-hidden="true">→</span></a>
+</article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ORGANISM: destinos destacados -->
+<section class="seccion seccion--tenue" aria-labelledby="destinos-titulo">
+  <div class="contenedor">
+    <div class="o-seccion__cabeza">
+      <div class="cabecera-seccion">
+        <p class="kicker">Destinos que enamoran</p>
+        <h2 id="destinos-titulo">Tres formas de empezar a viajar.</h2>
+        <p>Una ciudad amurallada, una terraza parisina o un jardín japonés. Elige el tono de tu próxima historia.</p>
+      </div>
+      <a class="boton boton--secundario" href="./destinos.html">Ver todos los destinos</a>
+    </div>
+    <div class="o-destacados__rejilla">
+      
+<!-- MOLECULE: tarjeta de destino -->
+<article class="tarjeta m-destino m-destino--colombia">
+  <div class="tarjeta__media">
+    <span class="insignia m-destino__pais">Colombia</span>
+    <img src="../../img/optimizadas/cartagenaColombia.jpg" alt="Vista aérea de la ciudad amurallada de Cartagena y el mar Caribe" width="1400" height="1008" loading="lazy" decoding="async">
+  </div>
+  <div class="m-destino__cuerpo">
+    <p class="tarjeta__kicker">4 días / 3 noches</p>
+    <h3 class="m-destino__titulo">Cartagena esencial</h3>
+    <p class="m-destino__texto">Murallas, mar Caribe y atardeceres que se quedan contigo.</p>
+    <div class="m-destino__meta">
+      <p class="m-destino__precio">$1.890.000<small>Desde / por persona</small></p>
+      <a class="m-destino__enlace" href="./destinos.html#modal-cartagena">Ver detalle <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</article>
+
+<!-- MOLECULE: tarjeta de destino -->
+<article class="tarjeta m-destino m-destino--europa">
+  <div class="tarjeta__media">
+    <span class="insignia m-destino__pais">Francia</span>
+    <img src="../../img/optimizadas/parisFrancia.jpg" alt="Torre Eiffel vista desde el parque, con visitantes al atardecer" width="1400" height="950" loading="lazy" decoding="async">
+  </div>
+  <div class="m-destino__cuerpo">
+    <p class="tarjeta__kicker">7 días / 6 noches</p>
+    <h3 class="m-destino__titulo">París sin prisa</h3>
+    <p class="m-destino__texto">Cafés, museos y paseos que merecen una segunda vuelta.</p>
+    <div class="m-destino__meta">
+      <p class="m-destino__precio">$6.450.000<small>Desde / por persona</small></p>
+      <a class="m-destino__enlace" href="./destinos.html#modal-paris">Ver detalle <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</article>
+
+<!-- MOLECULE: tarjeta de destino -->
+<article class="tarjeta m-destino m-destino--asia">
+  <div class="tarjeta__media">
+    <span class="insignia m-destino__pais">Japón</span>
+    <img src="../../img/optimizadas/kyotoJapon.jpg" alt="Pagoda de Kyoto al atardecer sobre los tejados de la ciudad" width="1400" height="933" loading="lazy" decoding="async">
+  </div>
+  <div class="m-destino__cuerpo">
+    <p class="tarjeta__kicker">8 días / 7 noches</p>
+    <h3 class="m-destino__titulo">Kyoto y los cerezos</h3>
+    <p class="m-destino__texto">Templos, jardines y silencio para desconectar de verdad.</p>
+    <div class="m-destino__meta">
+      <p class="m-destino__precio">$8.900.000<small>Desde / por persona</small></p>
+      <a class="m-destino__enlace" href="./destinos.html#modal-kyoto">Ver detalle <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ORGANISM: por qué elegirnos -->
+<section class="seccion" aria-labelledby="razones-titulo">
+  <div class="contenedor">
+    <div class="o-razones__rejilla">
+      <div class="o-razones__media">
+        <img src="../../img/optimizadas/rioMujer.jpg" alt="Viajera junto a los mosaicos de la Escalera Selarón, en Río de Janeiro" width="900" height="1350" loading="lazy" decoding="async">
+        <div class="o-razones__sello">
+          <strong>9 años</strong>
+          <span>creando viajes que se recuerdan</span>
+        </div>
+      </div>
+      <div>
+        <p class="kicker">Por qué elegirnos</p>
+        <h2 id="razones-titulo">Viajar bien no es casualidad.</h2>
+        <p class="texto-lead">Nos obsesionan los detalles que no se ven en una foto: el traslado que llega a tiempo, la mesa junto a la ventana, el día libre que nadie pidió pero todos agradecen.</p>
+        <ol class="o-razones__lista">
+          <li class="o-razon"><span class="o-razon__numero" aria-hidden="true">01</span><div><h3 class="o-razon__titulo">Diseño a medida</h3><p class="o-razon__texto">Escuchamos tu ritmo, tu presupuesto y eso que aún no sabes poner en palabras.</p></div></li><li class="o-razon"><span class="o-razon__numero" aria-hidden="true">02</span><div><h3 class="o-razon__titulo">Proveedores de confianza</h3><p class="o-razon__texto">Transporte, hospedaje y experiencias verificadas antes de salir.</p></div></li><li class="o-razon"><span class="o-razon__numero" aria-hidden="true">03</span><div><h3 class="o-razon__titulo">Acompañamiento real</h3><p class="o-razon__texto">Un equipo disponible antes, durante y después del viaje.</p></div></li><li class="o-razon"><span class="o-razon__numero" aria-hidden="true">04</span><div><h3 class="o-razon__titulo">Precios claros</h3><p class="o-razon__texto">Todo lo que incluye, a la vista, sin sorpresas de último minuto.</p></div></li>
+        </ol>
+        <div class="t-acciones">
+          <a class="boton boton--primario" href="./nosotros.html">Conoce nuestra historia</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ORGANISM: paquetes destacados -->
+<section class="seccion seccion--tenue" aria-labelledby="paquetes-titulo">
+  <div class="contenedor">
+    <div class="o-seccion__cabeza">
+      <div class="cabecera-seccion">
+        <p class="kicker">Listos para inspirarte</p>
+        <h2 id="paquetes-titulo">Paquetes que se adaptan a ti.</h2>
+        <p>Todos son una base: ajustamos días, vuelos, hospedaje y actividades según tu plan.</p>
+      </div>
+      <a class="boton boton--secundario" href="./paquetes.html">Ver todos los paquetes</a>
+    </div>
+    <div class="o-paquetes__rejilla">
+      
+<!-- MOLECULE: tarjeta de paquete -->
+<article class="tarjeta m-paquete m-paquete--playa m-paquete--familia p-paquetes__destacado">
+  <div class="tarjeta__media">
+    <span class="insignia insignia--dorada m-paquete__cinta">Más vendido</span>
+    <img src="../../img/optimizadas/cartagenaColombia.jpg" alt="Vista aérea de la ciudad amurallada de Cartagena" width="1400" height="1008" loading="lazy" decoding="async">
+  </div>
+  <div class="m-paquete__cuerpo">
+    <p class="tarjeta__kicker">4 días / 3 noches</p>
+    <h3 class="m-paquete__titulo">Cartagena esencial</h3>
+    <p class="m-paquete__texto">Cuatro días para cambiar el ruido por el sonido del mar.</p>
+    <ul class="m-paquete__incluye"><li>Hospedaje 3 noches</li><li>Desayunos</li><li>City tour</li><li>Traslados</li></ul>
+    <div class="m-paquete__pie">
+      <p class="m-paquete__precio">$1.890.000<small>Por persona</small></p>
+      <div class="m-paquete__acciones">
+        <a class="boton boton--primario boton--sm" href="./contacto.html">Solicitar cotización</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- MOLECULE: tarjeta de paquete -->
+<article class="tarjeta m-paquete m-paquete--cultura ">
+  <div class="tarjeta__media">
+    <span class="insignia insignia--dorada m-paquete__cinta">Romántico</span>
+    <img src="../../img/optimizadas/parisFrancia.jpg" alt="Torre Eiffel con visitantes al atardecer" width="1400" height="950" loading="lazy" decoding="async">
+  </div>
+  <div class="m-paquete__cuerpo">
+    <p class="tarjeta__kicker">7 días / 6 noches</p>
+    <h3 class="m-paquete__titulo">París sin prisa</h3>
+    <p class="m-paquete__texto">Siete días para mirar la ciudad, no solo fotografiarla.</p>
+    <ul class="m-paquete__incluye"><li>Vuelos</li><li>Hotel 6 noches</li><li>Desayunos</li><li>Museo incluido</li></ul>
+    <div class="m-paquete__pie">
+      <p class="m-paquete__precio">$6.450.000<small>Por persona</small></p>
+      <div class="m-paquete__acciones">
+        <a class="boton boton--primario boton--sm" href="./contacto.html">Solicitar cotización</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- MOLECULE: tarjeta de paquete -->
+<article class="tarjeta m-paquete m-paquete--cultura ">
+  <div class="tarjeta__media">
+    <span class="insignia insignia--dorada m-paquete__cinta">Temporada</span>
+    <img src="../../img/optimizadas/kyotoJapon.jpg" alt="Pagoda de Kyoto sobre los tejados de la ciudad" width="1400" height="933" loading="lazy" decoding="async">
+  </div>
+  <div class="m-paquete__cuerpo">
+    <p class="tarjeta__kicker">8 días / 7 noches</p>
+    <h3 class="m-paquete__titulo">Kyoto y los cerezos</h3>
+    <p class="m-paquete__texto">Ocho días de templos, jardines y silencio bien administrado.</p>
+    <ul class="m-paquete__incluye"><li>Vuelos</li><li>Ryokan 3 noches</li><li>JR Pass</li><li>Tours guiados</li></ul>
+    <div class="m-paquete__pie">
+      <p class="m-paquete__precio">$8.900.000<small>Por persona</small></p>
+      <div class="m-paquete__acciones">
+        <a class="boton boton--primario boton--sm" href="./contacto.html">Solicitar cotización</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+    </div>
+    <p class="p-paquetes__nota">Precios de demostración por persona en acomodación doble. No incluyen impuestos ni cargos no especificados.</p>
+  </div>
+</section>
+
+<!-- ORGANISM: testimonios -->
+<section class="seccion o-testimonios" aria-labelledby="testimonios-titulo">
+  <div class="contenedor">
+    <div class="o-seccion__cabeza">
+      <div class="cabecera-seccion">
+        <p class="kicker">Historias de viaje</p>
+        <h2 id="testimonios-titulo">Lo que se llevan a casa.</h2>
+        <p>Testimonios ficticios creados para mostrar el tono del sitio. Los viajes reales se parecen más a los tuyos.</p>
+      </div>
+    </div>
+    <div class="o-testimonios__carrusel" role="region" aria-label="Testimonios de viajeros" tabindex="0">
+      
+<!-- MOLECULE: testimonio -->
+<figure class="m-testimonio">
+  <p class="a-estrellas" role="img" aria-label="5 de 5 estrellas">★★★★★</p>
+  <blockquote class="m-testimonio__cita">Nos escucharon de verdad. El viaje tenía nuestro ritmo, no el de un catálogo.</blockquote>
+  <figcaption class="m-testimonio__pie">
+    <span class="m-testimonio__avatar"><img src="../../img/optimizadas/avatar-cartagena.jpg" alt="" width="160" height="160" loading="lazy" decoding="async"></span>
+    <span>
+      <span class="m-testimonio__nombre">Mariana G.</span>
+      <span class="m-testimonio__destino">Cartagena, Colombia</span>
+    </span>
+  </figcaption>
+</figure>
+
+<!-- MOLECULE: testimonio -->
+<figure class="m-testimonio">
+  <p class="a-estrellas" role="img" aria-label="5 de 5 estrellas">★★★★★</p>
+  <blockquote class="m-testimonio__cita">La diferencia fue sentir que alguien estaba pendiente de los detalles que uno no alcanza a pensar.</blockquote>
+  <figcaption class="m-testimonio__pie">
+    <span class="m-testimonio__avatar"><img src="../../img/optimizadas/avatar-paris.jpg" alt="" width="160" height="160" loading="lazy" decoding="async"></span>
+    <span>
+      <span class="m-testimonio__nombre">Camila R.</span>
+      <span class="m-testimonio__destino">París, Francia</span>
+    </span>
+  </figcaption>
+</figure>
+
+<!-- MOLECULE: testimonio -->
+<figure class="m-testimonio">
+  <p class="a-estrellas" role="img" aria-label="5 de 5 estrellas">★★★★★</p>
+  <blockquote class="m-testimonio__cita">Volvimos con la sensación de haber viajado sin prisa, incluso en un país tan distinto.</blockquote>
+  <figcaption class="m-testimonio__pie">
+    <span class="m-testimonio__avatar"><img src="../../img/optimizadas/avatar-kyoto.jpg" alt="" width="160" height="160" loading="lazy" decoding="async"></span>
+    <span>
+      <span class="m-testimonio__nombre">Daniela y Sofía</span>
+      <span class="m-testimonio__destino">Kyoto, Japón</span>
+    </span>
+  </figcaption>
+</figure>
+
+<!-- MOLECULE: testimonio -->
+<figure class="m-testimonio">
+  <p class="a-estrellas" role="img" aria-label="5 de 5 estrellas">★★★★★</p>
+  <blockquote class="m-testimonio__cita">Me ayudaron a armar un plan para viajar sola y sentirme acompañada todo el tiempo.</blockquote>
+  <figcaption class="m-testimonio__pie">
+    <span class="m-testimonio__avatar"><img src="../../img/optimizadas/avatar-berlin.jpg" alt="" width="160" height="160" loading="lazy" decoding="async"></span>
+    <span>
+      <span class="m-testimonio__nombre">Valentina M.</span>
+      <span class="m-testimonio__destino">Berlín, Alemania</span>
+    </span>
+  </figcaption>
+</figure>
+
+<!-- MOLECULE: testimonio -->
+<figure class="m-testimonio">
+  <p class="a-estrellas" role="img" aria-label="5 de 5 estrellas">★★★★★</p>
+  <blockquote class="m-testimonio__cita">Tres edades distintas y todos contentos. Eso, para nosotros, es un viaje bien diseñado.</blockquote>
+  <figcaption class="m-testimonio__pie">
+    <span class="m-testimonio__avatar m-testimonio__avatar--iniciales" aria-hidden="true">FR</span>
+    <span>
+      <span class="m-testimonio__nombre">Familia Restrepo</span>
+      <span class="m-testimonio__destino">Río de Janeiro, Brasil</span>
+    </span>
+  </figcaption>
+</figure>
+
+    </div>
+    <p class="o-testimonios__pista">Desliza o usa las flechas del teclado para ver más historias.</p>
+  </div>
+</section>
+
+<!-- ORGANISM: llamado a la acción -->
+<section class="o-cta" aria-labelledby="cta-titulo">
+  <div class="contenedor o-cta__caja">
+    <div class="o-cta__texto">
+      <p class="kicker">Tu próximo viaje</p>
+      <h2 id="cta-titulo">Cuéntanos qué sueñas y lo hacemos ruta.</h2>
+      <p>Respondemos en menos de 24 horas hábiles. Sin compromiso y sin letra pequeña.</p>
+    </div>
+    <div class="o-cta__acciones">
+      <a class="boton boton--dorado" href="./contacto.html">Solicitar cotización</a>
+      <a class="boton boton--secundario" href="./paquetes.html">Ver paquetes</a>
+    </div>
+  </div>
+</section>
+
+  </main>
+  
+<!-- ORGANISM: footer -->
+<footer class="o-pie">
+  <div class="contenedor o-pie__rejilla">
+    <div class="o-pie__marca">
+      <a class="o-marca" href="./index.html" aria-label="Tours Out Here, inicio">
+        <svg class="o-marca__icono" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="2"/><path d="M24 9l7 15-7 15-7-15 7-15z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="24" r="2.5" fill="currentColor"/></svg>
+        <span class="o-marca__texto">Tours <em>Out Here</em></span>
+      </a>
+      <p class="o-pie__texto">Viajes diseñados a tu medida desde Sabaneta, Antioquia. Rutas nacionales e internacionales con acompañamiento cercano.</p>
+      <p class="o-pie__nota">Sitio de demostración: destinos, precios, testimonios y datos de contacto son ficticios.</p>
+    </div>
+    <nav aria-labelledby="pie-explorar">
+      <h2 class="o-pie__titulo" id="pie-explorar">Explorar</h2>
+      <ul class="o-pie__lista">
+        <li><a href="./destinos.html">Destinos</a></li>
+        <li><a href="./paquetes.html">Paquetes</a></li>
+        <li><a href="./nosotros.html">Nosotros</a></li>
+        <li><a href="./contacto.html">Contacto</a></li>
+        <li><a href="../01-atomos/atoms.html">Guía de estilo</a></li>
+      </ul>
+    </nav>
+    <nav aria-labelledby="pie-destinos">
+      <h2 class="o-pie__titulo" id="pie-destinos">Destinos</h2>
+      <ul class="o-pie__lista">
+        <li><a href="./destinos.html#lista-destinos">Cartagena</a></li>
+        <li><a href="./destinos.html#lista-destinos">París</a></li>
+        <li><a href="./destinos.html#lista-destinos">Kyoto</a></li>
+        <li><a href="./destinos.html#lista-destinos">Roma</a></li>
+        <li><a href="./destinos.html#lista-destinos">Río de Janeiro</a></li>
+      </ul>
+    </nav>
+    <div>
+      <h2 class="o-pie__titulo">Hablemos</h2>
+      <address class="o-pie__contacto">
+        <span>Calle 10 # 45-20, Sabaneta, Antioquia</span>
+        <span>+57 300 000 0000</span>
+        <span>hola@toursouthere.demo</span>
+        <span>Lun a vie, 8:00 a 18:00</span>
+      </address>
+      <a class="boton boton--dorado boton--sm" href="./contacto.html">Solicitar cotización</a>
+    </div>
+  </div>
+  <div class="contenedor o-pie__base">
+    <p>© 2026 Tours Out Here. Todos los derechos reservados.</p>
+    <p>Hecho con HTML y CSS. Sin JavaScript.</p>
+  </div>
+</footer>
+
+</body>
+</html>

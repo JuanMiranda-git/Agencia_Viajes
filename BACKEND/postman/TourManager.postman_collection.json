@@ -2,13 +2,13 @@
   "info": {
     "_postman_id": "a1b2c3d4-0000-4000-9000-tourmanager01",
     "name": "TourManager - API v1",
-    "description": "Coleccion de pruebas de la API REST del Sistema de Gestion de Operaciones Turisticas (TourManager). Ejecute primero \"Autenticacion > Iniciar sesion\" para guardar el token; los demas ejemplos lo usan via {{token}}.",
+    "description": "Coleccion de pruebas de la API REST del Sistema de Gestion de Operaciones Turisticas (TourManager). Fase de desarrollo: las rutas no requieren token ni rol. Importe el entorno TourManager - Local y ejecute cualquier solicitud.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:3000"
+      "value": "http://localhost:3111"
     }
   ],
   "item": [
@@ -96,7 +96,7 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "pm.test('Inicio de sesion exitoso', () => pm.response.to.have.status(200));",
-                  "if (json.exito && json.datos && json.datos.token) {",
+                  "if (json.ok && json.datos && json.datos.token) {",
                   "  pm.environment.set('token', json.datos.token);",
                   "  pm.environment.set('idUsuario', json.datos.usuario.idUsuario);",
                   "}"
@@ -146,7 +146,7 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "pm.test('Inicio de sesion exitoso', () => pm.response.to.have.status(200));",
-                  "if (json.exito && json.datos && json.datos.token) {",
+                  "if (json.ok && json.datos && json.datos.token) {",
                   "  pm.environment.set('token', json.datos.token);",
                   "  pm.environment.set('idUsuario', json.datos.usuario.idUsuario);",
                   "}"
@@ -163,10 +163,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -322,10 +318,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -360,10 +352,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -395,7 +383,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "if (json.exito && json.datos && json.datos.idRol) { pm.environment.set('idRol', json.datos.idRol); }"
+                  "if (json.ok && json.datos && json.datos.idRol) { pm.environment.set('idRol', json.datos.idRol); }"
                 ]
               }
             }
@@ -409,10 +397,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -438,10 +422,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -476,10 +456,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -515,10 +491,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -541,7 +513,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "if (json.exito && json.datos && json.datos.length > 0) { pm.environment.set('idModulo', json.datos[0].idModulo); }"
+                  "if (json.ok && json.datos && json.datos.length > 0) { pm.environment.set('idModulo', json.datos[0].idModulo); }"
                 ]
               }
             }
@@ -555,10 +527,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -594,10 +562,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -624,10 +588,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -660,10 +620,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -692,6 +648,25 @@
               ]
             }
           },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Respuesta exitosa', () => pm.expect(json.ok).to.equal(true));",
+                  "pm.test('Datos es un arreglo', () => pm.expect(Array.isArray(json.datos)).to.equal(true));",
+                  "pm.test('Tiene metadatos de paginacion', () => pm.expect(json.meta.paginacion).to.be.an('object'));",
+                  "if (json.datos && json.datos.length > 0 && json.datos[0].idUsuario) {",
+                  "  pm.environment.set('idUsuario', json.datos[0].idUsuario);",
+                  "  console.log('Usuario capturado para encadenar: ' + json.datos[0].idUsuario);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "response": []
         },
         {
@@ -702,10 +677,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -737,7 +708,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "if (json.exito && json.datos && json.datos.idUsuario) { pm.environment.set('idUsuarioNuevo', json.datos.idUsuario); }"
+                  "if (json.ok && json.datos && json.datos.idUsuario) { pm.environment.set('idUsuarioNuevo', json.datos.idUsuario); }"
                 ]
               }
             }
@@ -751,10 +722,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -780,10 +747,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -818,10 +781,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -862,10 +821,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -900,10 +855,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -935,7 +886,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "if (json.exito && json.datos && json.datos.idCliente) { pm.environment.set('idCliente', json.datos.idCliente); }"
+                  "if (json.ok && json.datos && json.datos.idCliente) { pm.environment.set('idCliente', json.datos.idCliente); }"
                 ]
               }
             }
@@ -949,10 +900,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -978,10 +925,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1016,10 +959,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1046,10 +985,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1085,10 +1020,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1115,10 +1046,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1150,10 +1077,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1188,10 +1111,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1223,7 +1142,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "if (json.exito && json.datos && json.datos.idProveedor) { pm.environment.set('idProveedor', json.datos.idProveedor); }"
+                  "if (json.ok && json.datos && json.datos.idProveedor) { pm.environment.set('idProveedor', json.datos.idProveedor); }"
                 ]
               }
             }
@@ -1237,10 +1156,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1266,10 +1181,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1304,10 +1215,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1341,7 +1248,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "if (json.exito && json.datos && json.datos.idServicio) { pm.environment.set('idServicio', json.datos.idServicio); }"
+                  "if (json.ok && json.datos && json.datos.idServicio) { pm.environment.set('idServicio', json.datos.idServicio); }"
                 ]
               }
             }
@@ -1355,10 +1262,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1385,10 +1288,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1427,10 +1326,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1462,7 +1357,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "if (json.exito && json.datos && json.datos.idContrato) { pm.environment.set('idContrato', json.datos.idContrato); }"
+                  "if (json.ok && json.datos && json.datos.idContrato) { pm.environment.set('idContrato', json.datos.idContrato); }"
                 ]
               }
             }
@@ -1476,10 +1371,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1505,10 +1396,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1543,10 +1430,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1580,7 +1463,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "if (json.exito && json.datos && json.datos.idOtrosi) { pm.environment.set('idOtrosi', json.datos.idOtrosi); }"
+                  "if (json.ok && json.datos && json.datos.idOtrosi) { pm.environment.set('idOtrosi', json.datos.idOtrosi); }"
                 ]
               }
             }
@@ -1594,10 +1477,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1629,10 +1508,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1671,10 +1546,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1706,7 +1577,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "if (json.exito && json.datos && json.datos.idPaquete) { pm.environment.set('idPaquete', json.datos.idPaquete); }"
+                  "if (json.ok && json.datos && json.datos.idPaquete) { pm.environment.set('idPaquete', json.datos.idPaquete); }"
                 ]
               }
             }
@@ -1720,10 +1591,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1749,10 +1616,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1787,10 +1650,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1826,10 +1685,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1863,7 +1718,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "if (json.exito && json.datos && json.datos.idServicio) { pm.environment.set('idServicioPaquete', json.datos.idServicio); }"
+                  "if (json.ok && json.datos && json.datos.idServicio) { pm.environment.set('idServicioPaquete', json.datos.idServicio); }"
                 ]
               }
             }
@@ -1877,10 +1732,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1907,10 +1758,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1938,10 +1785,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -1975,7 +1818,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "if (json.exito && json.datos && json.datos.idItinerario) { pm.environment.set('idItinerario', json.datos.idItinerario); }"
+                  "if (json.ok && json.datos && json.datos.idItinerario) { pm.environment.set('idItinerario', json.datos.idItinerario); }"
                 ]
               }
             }
@@ -1989,10 +1832,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2019,10 +1858,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2057,10 +1892,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2086,10 +1917,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2124,10 +1951,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2168,10 +1991,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2206,10 +2025,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2241,7 +2056,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "if (json.exito && json.datos && json.datos.idReserva) { pm.environment.set('idReserva', json.datos.idReserva); }"
+                  "if (json.ok && json.datos && json.datos.idReserva) { pm.environment.set('idReserva', json.datos.idReserva); }"
                 ]
               }
             }
@@ -2255,10 +2070,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2284,10 +2095,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2313,10 +2120,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2355,10 +2158,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2394,10 +2193,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2424,10 +2219,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2459,10 +2250,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2497,10 +2284,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2532,7 +2315,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "if (json.exito && json.datos && json.datos.idVenta) { pm.environment.set('idVenta', json.datos.idVenta); }"
+                  "if (json.ok && json.datos && json.datos.idVenta) { pm.environment.set('idVenta', json.datos.idVenta); }"
                 ]
               }
             }
@@ -2546,10 +2329,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2575,10 +2354,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2614,10 +2389,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2644,10 +2415,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2679,10 +2446,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2717,10 +2480,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2752,7 +2511,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "if (json.exito && json.datos && json.datos.idTransporte) { pm.environment.set('idTransporte', json.datos.idTransporte); }"
+                  "if (json.ok && json.datos && json.datos.idTransporte) { pm.environment.set('idTransporte', json.datos.idTransporte); }"
                 ]
               }
             }
@@ -2766,10 +2525,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2795,10 +2550,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2833,10 +2584,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2877,10 +2624,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2913,7 +2656,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "const json = pm.response.json();",
-                  "if (json.exito && json.datos && json.datos.idInteraccion) { pm.environment.set('idInteraccion', json.datos.idInteraccion); }"
+                  "if (json.ok && json.datos && json.datos.idInteraccion) { pm.environment.set('idInteraccion', json.datos.idInteraccion); }"
                 ]
               }
             }
@@ -2927,10 +2670,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -2966,10 +2705,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -3002,10 +2737,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -3039,10 +2770,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -3077,10 +2804,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -3106,10 +2829,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -3145,10 +2864,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {
@@ -3184,10 +2899,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
               }
             ],
             "url": {

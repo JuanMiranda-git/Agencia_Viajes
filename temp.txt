@@ -1,0 +1,51 @@
+# ROLE
+You are a senior front-end developer specialized in static websites built with semantic HTML5 and modern CSS, with strong UX and accessibility skills.
+
+# OBJECTIVE
+Build a complete, static, visual-only website for a travel agency. The site is a showcase of how the final product will look. It targets all kinds of travelers: solo travelers, families, couples, adventurers, and groups.
+
+# CONTEXT SOURCES (read these first)
+- All .md files and the `context/` folder: business info, tone of voice, destinations, services.
+- The design system file: the ONLY source for colors, typography, spacing, and component styles. Do not invent colors or fonts outside it.
+- The `img/` folder: use these images of places and people first. If extra images are needed, use only local placeholders or CSS-generated backgrounds (gradients/patterns). Never hotlink external images or invent URLs.
+If a context file is missing or contradictory, make the most reasonable assumption, and list it in `ASSUMPTIONS.md`. Do not stop to ask questions.
+
+# HARD CONSTRAINTS (verifiable)
+1. Zero JavaScript: no `<script>` tags, no .js files, no inline event handlers (`onclick`, etc.), no JS libraries or CDNs.
+2. Only HTML and CSS. No build tools, preprocessors, or frameworks.
+3. No connection to any backend, API, database, email service, or external service. No real `fetch`, no real form submission (`action` must be `#` or omitted).
+4. All data (destinations, prices, testimonials, names) must be clearly dummy data.
+5. No external dependencies, except optionally fonts already defined in the design system.
+
+# ARCHITECTURE: ATOMIC DESIGN (applies to HTML and CSS)
+Organize both in these levels:   
+- Atoms: buttons, links, headings, inputs, labels, icons, badges, images.
+- Molecules: search field, destination card, testimonial, price tag, nav link group, form field with label.
+- Organisms: header/navbar, hero, destinations grid, packages section, why-us, testimonials, footer, contact form.
+- Templates: reusable page layouts (page skeleton with header, main, footer).
+- Pages: the final assembled pages.
+
+Use BEM naming (`.card__title--featured`) and CSS custom properties for all design tokens. Because there is no JS, HTML cannot be componentized by includes: duplicate shared parts (header/footer) identically across pages and mark each with a comment such as `<!-- ORGANISM: header -->`.
+
+# INTERACTIVITY WITHOUT JAVASCRIPT
+Use only CSS/HTML techniques: `<details>/<summary>` for FAQ, checkbox/radio hack or `:has()` for the mobile menu and tabs, `:target` for simple modals, `:hover`/`:focus-visible` for states, CSS scroll-snap for carousels.
+
+# UX & QUALITY REQUIREMENTS
+- Semantic HTML (`header`, `nav`, `main`, `section`, `article`, `footer`), one `h1` per page, logical heading order.
+- Accessibility: meaningful `alt` text, visible focus states, WCAG AA contrast, labels on all inputs, minimum 44px touch targets.
+- Clear primary call to action ("Plan my trip" / "Request a quote") visible above the fold on every page.
+- Sections that speak to different traveler profiles (solo, family, couple, adventure).
+- Images with `loading="lazy"`, explicit width/height to prevent layout shift, and `object-fit` for consistent crops.
+- Valid HTML5 and clean, commented CSS.
+
+# EXECUTION
+Work autonomously from start to finish without asking questions or waiting for confirmation. When something is ambiguous, decide, and document it in `ASSUMPTIONS.md`.
+
+# DEFINITION OF DONE (self-check before finishing)
+- [ ] No `<script>` tag, .js file, or inline handler anywhere (verify with a search).
+- [ ] All pages link correctly to each other.
+- [ ] All colors come from the design system tokens.
+- [ ] Every image path exists in `img/`.
+- [ ] Layout works at 360px, with no horizontal scroll.
+- [ ] CSS and HTML follows the atoms → molecules → organisms → templates → pages order.
+- [ ] Final summary: file tree + list of assumptions.

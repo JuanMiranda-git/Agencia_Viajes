@@ -9,14 +9,14 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 
-const entorno = require('./config/entorno');
-const registro = require('./config/registro');
-const { cerrarPool } = require('./config/baseDatos');
-const rutas = require('./routes');
-const { limitadorGlobal, limitadorAutenticacion } = require('./middleware/limitadores');
-const saneamiento = require('./middleware/saneamiento');
-const registroPeticiones = require('./middleware/registroPeticiones');
-const { rutaNoEncontrada, manejadorErrores } = require('./middleware/manejadorErrores');
+const entorno = require('./src/config/entorno');
+const registro = require('./src/config/registro');
+const { cerrarPool } = require('./src/config/database');
+const rutas = require('./src/routes');
+const { limitadorGlobal, limitadorAutenticacion } = require('./src/middleware/limitadores');
+const saneamiento = require('./src/middleware/saneamiento');
+const registroPeticiones = require('./src/middleware/registroPeticiones');
+const { rutaNoEncontrada, manejarErrores } = require('./src/middleware/errorHandler');
 
 const app = express();
 
@@ -61,7 +61,7 @@ app.get('/', (req, res) => {
 
 // 404 y manejador central de errores (siempre al final).
 app.use(rutaNoEncontrada);
-app.use(manejadorErrores);
+app.use(manejarErrores);
 
 const servidor = app.listen(entorno.puerto, () => {
   registro.info(`TourManager API escuchando en http://localhost:${entorno.puerto} (entorno: ${entorno.nodeEnv})`);

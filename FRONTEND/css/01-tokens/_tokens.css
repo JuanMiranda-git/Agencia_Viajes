@@ -1,0 +1,22 @@
+/*
+ * Capa de alias del sitio.
+ * No define colores, tipografías ni medidas crudas: solo compone tokens
+ * existentes en desingSystem.css para que las capas superiores lean mejor.
+ */
+
+:root {
+  --sitio-alto-encabezado: calc(var(--topbar-height) + var(--space-05));
+  --sitio-radio-media: var(--radius-lg);
+  --sitio-radio-caja: var(--radius);
+  --sitio-ancho-lectura: 62ch;
+  --sitio-sombra-flotante: var(--shadow-lg);
+  --sitio-transicion: var(--transition-control);
+  --sitio-degradado-oscuro: linear-gradient(180deg, transparent 0%, var(--overlay) 100%);
+  --sitio-degradado-claro: linear-gradient(180deg, var(--superficie-alta) 0%, var(--superficie-tenue) 100%);
+  --sitio-velo-hero: linear-gradient(
+    90deg,
+    var(--overlay-fuerte) 0%,
+    var(--overlay) 52%,
+    var(--overlay-suave) 100%
+  );
+}

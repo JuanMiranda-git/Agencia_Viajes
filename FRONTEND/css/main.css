@@ -1,0 +1,24 @@
+/*
+ * Tours Out Here — hoja de entrada única.
+ * Orden estricto ITCSS/Atomic Design:
+ *   1. Design system canónico (tokens + base + componentes existentes)
+ *   2. Alias de tokens del sitio
+ *   3. Base del sitio
+ *   4. Átomos
+ *   5. Moléculas
+ *   6. Organismos
+ *   7. Plantillas
+ *   8. Páginas
+ *
+ * No hay build, preprocesador ni JavaScript: el navegador resuelve estos
+ * @import directamente.
+ */
+
+@import url("./desingSystem.css");
+@import url("./01-tokens/_tokens.css");
+@import url("./02-base/_base.css");
+@import url("./03-atomos/_atomos.css");
+@import url("./04-moleculas/_moleculas.css");
+@import url("./05-organismos/_organismos.css");
+@import url("./06-plantillas/_plantillas.css");
+@import url("./07-paginas/_paginas.css");
